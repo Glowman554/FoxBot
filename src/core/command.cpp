@@ -21,7 +21,7 @@ void command_manager::on_command(client_command_handler* cmd) {
 			cmd->message_send((char*) "No command specified.");
 		} else {
 			char cmd_to_exec[0xff] = { 0 };
-			copy_until(cmd_to_exec, new_cmd, ' ');
+			char* args = copy_until(cmd_to_exec, new_cmd, ' ');			
 			debugf("searching for command %s\n", cmd_to_exec);
 
 			auto command_executer = commands.find<char*>([](char* name, list<command*>::node* node) {
@@ -37,16 +37,20 @@ void command_manager::on_command(client_command_handler* cmd) {
 					debugf("Command %s is bot owner command\n", cmd_to_exec);
 
 					if (cmd->handler->is_bot_owner(cmd->get_user_id())) {
-						command_executer->data->on_command(cmd);
+						command_executer->data->on_command(cmd, args[-1] == 0 ? nullptr : args);
 					} else {
 						char response[0xff] = { 0 };
 						sprintf(response, "You are not bot owner\n");
 						cmd->message_send(response);
 					}
 				} else {
-					command_executer->data->on_command(cmd);
+					command_executer->data->on_command(cmd, args[-1] == 0 ? nullptr : args);
 				}
 			}
 		}
 	}
+}
+
+list<command*>* command_manager::get_commands() {
+	return &commands;
 }

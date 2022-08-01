@@ -1,2 +1,3 @@
 add_subdirectory(test)
 add_subdirectory(discord)
+add_subdirectory(util_commands)

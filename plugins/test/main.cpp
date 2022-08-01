@@ -12,9 +12,17 @@ class test_command : public command {
 			return true;
 		}
 
-		void on_command(client_command_handler* cmd) override {
+		void on_command(client_command_handler* cmd, char* args) override {
 			cmd->message_send((char*) "test");
 			cmd->file_upload((char*) "../LICENSE");
+		}
+
+		char* get_help(bool long_desc) {
+			if (long_desc) {
+				return (char*) "test long";
+			} else {
+				return (char*) "test short";
+			}
 		}
 };
 

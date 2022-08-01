@@ -6,5 +6,5 @@ client_command_handler::client_command_handler(client_handler* handler, char* co
 	this->handler = handler;
 	this->command = command;
 
-	debugf("command: %s\n", command);
+	debugf("message: %s\n", command);
 }

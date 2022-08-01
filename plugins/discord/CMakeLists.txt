@@ -18,3 +18,8 @@ target_link_libraries(
 	discord
 	sleepy-discord
 )
+
+add_custom_command(TARGET discord
+	POST_BUILD
+	COMMAND /bin/bash -c "cp -v ${CMAKE_CURRENT_BINARY_DIR}/*.so ${CMAKE_CURRENT_BINARY_DIR}/.."
+)

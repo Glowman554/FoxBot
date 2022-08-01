@@ -27,8 +27,7 @@ int main() {
 
 	global_command_manager = new command_manager();
 
-	load_plugin((char*) "plugins/test/libtest.so");
-	load_plugin((char*) "plugins/discord/libdiscord.so");
+	load_folder((char*) "plugins");
 
 	debugf("Startup complete!\n");
 

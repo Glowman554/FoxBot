@@ -1,3 +1,6 @@
 [submodule "plugins/discord/sleepy-discord"]
 	path = plugins/discord/sleepy-discord
 	url = https://github.com/yourWaifu/sleepy-discord
+[submodule "plugins/telegram/tgbot-cpp"]
+	path = plugins/telegram/tgbot-cpp
+	url = https://github.com/reo7sp/tgbot-cpp

@@ -1,16 +1,23 @@
 include_directories(../../include)
 include_directories(include)
 
+add_subdirectory(tgbot-cpp)
+
+
 add_library(
-    util_commands
+    telegram
     SHARED
     main.cpp
-	say_command.cpp
-	help_command.cpp
-	whoami_command.cpp
+	telegram_client_command_handler.cpp
+	telegram_client_handler.cpp
 )
 
-add_custom_command(TARGET util_commands
+target_link_libraries(
+	telegram
+	TgBot
+)
+
+add_custom_command(TARGET telegram
 	POST_BUILD
 	COMMAND /bin/bash -c "cp -v ${CMAKE_CURRENT_BINARY_DIR}/*.so ${CMAKE_CURRENT_BINARY_DIR}/.."
 )

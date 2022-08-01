@@ -1,5 +1,5 @@
-#include <core/platform/discord_client_command_handler.h>
-#include <core/platform/discord_client_handler.h>
+#include <discord_client_command_handler.h>
+#include <discord_client_handler.h>
 
 discord_client_command_handler::discord_client_command_handler(SleepyDiscord::Message message, client_handler* handler) : client_command_handler(handler, (char*) message.content.c_str()) {
 	this->message = message;

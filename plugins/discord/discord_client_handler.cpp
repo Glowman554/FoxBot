@@ -1,5 +1,5 @@
-#include <core/platform/discord_client_handler.h>
-#include <core/platform/discord_client_command_handler.h>
+#include <discord_client_handler.h>
+#include <discord_client_command_handler.h>
 #include <core/core.h>
 
 discord_client_handler::discord_client_handler() : SleepyDiscord::DiscordClient("", SleepyDiscord::USER_CONTROLED_THREADS) {
@@ -8,7 +8,6 @@ discord_client_handler::discord_client_handler() : SleepyDiscord::DiscordClient(
 
 	this->setToken(token);
 	this->setIntents(SleepyDiscord::Intent::SERVER_MESSAGES);
-	this->run();
 }
 
 discord_client_handler::~discord_client_handler() {}

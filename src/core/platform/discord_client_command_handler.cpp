@@ -5,6 +5,8 @@ discord_client_command_handler::discord_client_command_handler(SleepyDiscord::Me
 	this->message = message;
 }
 
+discord_client_command_handler::~discord_client_command_handler() {}
+
 void discord_client_command_handler::message_send(char* message) {
 	((discord_client_handler*) this->handler)->sendMessage(this->message.channelID, message);
 }

@@ -37,7 +37,7 @@ class list {
 
 		template <typename Y>
 		void foreach(void (*f)(Y, node*), Y arg) {
-			for (size_t i = 0; i < length; i++) {
+			for (int i = 0; i < length; i++) {
 				if (data[i].taken) {
 					f(arg, &data[i]);
 				}

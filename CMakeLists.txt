@@ -14,6 +14,7 @@ add_executable(foxbot
 	src/core/client_command_handler.cpp
 	src/core/platform/discord_client_handler.cpp
 	src/core/platform/discord_client_command_handler.cpp
+	src/core/command.cpp
 )
 
 target_link_libraries(foxbot sleepy-discord)

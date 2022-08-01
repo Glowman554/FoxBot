@@ -8,6 +8,7 @@
 class discord_client_command_handler : public client_command_handler {
 	public:
 		discord_client_command_handler(SleepyDiscord::Message message, client_handler* handler);
+		~discord_client_command_handler();
 		
 		void message_send(char* message) override;
 		

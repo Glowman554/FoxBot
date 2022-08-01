@@ -1,13 +1,18 @@
 #include "sleepy_discord/sleepy_discord.h"
 
 #include <utils/config.h>
+#include <core/core.h>
+#include <core/platform/discord_client_handler.h>
+#include <debug.h>
 
 class MyClientClass : public SleepyDiscord::DiscordClient {
 public:
 	MyClientClass(std::string token, SleepyDiscord::Mode mode) : SleepyDiscord::DiscordClient(token, mode) {}
 	void onMessage(SleepyDiscord::Message message) override {
-		if (message.startsWith("hello"))
-			sendMessage(message.channelID, "Hello " + message.author.username);
+		if (message.startsWith("test")) {
+			sendMessage(message.channelID, "Hello " + message.author.ID.string());
+			uploadFile(message.channelID, "../LICENSE", "LICENSE");
+		}
 	}
 };
 
@@ -26,12 +31,10 @@ int main() {
 	fread(cfg, cfg_len, 1, cfg_file);
 	fclose(cfg_file);
 
-	config_loader loader = config_loader(cfg);
+	global_config = new config_loader(cfg);
 
+	debugf("here\n");
 
-	char* discord_token = loader.get_key("discord_token");
-	assert(discord_token != nullptr);
-	MyClientClass client(discord_token, SleepyDiscord::USER_CONTROLED_THREADS);
-	client.setIntents(SleepyDiscord::Intent::SERVER_MESSAGES);
-	client.run();
+	discord_client_handler* handler = new discord_client_handler();
+	debugf("Startup complete!\n");
 }

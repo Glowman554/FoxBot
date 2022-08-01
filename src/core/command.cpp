@@ -14,14 +14,14 @@ void command_manager::add_command(command* cmd) {
 
 void command_manager::on_command(client_command_handler* cmd) {
 	char cmd_prefix[0xff] = { 0 };
-	char* new_cmd = copy_until(cmd_prefix, cmd->command, ' ');
+	char* new_cmd = copy_until(cmd_prefix, cmd->command, ' ', 0xff);
 
 	if (strcmp(cmd_prefix, prefix) == 0) {
 		if (new_cmd[-1] == 0) {
 			cmd->message_send((char*) "No command specified.");
 		} else {
 			char cmd_to_exec[0xff] = { 0 };
-			char* args = copy_until(cmd_to_exec, new_cmd, ' ');			
+			char* args = copy_until(cmd_to_exec, new_cmd, ' ', 0xff);			
 			debugf("searching for command %s\n", cmd_to_exec);
 
 			auto command_executer = commands.find<char*>([](char* name, list<command*>::node* node) {

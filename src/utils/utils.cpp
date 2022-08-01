@@ -9,8 +9,8 @@ void* clear_alloc(size_t size) {
 	return ptr;
 }
 
-char* copy_until(char* dst, char* src, char delim) {
-	while (*src != delim && *src != '\0') {
+char* copy_until(char* dst, char* src, char delim, int limit) {
+	while (*src != delim && *src != '\0' && --limit != 0) {
 		*dst = *src;
 		dst++;
 		src++;

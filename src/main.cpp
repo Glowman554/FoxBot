@@ -5,8 +5,13 @@
 #include <assert.h>
 #include <unistd.h>
 
-int main() {
-	char* cfg_path = (char*) "config.cfg";
+int main(int argc, char** argv) {
+	if (argc < 2) {
+		debugf("Usage: %s <config_file>\n", argv[0]);
+		return 1;
+	}
+
+	char* cfg_path = argv[1];
 
 	FILE* cfg_file = fopen(cfg_path, "r");
 	assert(cfg_file != NULL);
@@ -27,7 +32,7 @@ int main() {
 
 	global_command_manager = new command_manager();
 
-	load_folder((char*) "plugins");
+	load_folder(global_config->get_key((char*) "plugin_path"));
 
 	debugf("Startup complete!\n");
 

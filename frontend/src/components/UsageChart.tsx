@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { VictoryChart, VictoryBar, VictoryTheme, VictoryAxis, VictoryContainer } from "victory";
+import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 type UsageObject = { [key: string]: number };
 type UsageChart = { command: string, usage: number }[];
+
 
 export default function UsageChart(props: { baseUrl: string }) {
     const [chart, setChart] = useState([] as UsageChart);
@@ -31,12 +32,15 @@ export default function UsageChart(props: { baseUrl: string }) {
     }, []);
 
     return (
-        <VictoryChart theme={VictoryTheme.material}>
-            <VictoryBar
-                data={chart}
-                x="command"
-                y="usage"
-            />
-        </VictoryChart>
-    )
+        <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chart}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="command" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="usage" fill="#777777" />
+            </BarChart>
+        </ResponsiveContainer>
+    );
 }

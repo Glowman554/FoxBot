@@ -49,7 +49,9 @@ function entriesReducer(state: {entries: JSX.Element[]}, action: JSX.Element) {
 export function Shell(props: { socketUrl: string, hostUrl: string }) {
     const [entriesState, dispatchEntry] = useReducer(entriesReducer, { entries: [] });
 	const {sendMessage} = useWebSocket(props.socketUrl, {
-		onOpen: () => {},
+		onOpen: () => {
+			dispatchEntry(<p>Connection successful.</p>);
+		},
 		onMessage: (message) => {
 			const json = JSON.parse(message.data) as FromServer.BaseMessage;
 			switch (json.type) {
@@ -98,11 +100,7 @@ export function Shell(props: { socketUrl: string, hostUrl: string }) {
 				{entriesState.entries.map((comp, i) => React.cloneElement(comp, { key: i }))}
 			</div>
 
-			<input style={{
-				width: "100%",
-				backgroundColor: "transparent",
-				color: "white",
-				outline: "none"
+			<input className="glow-input" style={{
 			}} type="text" autoComplete="off" autoCapitalize="off" onKeyDown={(e) => {
 					if (e.key == "Enter") {
 						dispatchEntry(<p>{(e.target as any).value}</p>)

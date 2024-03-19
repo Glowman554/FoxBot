@@ -8,7 +8,9 @@ export const metadata: Metadata = {
 
 export default function Home() {
 	return (
-        <div className="glow-text">
+        <div className="glow-text" style={{
+            height: "70vh"
+        }}>
             <UsageChart baseUrl={HOST_URL}/>
         </div>
 	);

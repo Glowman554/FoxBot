@@ -262,8 +262,19 @@ img {
 
 .glow-auth-button {
   width: 100%;
-  height: 3rem;
+  padding: 0.5rem;
   color: black;
   background-color: grey;
   margin-bottom: 1rem;
+  border-radius: 6px;
+  border: none;
+}
+
+.glow-input, .glow-input::selection {
+  background-color: grey;
+  color: white;
+  border-radius: 6px;
+  border: none;
+  padding: 0.5rem;
+  width: calc(100% - 1rem);
 }

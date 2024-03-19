@@ -270,9 +270,8 @@ img {
   border: none;
 }
 
-.glow-input, .glow-input::selection {
-  background-color: grey;
-  color: white;
+.glow-input {
+  /* background-color: grey; */
   border-radius: 6px;
   border: none;
   padding: 0.5rem;

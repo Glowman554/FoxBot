@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="Layer_3"
+   data-name="Layer 3"
+   viewBox="0 0 128 128"
+   version="1.1"
+   sodipodi:docname="menu.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs848" />
+  <sodipodi:namedview
+     id="namedview846"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="6.3203125"
+     inkscape:cx="64"
+     inkscape:cy="64"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Layer_3" />
+  <title
+     id="title837">Artboard 111</title>
+  <path
+     d="M97.092,36.078H30.908a2.111,2.111,0,0,0,0,4.222H97.092a2.111,2.111,0,0,0,0-4.222Z"
+     id="path839"
+     style="fill:#ffffff" />
+  <path
+     d="M97.092,61.889H30.908a2.111,2.111,0,0,0,0,4.222H97.092a2.111,2.111,0,0,0,0-4.222Z"
+     id="path841"
+     style="fill:#ffffff" />
+  <path
+     d="M97.092,87.7H30.908a2.111,2.111,0,0,0,0,4.222H97.092a2.111,2.111,0,0,0,0-4.222Z"
+     id="path843"
+     style="fill:#ffffff" />
+</svg>

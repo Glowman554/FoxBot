@@ -45,3 +45,5 @@ logs
 tmp
 plugins
 *.puml
+dependency-reduced-pom.xml
+.keystore

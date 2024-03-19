@@ -1,0 +1,24 @@
+version: "3.3"
+services:
+  bot:
+    build: .
+    volumes:
+      - "./srv:/srv"
+    ports:
+      - "3443:3443"
+    restart: always
+
+  bot_frontend:
+    image: nginx
+    volumes:
+      - "./frontend/out:/webroot"
+      - "./frontend/nginx.conf:/etc/nginx/nginx.conf"
+      - "/etc/letsencrypt:/etc/letsencrypt"
+    networks:
+      - "router_default"
+      - "default"
+    restart: always
+
+networks:
+  router_default:
+    external: true

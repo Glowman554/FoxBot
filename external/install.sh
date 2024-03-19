@@ -1,0 +1,1 @@
+mvn install:install-file -Dfile=ConfigManager-lib-1.0.2.jar -DgroupId=de.glowman554 -DartifactId=ConfigManager -Dversion=1.0.2 -Dpackaging=jar -DgeneratePom=true

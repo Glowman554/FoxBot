@@ -1,10 +1,10 @@
 import { Navigation } from "@/components/Navigation";
-import { Inter } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./global.css";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 
-const inter = Inter({ subsets: ["latin"] });
+const font = JetBrains_Mono({ subsets: ["latin"] });
 
 export default function RootLayout({
 	children,
@@ -13,7 +13,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body className={inter.className}>
+			<body className={font.className}>
 				<div className="glow-content">
 					<Navigation />
 					<Header />

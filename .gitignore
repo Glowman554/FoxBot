@@ -47,3 +47,5 @@ plugins
 *.puml
 dependency-reduced-pom.xml
 .keystore
+
+srv

@@ -13,8 +13,4 @@ public class JavalinEvent extends Event {
     public Javalin getJavalin() {
         return javalin;
     }
-
-    public enum Step {
-        SOCKET, API
-    }
 }

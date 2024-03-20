@@ -11,7 +11,7 @@ export default function Home() {
         <div className="glow-text" style={{
             height: "70vh"
         }}>
-            <UsageChart baseUrl={HOST_URL}/>
+            <UsageChart hostUrl={HOST_URL}/>
         </div>
 	);
 }

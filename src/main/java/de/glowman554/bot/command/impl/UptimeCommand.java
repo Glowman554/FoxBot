@@ -6,7 +6,7 @@ import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.TimeUtils;
 
 public class UptimeCommand extends Command {
-    private static final long startingTime = System.currentTimeMillis();
+    public static final long startingTime = System.currentTimeMillis();
 
     public UptimeCommand() {
         super("See the uptime of the bot.", "Usage: <command>", null, Group.TOOLS);

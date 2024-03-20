@@ -16,6 +16,8 @@ public class Api {
         if (event.getStep() == SparkSetupEvent.Step.API) {
             Logger.log("Adding api endpoints.");
             Spark.get("/api/usage", new UsageApiEndpoint());
+            Spark.get("/api/help", new HelpApiEndpoint());
+            Spark.get("/api/stats", new StatsApiEndpoint());
         }
     }
 }

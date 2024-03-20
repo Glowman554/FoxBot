@@ -10,6 +10,7 @@ export function Navigation() {
 			<a href="/">Home</a>
 			<a href="/usage">Usage</a>
 			<a href="/shell">Shell</a>
+			<a href="/commands">Commands</a>
 			
 			<a onClick={() => {
 				if (mainBarClass == "glow-bar") {

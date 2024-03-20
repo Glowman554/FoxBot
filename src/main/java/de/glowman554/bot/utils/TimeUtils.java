@@ -1,7 +1,7 @@
 package de.glowman554.bot.utils;
 
 public class TimeUtils {
-    public static String seconToDhms(int seconds) {
+    public static String secondsToDhms(int seconds) {
         int day = (seconds / (3600 * 24));
         int hour = (seconds % (3600 * 24) / 3600);
         int minute = (seconds % 3600 / 60);
@@ -22,6 +22,6 @@ public class TimeUtils {
     }
 
     public static String millisecondToDhms(long milliseconds) {
-        return seconToDhms((int) (milliseconds / 1000));
+        return secondsToDhms((int) (milliseconds / 1000));
     }
 }

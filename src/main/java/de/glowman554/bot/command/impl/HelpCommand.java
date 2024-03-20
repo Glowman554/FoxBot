@@ -47,7 +47,7 @@ public class HelpCommand extends Command {
             }
             try {
                 Command command = Registries.COMMANDS.get(commandStr);
-                message.reply(message.formatBold(Main.config.getPrefix() + commandStr + " (" + command.getGroup().getDisplayName() + " command)") + "\n\n" + command.getLongHelp().replace(Main.config.getPrefix() + "<command>", commandStr));
+                message.reply(message.formatBold(Main.config.getPrefix() + commandStr + " (" + command.getGroup().getDisplayName() + " command)") + "\n\n" + command.getLongHelp().replace("<command>", Main.config.getPrefix() + commandStr));
             } catch (IllegalArgumentException e) {
                 message.reply("Command " + commandStr + " not found!");
             }

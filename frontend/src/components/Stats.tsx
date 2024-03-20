@@ -7,6 +7,7 @@ interface StatsObject {
     commands: number;
     platforms: number;
     uptime: number;
+    prefix: string;
 }
 
 export function Stats(props: { hostUrl: string }) {
@@ -34,6 +35,10 @@ export function Stats(props: { hostUrl: string }) {
                 <tr className="glow-tr">
                     <td className="glow-td">Supported platforms</td>
                     <td className="glow-td">{stats.platforms}</td>
+                </tr>
+                <tr className="glow-tr">
+                    <td className="glow-td">Command prefix</td>
+                    <td className="glow-td">{stats.prefix}</td>
                 </tr>
             </tbody>
         </table>

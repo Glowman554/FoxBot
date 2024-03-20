@@ -55,14 +55,12 @@ public class Main {
         new PluginLoader(new File("plugins"));
 
         registerPlatforms();
+        registerCommands();
+        registerFeatures();
 
         Registries.PLATFORMS.getRegistry().values().forEach(platform -> platform.init(platformConfigs));
 
         startSpark();
-
-        registerCommands();
-        registerFeatures();
-
         complete();
     }
 

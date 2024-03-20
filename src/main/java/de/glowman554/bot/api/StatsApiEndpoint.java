@@ -1,5 +1,6 @@
 package de.glowman554.bot.api;
 
+import de.glowman554.bot.Main;
 import de.glowman554.bot.command.impl.UptimeCommand;
 import de.glowman554.bot.registry.Registries;
 import net.shadew.json.Json;
@@ -18,6 +19,7 @@ public class StatsApiEndpoint implements Route {
         root.set("commands", Registries.COMMANDS.getRegistry().size());
         root.set("platforms", Registries.PLATFORMS.getRegistry().size());
         root.set("uptime", System.currentTimeMillis() - UptimeCommand.startingTime);
+        root.set("prefix", Main.config.getPrefix());
 
         return Json.json().serialize(root);
     }

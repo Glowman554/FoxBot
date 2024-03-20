@@ -1,5 +1,8 @@
 package de.glowman554.bot.utils.api.spotify;
 
+import de.glowman554.bot.event.EventManager;
+import de.glowman554.bot.event.EventTarget;
+import de.glowman554.bot.event.impl.SparkSetupEvent;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.AutoFileSavable;
 import de.glowman554.config.ConfigManager;
@@ -26,6 +29,7 @@ public class SpotifyApi implements AutoCloseable {
     private final Timer timer = new Timer("Spotify renew timer");
 
     private SpotifyToken spotifyToken = new SpotifyToken();
+    private boolean authentication = false;
 
     public SpotifyApi(String clientId, String clientSecret, String redirectUrl) {
         this.clientId = clientId;
@@ -35,7 +39,17 @@ public class SpotifyApi implements AutoCloseable {
         spotifyToken.load();
         if (spotifyToken.isEmpty()) {
             Logger.log("Spotify authentication necessary.");
+            authentication = true;
+        } else {
+            setup();
+        }
 
+        EventManager.register(this);
+    }
+
+    @EventTarget
+    public void onSparkSetup(SparkSetupEvent event) {
+        if (event.getStep() == SparkSetupEvent.Step.API && authentication) {
             Spark.get("/login", (request, response) -> {
                 response.redirect("https://accounts.spotify.com/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUrl);
                 return response;
@@ -53,8 +67,6 @@ public class SpotifyApi implements AutoCloseable {
 
                 return "Big success!";
             });
-        } else {
-            setup();
         }
     }
 

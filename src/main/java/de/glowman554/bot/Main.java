@@ -31,11 +31,6 @@ public class Main {
     public static final CommandManager commandManager = new CommandManager();
     public static final File staticFolder = new File("host");
 
-
-    // TODO
-    // web frontend for help
-    // host using docker and mysql (external plugin)
-
     public static void main(String[] args) throws Exception {
         Logger.log("Starting...");
 
@@ -61,9 +56,7 @@ public class Main {
 
         registerPlatforms();
 
-        Registries.PLATFORMS.getRegistry().values().forEach(platform -> {
-            platform.init(platformConfigs);
-        });
+        Registries.PLATFORMS.getRegistry().values().forEach(platform -> platform.init(platformConfigs));
 
         startSpark();
 

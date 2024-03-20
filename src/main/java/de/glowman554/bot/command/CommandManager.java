@@ -5,15 +5,22 @@ import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.registry.Registries;
+import de.glowman554.config.ConfigManager;
+import de.glowman554.config.Savable;
+import net.shadew.json.Json;
+import net.shadew.json.JsonNode;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
-public class CommandManager {
-
-    private final HashMap<String, Integer> usage = new HashMap<>();
+public class CommandManager implements Savable {
+    private HashMap<String, Integer> usage = new HashMap<>();
+    private final File usageFile = new File(ConfigManager.BASE_FOLDER, "usage.json");
 
     public CommandManager() {
         EventManager.register(this);
+        load();
     }
 
     @EventTarget
@@ -34,6 +41,7 @@ public class CommandManager {
                 } else {
                     usage.put(arguments[0], 1);
                 }
+                save();
 
                 try {
                     Command command = Registries.COMMANDS.get(arguments[0]);
@@ -59,5 +67,38 @@ public class CommandManager {
     @Deprecated
     public PermissionProvider getPermissionProvider() {
         return Registries.PERMISSION_PROVIDER.get();
+    }
+
+    @Override
+    public void fromJSON(JsonNode jsonNode) {
+        usage = new HashMap<>();
+        for (String key : jsonNode.keySet()) {
+            usage.put(key, jsonNode.get(key).asInt());
+        }
+    }
+
+    @Override
+    public JsonNode toJSON() {
+        JsonNode object = JsonNode.object();
+        for (String key : usage.keySet()) {
+            object.set(key, usage.get(key));
+        }
+        return object;
+    }
+
+    public void save() {
+        try {
+            Json.json().serialize(toJSON(), usageFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void load() {
+        try {
+            fromJSON(Json.json().parse(usageFile));
+        } catch (IOException ignored) {
+        }
+        save();
     }
 }

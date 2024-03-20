@@ -1,5 +1,5 @@
 import { Commands } from "@/components/Commands";
-import { HOST_URL, PREFIX, SOCKET_URL } from "@/environment";
+import { PREFIX } from "@/environment";
 import { Metadata } from "next";
 
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 export default function Home() {
 	return (
         <div className="glow-text">
-    		<Commands hostUrl={HOST_URL} />
+    		<Commands />
         </div>
 	)
 }

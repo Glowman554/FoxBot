@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useReducer } from "react";
+import React, { useCallback, useReducer } from "react";
 import useWebSocket from "react-use-websocket";
 
 namespace FromServer {
@@ -46,9 +46,9 @@ function entriesReducer(state: {entries: JSX.Element[]}, action: JSX.Element) {
 }
 
 
-export function Shell(props: { socketUrl: string, hostUrl: string }) {
+export function Shell() {
     const [entriesState, dispatchEntry] = useReducer(entriesReducer, { entries: [] });
-	const {sendMessage} = useWebSocket(props.socketUrl, {
+	const {sendMessage} = useWebSocket(useCallback(() => (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/web", []), {
 		onOpen: () => {
 			dispatchEntry(<p>Connection successful.</p>);
 		},
@@ -66,16 +66,16 @@ export function Shell(props: { socketUrl: string, hostUrl: string }) {
 					}
 					switch (replyFile.fileType) {
 						case "IMAGE":
-							dispatchEntry(<img src={props.hostUrl + replyFile.file} />);
+							dispatchEntry(<img src={replyFile.file} />);
 							break;
 						case "VIDEO":
-							dispatchEntry(<video src={props.hostUrl + replyFile.file} controls/>);
+							dispatchEntry(<video src={replyFile.file} controls/>);
 							break;
 						case "AUDIO":
-							dispatchEntry(<audio src={props.hostUrl + replyFile.file} controls/>);
+							dispatchEntry(<audio src={replyFile.file} controls/>);
 							break;
 						case "DOCUMENT":
-							dispatchEntry(<><a href={props.hostUrl + replyFile.file}>Open file</a><br /></>);
+							dispatchEntry(<><a href={replyFile.file}>Open file</a><br /></>);
 							break;
 					}
                     break;
@@ -85,7 +85,8 @@ export function Shell(props: { socketUrl: string, hostUrl: string }) {
 					break;
 			}
 		}
-	});
+
+	}, true);
 
 	return (
 		<div className="glow-text">

@@ -1,5 +1,6 @@
 package de.glowman554.bot.command;
 
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.utils.FileUtils;
 
 import java.io.File;
@@ -8,6 +9,8 @@ import java.util.List;
 
 public abstract class Attachment {
     public abstract void download(File output);
+
+    public abstract StreamedFile download();
 
     public Type getType() {
         String extension = FileUtils.getFileExtension(getName());

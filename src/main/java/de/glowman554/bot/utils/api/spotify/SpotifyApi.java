@@ -2,7 +2,7 @@ package de.glowman554.bot.utils.api.spotify;
 
 import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
-import de.glowman554.bot.event.impl.SparkSetupEvent;
+import de.glowman554.bot.event.impl.JavalinEvent;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.AutoFileSavable;
 import de.glowman554.config.ConfigManager;
@@ -10,7 +10,6 @@ import de.glowman554.config.auto.Saved;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 import okhttp3.*;
-import spark.Spark;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,26 +47,20 @@ public class SpotifyApi implements AutoCloseable {
     }
 
     @EventTarget
-    public void onSparkSetup(SparkSetupEvent event) {
-        if (event.getStep() == SparkSetupEvent.Step.API && authentication) {
-            Spark.get("/login", (request, response) -> {
-                response.redirect("https://accounts.spotify.com/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUrl);
-                return response;
-            });
+    public void onJavalin(JavalinEvent event) {
+        event.getJavalin().get("/login", (context) -> {
+            context.redirect("https://accounts.spotify.com/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUrl);
+        });
 
-            Spark.get("/callback", (request, response) -> {
-                String code = request.queryParams("code");
-                if (code == null) {
-                    throw new IllegalArgumentException("Missing parameter code");
-                }
+        event.getJavalin().get("/callback", (context) -> {
+            String code = context.queryParams("code").stream().findFirst().orElseThrow();
 
-                spotifyToken = createToken(code);
-                spotifyToken.save();
-                setup();
+            spotifyToken = createToken(code);
+            spotifyToken.save();
+            setup();
 
-                return "Big success!";
-            });
-        }
+            context.result("Big success!");
+        });
     }
 
     private SpotifyToken createToken(String code) {

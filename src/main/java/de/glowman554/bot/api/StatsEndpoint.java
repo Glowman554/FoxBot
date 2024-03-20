@@ -3,17 +3,16 @@ package de.glowman554.bot.api;
 import de.glowman554.bot.Main;
 import de.glowman554.bot.command.impl.UptimeCommand;
 import de.glowman554.bot.registry.Registries;
+import io.javalin.http.Context;
+import io.javalin.http.Handler;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import org.jetbrains.annotations.NotNull;
 
-public class StatsApiEndpoint implements Route {
-
+public class StatsEndpoint implements Handler {
     @Override
-    public Object handle(Request request, Response response) throws Exception {
-        response.header("Content-Type", "application/json");
+    public void handle(@NotNull Context context) throws Exception {
+        context.header("Content-Type", "application/json");
         JsonNode root = JsonNode.object();
 
         root.set("commands", Registries.COMMANDS.getRegistry().size());
@@ -21,6 +20,6 @@ public class StatsApiEndpoint implements Route {
         root.set("uptime", System.currentTimeMillis() - UptimeCommand.startingTime);
         root.set("prefix", Main.config.getPrefix());
 
-        return Json.json().serialize(root);
+        context.result(Json.json().serialize(root));
     }
 }

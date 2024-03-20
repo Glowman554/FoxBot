@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class CommandManager implements Savable {
-    private HashMap<String, Integer> usage = new HashMap<>();
     private final File usageFile = new File(ConfigManager.BASE_FOLDER, "usage.json");
+    private HashMap<String, Integer> usage = new HashMap<>();
 
     public CommandManager() {
         EventManager.register(this);

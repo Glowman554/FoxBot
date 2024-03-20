@@ -1,5 +1,6 @@
 package de.glowman554.bot.command.impl;
 
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Command;
 import de.glowman554.bot.command.Constants;
 import de.glowman554.bot.command.Message;
@@ -15,7 +16,9 @@ public class LogCommand extends Command {
         if (arguments.length != 0) {
             message.reply(Constants.NO_ARGUMENTS);
         } else {
-            message.replyFile(Logger.getCurrentLogFile(), Message.Type.DOCUMENT, false);
+            try (StreamedFile file = new StreamedFile(Logger.getCurrentLogFile())) {
+                message.replyFile(file, Message.Type.DOCUMENT, false);
+            }
         }
     }
 }

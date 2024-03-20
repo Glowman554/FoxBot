@@ -1,10 +1,10 @@
 package de.glowman554.bot.command.impl;
 
 import de.glowman554.bot.Main;
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Command;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.HttpClient;
-import de.glowman554.bot.utils.TemporaryFile;
 import de.glowman554.bot.utils.api.spotify.Song;
 import de.glowman554.bot.utils.api.spotify.SpotifyApi;
 
@@ -28,9 +28,8 @@ public class SpotifyCommand extends Command {
                 if (song.preview() == null || song.preview().isEmpty() || song.preview().equals("null")) {
                     continue;
                 }
-                try (TemporaryFile temporaryFile = new TemporaryFile("mp3")) {
-                    HttpClient.download(temporaryFile.getFile(), song.preview());
-                    message.replyFile(temporaryFile.getFile(), Message.Type.AUDIO, false, "Maybe you like " + message.formatBold(song.title()));
+                try (StreamedFile file = HttpClient.download(song.preview())) {
+                    message.replyFile(file, Message.Type.AUDIO, false, "Maybe you like " + message.formatBold(song.title()));
                 }
             }
         }

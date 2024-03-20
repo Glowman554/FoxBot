@@ -1,5 +1,6 @@
 package de.glowman554.bot.platform.discord;
 
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Attachment;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -15,6 +16,11 @@ public class DiscordAttachment extends Attachment {
     @Override
     public void download(File output) {
         attachment.getProxy().downloadToFile(output).join();
+    }
+
+    @Override
+    public StreamedFile download() {
+        return new StreamedFile(attachment.getProxy().download().join(), getName());
     }
 
     @Override

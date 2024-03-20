@@ -7,12 +7,12 @@ type UsageObject = { [key: string]: number };
 type UsageChart = { command: string, usage: number }[];
 
 
-export default function UsageChart(props: { hostUrl: string }) {
+export default function UsageChart() {
     const [chart, setChart] = useState([] as UsageChart);
 
     useEffect(() => {
         async function update() {
-            const req = await fetch(props.hostUrl + "/api/usage");
+            const req = await fetch("/api/usage");
             const json = await req.json() as UsageObject;
 
             const newChart: UsageChart = [];

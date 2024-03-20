@@ -1,10 +1,10 @@
 package de.glowman554.bot.platform.discord;
 
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Attachment;
 import de.glowman554.bot.command.Message;
 import net.dv8tion.jda.api.utils.FileUpload;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class DiscordMessage extends Message {
@@ -36,8 +36,8 @@ public class DiscordMessage extends Message {
     }
 
     @Override
-    public void replyFile(File file, Type type, boolean nsfw) {
-        FileUpload upload = FileUpload.fromData(file);
+    public void replyFile(StreamedFile file, Type type, boolean nsfw) {
+        FileUpload upload = FileUpload.fromData(file.getStream(), file.getName());
         if (nsfw) {
             upload.asSpoiler();
         }
@@ -45,8 +45,8 @@ public class DiscordMessage extends Message {
     }
 
     @Override
-    public void replyFile(File file, Type type, boolean nsfw, String caption) {
-        FileUpload upload = FileUpload.fromData(file);
+    public void replyFile(StreamedFile file, Type type, boolean nsfw, String caption) {
+        FileUpload upload = FileUpload.fromData(file.getStream(), file.getName());
         if (nsfw) {
             upload.asSpoiler();
         }

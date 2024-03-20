@@ -1,5 +1,6 @@
 package de.glowman554.bot.platform.telegram;
 
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Attachment;
 import de.glowman554.bot.utils.HttpClient;
 
@@ -18,6 +19,15 @@ public class TelegramAttachment extends Attachment {
     public void download(File output) {
         try {
             HttpClient.download(output, file.getFileUrl(TelegramPlatform.getTelegramBot().getBotToken()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public StreamedFile download() {
+        try {
+            return HttpClient.download(file.getFileUrl(TelegramPlatform.getTelegramBot().getBotToken()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

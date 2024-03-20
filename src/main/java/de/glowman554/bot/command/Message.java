@@ -1,8 +1,8 @@
 package de.glowman554.bot.command;
 
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.event.Event;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public abstract class Message extends Event {
@@ -42,9 +42,9 @@ public abstract class Message extends Event {
         return displayName;
     }
 
-    public abstract void replyFile(File file, Type type, boolean nsfw);
+    public abstract void replyFile(StreamedFile file, Type type, boolean nsfw);
 
-    public abstract void replyFile(File file, Type type, boolean nsfw, String caption);
+    public abstract void replyFile(StreamedFile file, Type type, boolean nsfw, String caption);
 
     public abstract String formatBold(String text);
 

@@ -10,7 +10,7 @@ interface StatsObject {
     prefix: string;
 }
 
-export function Stats(props: { hostUrl: string }) {
+export function Stats() {
     const [stats, setStats] = useState({
         commands: 1,
         platforms: 1,
@@ -18,7 +18,7 @@ export function Stats(props: { hostUrl: string }) {
     } as StatsObject);
 
     useEffect(() => {
-        fetch(props.hostUrl + "/api/stats").then(r => r.json().then(r => setStats(r as StatsObject)));
+        fetch("/api/stats").then(r => r.json().then(r => setStats(r as StatsObject)));
     }, []);
 
     return (

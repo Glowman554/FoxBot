@@ -1,12 +1,14 @@
 package de.glowman554.bot;
 
-import de.glowman554.bot.api.Api;
+import de.glowman554.bot.api.HelpEndpoint;
+import de.glowman554.bot.api.StatsEndpoint;
+import de.glowman554.bot.api.UsageEndpoint;
 import de.glowman554.bot.command.Command;
 import de.glowman554.bot.command.CommandManager;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.command.impl.*;
 import de.glowman554.bot.command.impl.testing.Testing;
-import de.glowman554.bot.event.impl.SparkSetupEvent;
+import de.glowman554.bot.event.impl.JavalinEvent;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.platform.discord.DiscordPlatform;
 import de.glowman554.bot.platform.telegram.TelegramPlatform;
@@ -19,7 +21,9 @@ import de.glowman554.config.ConfigManager;
 import de.glowman554.config.Savable;
 import de.glowman554.config.auto.AutoSavable;
 import de.glowman554.config.auto.Saved;
-import spark.Spark;
+import io.javalin.Javalin;
+import io.javalin.community.ssl.SslPlugin;
+import io.javalin.http.staticfiles.Location;
 
 import java.io.*;
 import java.util.List;
@@ -48,7 +52,7 @@ public class Main {
         }
 
         if (config.api) {
-            new Api();
+
         }
 
 
@@ -60,40 +64,65 @@ public class Main {
 
         Registries.PLATFORMS.getRegistry().values().forEach(platform -> platform.init(platformConfigs));
 
-        startSpark();
+        startJavalin();
         complete();
     }
 
-    private static void startSpark() {
+    private static void startJavalin() {
         if (!staticFolder.exists()) {
             Logger.log("Creating %s", staticFolder.getPath());
             if (!staticFolder.mkdir()) {
                 throw new RuntimeException("Could not create " + staticFolder.getPath());
             }
         }
-        Spark.staticFiles.externalLocation(staticFolder.getAbsolutePath());
-        Spark.exception(Exception.class, (e, request, response) -> {
-            e.printStackTrace();
+
+        Javalin app = Javalin.create(javalinConfig -> {
+            javalinConfig.staticFiles.add(staticFileConfig -> {
+                staticFileConfig.hostedPath = "/";
+                staticFileConfig.directory = staticFolder.getAbsolutePath();
+                staticFileConfig.location = Location.EXTERNAL;
+            });
+            javalinConfig.staticFiles.add(staticFileConfig -> {
+                staticFileConfig.hostedPath = "/";
+                staticFileConfig.directory = new File("frontend/out").getAbsolutePath();
+                staticFileConfig.location = Location.EXTERNAL;
+            });
+
+            if (config.webserver.isSSL()) {
+                SslPlugin plugin = new SslPlugin(sslConfig -> {
+                    sslConfig.pemFromPath(config.webserver.certificate, config.webserver.privatekey);
+                });
+                javalinConfig.registerPlugin(plugin);
+            }
+        });
+
+        app.exception(Exception.class, (exception, context) -> {
+            exception.printStackTrace();
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw, true);
 
-            e.printStackTrace(pw);
+            exception.printStackTrace(pw);
 
-            response.status(500);
-            response.body("<h1>Internal server error!</h1>\n<span style=\"white-space: pre-line\"><code>" + sw.getBuffer().toString() + "</code></span>");
+            context.status(500);
+            context.result("<h1>Internal server error!</h1>\n<span style=\"white-space: pre-line\"><code>" + sw.getBuffer().toString() + "</code></span>");
         });
 
-        Spark.port(config.spark.port);
-        if (!(config.spark.keystoreFile.isEmpty() || config.spark.keystorePassword.isEmpty())) {
-            Logger.log("Using keystore file %s", config.spark.keystoreFile);
-            Spark.secure(config.spark.keystoreFile, config.spark.keystorePassword, null, null);
-        }
-        new SparkSetupEvent(SparkSetupEvent.Step.SOCKET).call();
-        Spark.before((request, response) -> response.header("Access-Control-Allow-Origin", "*"));
+        app.error(404, context -> {
+            context.header("Content-Type", "text/html");
+            context.result(new FileInputStream("frontend/out/404.html"));
+        });
 
-        Logger.log("Listening on port %d", config.spark.port);
 
-        new SparkSetupEvent(SparkSetupEvent.Step.API).call();
+        app.before(context -> context.header("Access-Control-Allow-Origin", "*"));
+
+        app.get("/api/help", new HelpEndpoint());
+        app.get("/api/usage", new UsageEndpoint());
+        app.get("/api/stats", new StatsEndpoint());
+
+        new JavalinEvent(app).call();
+
+        app.start(config.webserver.port);
+        Logger.log("Listening on port %d", config.webserver.port);
     }
 
     private static void registerPlatforms() {
@@ -196,7 +225,7 @@ public class Main {
         @Saved(remap = Savable.class)
         private Spotify spotify = new Spotify();
         @Saved(remap = Savable.class)
-        private SparkConfig spark = new SparkConfig();
+        private WebserverConfig webserver = new WebserverConfig();
         @Saved
         private boolean api = true;
 
@@ -208,13 +237,17 @@ public class Main {
             return spotify;
         }
 
-        public static class SparkConfig extends AutoSavable {
+        public static class WebserverConfig extends AutoSavable {
             @Saved
             private int port = 8888;
             @Saved
-            private String keystoreFile = "";
+            private String certificate = "";
             @Saved
-            private String keystorePassword = "";
+            private String privatekey = "";
+
+            public boolean isSSL() {
+                return !(certificate.isEmpty() || privatekey.isEmpty());
+            }
         }
 
         public static class Spotify extends AutoSavable {

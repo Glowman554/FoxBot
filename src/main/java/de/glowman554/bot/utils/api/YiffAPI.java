@@ -1,9 +1,8 @@
 package de.glowman554.bot.utils.api;
 
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.logging.Logger;
-import de.glowman554.bot.utils.FileUtils;
 import de.glowman554.bot.utils.HttpClient;
-import de.glowman554.bot.utils.TemporaryFile;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 
@@ -42,7 +41,7 @@ public class YiffAPI {
     }
 
     public record YiffCategory(String name, String db, boolean sfw) {
-        public TemporaryFile download() {
+        public StreamedFile download() {
             try {
                 JsonNode root = Json.json().parse(HttpClient.get(String.format("https://v2.yiff.rest/%s?amount=1&notes=disabled", db.replace(".", "/"))));
                 if (!root.get("success").asBoolean()) {
@@ -54,10 +53,7 @@ public class YiffAPI {
 
                 String url = root.get("images").get(0).get("url").asString();
 
-                TemporaryFile temporaryFile = new TemporaryFile(FileUtils.getFileExtension(url));
-                HttpClient.download(temporaryFile.getFile(), url);
-
-                return temporaryFile;
+                return HttpClient.download(url);
             } catch (IOException | InterruptedException e) {
                 throw new RuntimeException(e);
             }

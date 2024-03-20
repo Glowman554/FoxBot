@@ -1,22 +1,22 @@
 package de.glowman554.bot.platform.web;
 
 import de.glowman554.bot.Main;
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.FileUtils;
 import de.glowman554.bot.utils.TemporaryFile;
+import io.javalin.websocket.WsMessageContext;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
-import org.eclipse.jetty.websocket.api.Session;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 
 public class WebMessage extends Message {
-    private final Session session;
+    private final WsMessageContext session;
 
-    protected WebMessage(String message, String userId, String displayName, Session session) {
+    protected WebMessage(String message, String userId, String displayName, WsMessageContext session) {
         super(message, null, new ArrayList<>(), userId, displayName);
         this.session = session;
     }
@@ -26,27 +26,23 @@ public class WebMessage extends Message {
         JsonNode root = JsonNode.object();
         root.set("type", "reply");
         root.set("message", reply);
-        try {
-            session.getRemote().sendString(Json.json().serialize(root));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        session.send(Json.json().serialize(root));
     }
 
-    private String staticFile(File file) throws IOException {
+    private String staticFile(StreamedFile file) throws IOException {
         String outputName = TemporaryFile.createTemporaryFileName(FileUtils.getFileExtension(file.getName()));
         File output = new File(Main.staticFolder, outputName);
-        Files.copy(file.toPath(), output.toPath());
+        file.save(output);
         return outputName;
     }
 
     @Override
-    public void replyFile(File file, Type type, boolean nsfw) {
+    public void replyFile(StreamedFile file, Type type, boolean nsfw) {
         replyFile(file, type, nsfw, null);
     }
 
     @Override
-    public void replyFile(File file, Type type, boolean nsfw, String caption) {
+    public void replyFile(StreamedFile file, Type type, boolean nsfw, String caption) {
         try {
             JsonNode root = JsonNode.object();
             root.set("type", "replyFile");
@@ -54,7 +50,7 @@ public class WebMessage extends Message {
             root.set("fileType", type.toString());
             root.set("nsfw", nsfw);
             root.set("caption", caption);
-            session.getRemote().sendString(Json.json().serialize(root));
+            session.send(Json.json().serialize(root));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -1,18 +1,18 @@
 package de.glowman554.bot.api;
 
 import de.glowman554.bot.Main;
+import io.javalin.http.Context;
+import io.javalin.http.Handler;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-public class UsageApiEndpoint implements Route {
+public class UsageEndpoint implements Handler {
     @Override
-    public Object handle(Request request, Response response) throws Exception {
-        response.header("Content-Type", "application/json");
+    public void handle(@NotNull Context context) throws Exception {
+        context.header("Content-Type", "application/json");
         JsonNode root = JsonNode.object();
 
         HashMap<String, Integer> uses = Main.commandManager.getUsage();
@@ -21,6 +21,6 @@ public class UsageApiEndpoint implements Route {
             root.set(key, uses.get(key));
         }
 
-        return Json.json().serialize(root);
+        context.result(Json.json().serialize(root));
     }
 }

@@ -10,10 +10,10 @@ interface HelpEntry {
     group: string;
 }
 
-export function Commands(props: { hostUrl: string }) {
+export function Commands() {
     const [entries, setEntries] = useState([] as HelpEntry[]);
     useEffect(() => {
-        fetch(props.hostUrl + "/api/help").then(r => r.json().then(r => setEntries(r as HelpEntry[])));
+        fetch("/api/help").then(r => r.json().then(r => setEntries(r as HelpEntry[])));
     }, []);
 
 	return (

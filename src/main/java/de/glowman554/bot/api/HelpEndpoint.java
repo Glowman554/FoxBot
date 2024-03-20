@@ -3,18 +3,18 @@ package de.glowman554.bot.api;
 import de.glowman554.bot.Main;
 import de.glowman554.bot.command.Command;
 import de.glowman554.bot.registry.Registries;
+import io.javalin.http.Context;
+import io.javalin.http.Handler;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
-import spark.Request;
-import spark.Response;
-import spark.Route;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 
-public class HelpApiEndpoint implements Route {
+public class HelpEndpoint implements Handler {
     @Override
-    public Object handle(Request request, Response response) throws Exception {
-        response.header("Content-Type", "application/json");
+    public void handle(@NotNull Context context) throws Exception {
+        context.header("Content-Type", "application/json");
         JsonNode root = JsonNode.array();
 
         HashMap<String, Command> commands = Registries.COMMANDS.getRegistry();
@@ -30,6 +30,6 @@ public class HelpApiEndpoint implements Route {
             root.add(object);
         }
 
-        return Json.json().serialize(root);
+        context.result(Json.json().serialize(root));
     }
 }

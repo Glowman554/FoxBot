@@ -1,6 +1,7 @@
 package de.glowman554.bot.platform.telegram;
 
 
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Attachment;
 import de.glowman554.bot.command.Message;
 import org.telegram.telegrambots.facilities.filedownloader.TelegramFileDownloader;
@@ -10,7 +11,6 @@ import org.telegram.telegrambots.meta.api.objects.InputFile;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.File;
 import java.util.ArrayList;
 
 public class TelegramMessage extends Message {
@@ -78,34 +78,34 @@ public class TelegramMessage extends Message {
     }
 
     @Override
-    public void replyFile(File file, Type type, boolean nsfw) {
+    public void replyFile(StreamedFile file, Type type, boolean nsfw) {
         try {
             switch (type) {
                 case AUDIO:
                     SendAudio sendAudio = new SendAudio();
                     sendAudio.setChatId(telegramMessage.getChatId().toString());
-                    sendAudio.setAudio(new InputFile(file));
+                    sendAudio.setAudio(new InputFile(file.getStream(), file.getName()));
                     sendAudio.setReplyToMessageId(telegramMessage.getMessageId());
                     TelegramPlatform.getTelegramBot().execute(sendAudio);
                     break;
                 case VIDEO:
                     SendVideo sendVideo = new SendVideo();
                     sendVideo.setChatId(telegramMessage.getChatId().toString());
-                    sendVideo.setVideo(new InputFile(file));
+                    sendVideo.setVideo(new InputFile(file.getStream(), file.getName()));
                     sendVideo.setReplyToMessageId(telegramMessage.getMessageId());
                     TelegramPlatform.getTelegramBot().execute(sendVideo);
                     break;
                 case IMAGE:
                     SendPhoto sendPhoto = new SendPhoto();
                     sendPhoto.setChatId(telegramMessage.getChatId().toString());
-                    sendPhoto.setPhoto(new InputFile(file));
+                    sendPhoto.setPhoto(new InputFile(file.getStream(), file.getName()));
                     sendPhoto.setReplyToMessageId(telegramMessage.getMessageId());
                     TelegramPlatform.getTelegramBot().execute(sendPhoto);
                     break;
                 case DOCUMENT:
                     SendDocument sendDocument = new SendDocument();
                     sendDocument.setChatId(telegramMessage.getChatId().toString());
-                    sendDocument.setDocument(new InputFile(file));
+                    sendDocument.setDocument(new InputFile(file.getStream(), file.getName()));
                     sendDocument.setReplyToMessageId(telegramMessage.getMessageId());
                     TelegramPlatform.getTelegramBot().execute(sendDocument);
                     break;
@@ -116,13 +116,13 @@ public class TelegramMessage extends Message {
     }
 
     @Override
-    public void replyFile(File file, Type type, boolean nsfw, String caption) {
+    public void replyFile(StreamedFile file, Type type, boolean nsfw, String caption) {
         try {
             switch (type) {
                 case AUDIO:
                     SendAudio sendAudio = new SendAudio();
                     sendAudio.setChatId(telegramMessage.getChatId().toString());
-                    sendAudio.setAudio(new InputFile(file));
+                    sendAudio.setAudio(new InputFile(file.getStream(), file.getName()));
                     sendAudio.setReplyToMessageId(telegramMessage.getMessageId());
                     sendAudio.setCaption(caption);
                     TelegramPlatform.getTelegramBot().execute(sendAudio);
@@ -130,7 +130,7 @@ public class TelegramMessage extends Message {
                 case VIDEO:
                     SendVideo sendVideo = new SendVideo();
                     sendVideo.setChatId(telegramMessage.getChatId().toString());
-                    sendVideo.setVideo(new InputFile(file));
+                    sendVideo.setVideo(new InputFile(file.getStream(), file.getName()));
                     sendVideo.setReplyToMessageId(telegramMessage.getMessageId());
                     sendVideo.setCaption(caption);
                     TelegramPlatform.getTelegramBot().execute(sendVideo);
@@ -138,7 +138,7 @@ public class TelegramMessage extends Message {
                 case IMAGE:
                     SendPhoto sendPhoto = new SendPhoto();
                     sendPhoto.setChatId(telegramMessage.getChatId().toString());
-                    sendPhoto.setPhoto(new InputFile(file));
+                    sendPhoto.setPhoto(new InputFile(file.getStream(), file.getName()));
                     sendPhoto.setReplyToMessageId(telegramMessage.getMessageId());
                     sendPhoto.setCaption(caption);
                     TelegramPlatform.getTelegramBot().execute(sendPhoto);
@@ -146,7 +146,7 @@ public class TelegramMessage extends Message {
                 case DOCUMENT:
                     SendDocument sendDocument = new SendDocument();
                     sendDocument.setChatId(telegramMessage.getChatId().toString());
-                    sendDocument.setDocument(new InputFile(file));
+                    sendDocument.setDocument(new InputFile(file.getStream(), file.getName()));
                     sendDocument.setReplyToMessageId(telegramMessage.getMessageId());
                     sendDocument.setCaption(caption);
                     TelegramPlatform.getTelegramBot().execute(sendDocument);

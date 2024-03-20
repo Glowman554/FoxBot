@@ -66,16 +66,16 @@ export function Shell() {
 					}
 					switch (replyFile.fileType) {
 						case "IMAGE":
-							dispatchEntry(<img src={replyFile.file} />);
+							dispatchEntry(<img src={"/" + replyFile.file} />);
 							break;
 						case "VIDEO":
-							dispatchEntry(<video src={replyFile.file} controls/>);
+							dispatchEntry(<video src={"/" + replyFile.file} controls/>);
 							break;
 						case "AUDIO":
-							dispatchEntry(<audio src={replyFile.file} controls/>);
+							dispatchEntry(<audio src={"/" + replyFile.file} controls/>);
 							break;
 						case "DOCUMENT":
-							dispatchEntry(<><a href={replyFile.file}>Open file</a><br /></>);
+							dispatchEntry(<><a href={"/" + replyFile.file}>Open file</a><br /></>);
 							break;
 					}
                     break;

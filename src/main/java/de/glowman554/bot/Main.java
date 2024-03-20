@@ -22,11 +22,14 @@ import de.glowman554.config.Savable;
 import de.glowman554.config.auto.AutoSavable;
 import de.glowman554.config.auto.Saved;
 import io.javalin.Javalin;
-import io.javalin.community.ssl.SslPlugin;
 import io.javalin.http.staticfiles.Location;
 
 import java.io.*;
 import java.util.List;
+
+import org.eclipse.jetty.server.ConnectionFactory;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 public class Main {
     public static final File configFile = new File(ConfigManager.BASE_FOLDER, "config.json");
@@ -76,6 +79,8 @@ public class Main {
             }
         }
 
+        File frontend = new File(config.webserver.frontendPath);
+
         Javalin app = Javalin.create(javalinConfig -> {
             javalinConfig.staticFiles.add(staticFileConfig -> {
                 staticFileConfig.hostedPath = "/";
@@ -84,15 +89,22 @@ public class Main {
             });
             javalinConfig.staticFiles.add(staticFileConfig -> {
                 staticFileConfig.hostedPath = "/";
-                staticFileConfig.directory = new File("frontend/out").getAbsolutePath();
+                staticFileConfig.directory = frontend.getAbsolutePath();
                 staticFileConfig.location = Location.EXTERNAL;
             });
 
             if (config.webserver.isSSL()) {
-                SslPlugin plugin = new SslPlugin(sslConfig -> {
-                    sslConfig.pemFromPath(config.webserver.certificate, config.webserver.privatekey);
+                javalinConfig.jetty.addConnector((server, httpConfiguration) -> {
+                    ServerConnector sslConnector = new ServerConnector(server, getSslContextFactory());
+                    sslConnector.setPort(443);
+                    return sslConnector;
+            });
+            } else {
+                javalinConfig.jetty.addConnector((server, httpConfiguration) -> {
+                    ServerConnector connector = new ServerConnector(server);
+                    connector.setPort(config.webserver.port);
+                    return connector;
                 });
-                javalinConfig.registerPlugin(plugin);
             }
         });
 
@@ -109,7 +121,7 @@ public class Main {
 
         app.error(404, context -> {
             context.header("Content-Type", "text/html");
-            context.result(new FileInputStream("frontend/out/404.html"));
+            context.result(new FileInputStream(new File(frontend, "404.html")));
         });
 
 
@@ -121,7 +133,7 @@ public class Main {
 
         new JavalinEvent(app).call();
 
-        app.start(config.webserver.port);
+        app.start();
         Logger.log("Listening on port %d", config.webserver.port);
     }
 
@@ -212,6 +224,13 @@ public class Main {
         message.reply("There was an error executing your request. Use " + message.formatCode(config.getPrefix() + "crash " + id) + " to upload the stack trace!");
     }
 
+    private static SslContextFactory.Server getSslContextFactory() {
+        SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
+        sslContextFactory.setKeyStorePath(config.webserver.keystoreFile);
+        sslContextFactory.setKeyStorePassword(config.webserver.keystorePassword);
+        return sslContextFactory;
+    }
+
 
     public static class Config extends AutoFileSavable {
         @Saved
@@ -241,12 +260,14 @@ public class Main {
             @Saved
             private int port = 8888;
             @Saved
-            private String certificate = "";
+            private String keystoreFile = "";
             @Saved
-            private String privatekey = "";
+            private String keystorePassword = "";
+            @Saved
+            private String frontendPath = "frontend/out";
 
             public boolean isSSL() {
-                return !(certificate.isEmpty() || privatekey.isEmpty());
+                return !(keystoreFile.isEmpty() || keystorePassword.isEmpty());
             }
         }
 

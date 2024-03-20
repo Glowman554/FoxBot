@@ -1,6 +1,6 @@
 set -ex
 
-DOMAIN=cloud.glowman554.de
+DOMAIN=foxbot.glowman554.de
 read -p "Keystore password > " PASSWORD
 
 sudo openssl pkcs12 -export \

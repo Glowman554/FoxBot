@@ -1,23 +1,14 @@
 version: "3.3"
 services:
-  bot:
+  foxbot:
     build: .
     volumes:
       - "./srv:/srv"
-    ports:
-      - "3443:3443"
-    restart: always
-    privileged: true
-
-  bot_frontend:
-    image: nginx
-    volumes:
-      - "./frontend/out:/webroot"
-      - "./frontend/nginx.conf:/etc/nginx/nginx.conf"
       - "/etc/letsencrypt:/etc/letsencrypt"
     networks:
       - "router_default"
       - "default"
+    privileged: true
     restart: always
 
 networks:

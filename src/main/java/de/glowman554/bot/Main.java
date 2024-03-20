@@ -35,7 +35,7 @@ public class Main {
     public static final File configFile = new File(ConfigManager.BASE_FOLDER, "config.json");
 
     public static final Config config = new Config();
-    public static final CommandManager commandManager = new CommandManager();
+    public static CommandManager commandManager;
     public static final File staticFolder = new File("host");
 
     public static void main(String[] args) throws Exception {
@@ -47,6 +47,7 @@ public class Main {
             }
             Logger.log("Created directory %s", ConfigManager.BASE_FOLDER.getPath());
         }
+        commandManager = new CommandManager();
         ConfigManager platformConfigs = new ConfigManager("platform", false);
         config.load(configFile);
 
@@ -87,11 +88,15 @@ public class Main {
                 staticFileConfig.directory = staticFolder.getAbsolutePath();
                 staticFileConfig.location = Location.EXTERNAL;
             });
-            javalinConfig.staticFiles.add(staticFileConfig -> {
-                staticFileConfig.hostedPath = "/";
-                staticFileConfig.directory = frontend.getAbsolutePath();
-                staticFileConfig.location = Location.EXTERNAL;
-            });
+            if (frontend.exists()) {
+                javalinConfig.staticFiles.add(staticFileConfig -> {
+                    staticFileConfig.hostedPath = "/";
+                    staticFileConfig.directory = frontend.getAbsolutePath();
+                    staticFileConfig.location = Location.EXTERNAL;
+                });
+            } else {
+                Logger.log("[WARNING] Frontend path not found!");
+            }
 
             if (config.webserver.isSSL()) {
                 javalinConfig.jetty.addConnector((server, httpConfiguration) -> {

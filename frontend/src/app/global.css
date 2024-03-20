@@ -165,7 +165,7 @@ hr {border: 0px; border-top: 1px solid #e7e7e7; margin: 20px 0;}
 .glow-td {
 	padding-left: 16px;
 	padding: 8px 8px;
-	background-color: #000!important;
+	background-color: #000;
 }
 
 code {

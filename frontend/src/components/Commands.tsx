@@ -10,6 +10,30 @@ interface HelpEntry {
     group: string;
 }
 
+export function CommandEntry(props: { command: HelpEntry }) {
+    const [show, setShow] = useState(false);
+
+    return (
+        <>
+            <tr className="glow-tr" onClick={() => setShow(!show)}>
+                <td className="glow-td">{props.command.command}</td>
+                <td className="glow-td">{props.command.shortHelp.endsWith(".") ? props.command.shortHelp.substring(0, props.command.shortHelp.length - 1) : props.command.shortHelp}</td>
+                <td className="glow-td">{props.command.group}</td>
+            </tr>
+            <tr className="glow-tr" style={{
+                    display: show ? undefined : "none"
+                }}>
+                    <td className="glow-td" colSpan={3} style={{
+                        backgroundColor: "grey"
+                    }} dangerouslySetInnerHTML={{__html: props.command.longHelp.replaceAll("\n", "<br />")}}>
+
+                    </td>
+            </tr>
+            
+        </>
+    );
+}
+
 export function Commands() {
     const [entries, setEntries] = useState([] as HelpEntry[]);
     useEffect(() => {
@@ -22,16 +46,12 @@ export function Commands() {
                 <tr className="glow-tr">
                     <td className="glow-td">Command</td>
                     <td className="glow-td">Description</td>
+                    <td className="glow-td">Group</td>
                 </tr>
             </thead>
             <tbody>
                 {
-                    entries.map((e, i) => 
-                        <tr key={i} className="glow-tr">
-                            <td className="glow-td">{e.command}</td>
-                            <td className="glow-td">{e.shortHelp.endsWith(".") ? e.shortHelp.substring(0, e.shortHelp.length - 1) : e.shortHelp}</td>
-                        </tr>
-                    )
+                    entries.map((e, i) => <CommandEntry command={e} key={i} />)
                 }
             </tbody>
         </table>

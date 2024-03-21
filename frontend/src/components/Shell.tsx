@@ -84,8 +84,13 @@ export function Shell() {
 					dispatchEntry(<p>Send {authenticate.string} to the bot to authenticate this session.</p>);
 					break;
 			}
-		}
-
+		},
+		heartbeat: {
+			interval: 1000,
+		},
+		shouldReconnect: (closeEvent) => true,
+		retryOnError: true,
+		reconnectInterval: 1000
 	}, true);
 
 	return (

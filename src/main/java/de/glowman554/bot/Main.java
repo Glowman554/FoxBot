@@ -180,7 +180,7 @@ public class Main {
         Registries.COMMANDS.register("features", new FeaturesCommand());
         Registries.COMMANDS.register("wikipedia", new WikipediaCommand());
         Registries.COMMANDS.register("meme", new MemeCommand());
-        Registries.COMMANDS.register("yuna", new YunaCommand());
+        // Registries.COMMANDS.register("yuna", new YunaCommand());
         Registries.COMMANDS.register("role", new RoleCommand());
         Registries.COMMANDS.register("spotify", new SpotifyCommand());
         Registries.COMMANDS.register("run", new RunCommand());

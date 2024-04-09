@@ -57,6 +57,14 @@ function entriesReducer(state: {entries: JSX.Element[]}, action: JSX.Element) {
 	};
 }
 
+function plural(word: string, length: number) {
+	if (length > 1) {
+		return word + "s";
+	} else {
+		return word;
+	}
+}
+
 export function Shell() {
     const [entriesState, dispatchEntry] = useReducer(entriesReducer, { entries: [] });
 	const [prefix, setPrefix] = useState("");
@@ -149,9 +157,9 @@ export function Shell() {
 			}}>Authenticate</button>
 
 			<div className="glow-upload-field">
-				<label htmlFor="file">{uploadedFiles.length + " files uploaded."}</label>
+				<label htmlFor="file">{uploadedFiles.length + " " + plural("file", uploadedFiles.length) +  " uploaded."}</label>
 				<br />
-				<input type="file" name="file" onChange={processUpload} />
+				<input type="file" name="file" onChange={processUpload} multiple />
 			</div>
 
 			<div className="glow-shell">
@@ -161,7 +169,12 @@ export function Shell() {
 			<input className="glow-input" style={{
 			}} type="text" autoComplete="off" autoCapitalize="off" defaultValue={prefix} onKeyDown={(e) => {
 					if (e.key == "Enter") {
-						dispatchEntry(<p>{(e.target as any).value}</p>)
+						if (uploadedFiles.length == 0) {
+							dispatchEntry(<p>{(e.target as any).value}</p>)
+						} else {
+							dispatchEntry(<p><code>[{uploadedFiles.length} {plural("file", uploadedFiles.length)} attached.]</code> {(e.target as any).value}</p>)
+						}
+
 						sendMessage(JSON.stringify({
 							type: "message",
 							message: (e.target as any).value,

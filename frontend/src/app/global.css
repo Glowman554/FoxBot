@@ -270,6 +270,14 @@ img {
   border: none;
 }
 
+.glow-upload-field {
+  padding: 0.5rem;
+  color: black;
+  background-color: grey;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+}
+
 .glow-input {
   /* background-color: grey; */
   border-radius: 6px;

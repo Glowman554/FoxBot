@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useReducer, useState } from "react";
+import React, { ChangeEvent, useCallback, useReducer, useState } from "react";
 import useWebSocket from "react-use-websocket";
 
 namespace FromServer {
@@ -30,12 +30,19 @@ namespace FromServer {
 }
 
 namespace ToServer {
+	
 	export interface BaseMessage {
 		type: "message" | "authenticate" | "displayName";
 	}
 
+	export interface UploadedFile {
+		name: string;
+		file: string;
+	}
+
 	export interface Message extends BaseMessage {
 		message: string;
+		files: UploadedFile[];
 	}
 
 	export interface Authenticate extends BaseMessage {
@@ -50,10 +57,10 @@ function entriesReducer(state: {entries: JSX.Element[]}, action: JSX.Element) {
 	};
 }
 
-
 export function Shell() {
     const [entriesState, dispatchEntry] = useReducer(entriesReducer, { entries: [] });
 	const [prefix, setPrefix] = useState("");
+	const [uploadedFiles, setUploadedFiles] = useState([] as ToServer.UploadedFile[]);
 	const {sendMessage} = useWebSocket(useCallback(() => (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/web", []), {
 		onOpen: () => {
 			dispatchEntry(<p>Connection successful.</p>);
@@ -106,6 +113,31 @@ export function Shell() {
 		reconnectInterval: 1000
 	}, true);
 
+	const processUpload = (e: ChangeEvent<HTMLInputElement>) => {
+		const target = e.target;
+
+		const promises: Promise<ToServer.UploadedFile>[] = [];
+
+		if (target.files) {
+			const files = target.files;
+			
+			for (let i = 0; i < files.length; i++) {
+				promises.push(new Promise<ToServer.UploadedFile>((resolve, reject) => {
+					const reader = new FileReader();
+					reader.readAsDataURL(files[i]);
+					reader.onload = () => resolve({ name: files[i].name, file: (reader.result as string).split(",").pop() as string });
+					reader.onerror = (error) => reject(error);
+					// reader.onprogress = (progress) => prg((progress.loaded / progress.total) * 100);
+				}));
+			}
+		}
+
+
+		Promise.all(promises).then(f => {
+			setUploadedFiles(f);
+		});
+	}
+
 	return (
 		<div className="glow-text">
 			<button className="glow-auth-button" onClick={() => {
@@ -115,6 +147,13 @@ export function Shell() {
 					user: id
 				} as ToServer.Authenticate));
 			}}>Authenticate</button>
+
+			<div className="glow-upload-field">
+				<label htmlFor="file">{uploadedFiles.length + " files uploaded."}</label>
+				<br />
+				<input type="file" name="file" onChange={processUpload} />
+			</div>
+
 			<div className="glow-shell">
 				{entriesState.entries.map((comp, i) => React.cloneElement(comp, { key: i }))}
 			</div>
@@ -125,8 +164,11 @@ export function Shell() {
 						dispatchEntry(<p>{(e.target as any).value}</p>)
 						sendMessage(JSON.stringify({
 							type: "message",
-							message: (e.target as any).value
+							message: (e.target as any).value,
+							files: uploadedFiles
 						} as ToServer.Message));
+						
+						setUploadedFiles([]);
 						(e.target as any).value = prefix;
 					}
 				}

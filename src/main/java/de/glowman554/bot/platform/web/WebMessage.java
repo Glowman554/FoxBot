@@ -1,5 +1,6 @@
 package de.glowman554.bot.platform.web;
 
+import de.glowman554.bot.command.Attachment;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.StreamedFile;
 import io.javalin.websocket.WsMessageContext;
@@ -15,8 +16,8 @@ import java.util.Base64;
 public class WebMessage extends Message {
     private final WsMessageContext session;
 
-    protected WebMessage(String message, String userId, String displayName, WsMessageContext session) {
-        super(message, null, new ArrayList<>(), userId, displayName);
+    protected WebMessage(String message, String userId, String displayName, WsMessageContext session, ArrayList<Attachment> attachments) {
+        super(message, null, attachments, userId, displayName);
         this.session = session;
     }
 

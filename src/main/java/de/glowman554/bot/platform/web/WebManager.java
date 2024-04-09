@@ -1,6 +1,7 @@
 package de.glowman554.bot.platform.web;
 
 import de.glowman554.bot.Main;
+import de.glowman554.bot.command.Attachment;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
@@ -16,6 +17,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 @WebSocket
@@ -77,10 +79,14 @@ public class WebManager {
                     wsMessageContext.send(Json.json().serialize(reply));
                     break;
                 case "message":
+                    ArrayList<Attachment> attachments = new ArrayList<>();
+                    for (JsonNode attachmentNode : root.get("files")) {
+                        attachments.add(new WebAttachment(attachmentNode.get("name").asString(), attachmentNode.get("file").asString()));
+                    }
                     if (instance.isAuthenticated()) {
-                        new WebMessage(root.get("message").asString(), instance.getUserId(), "Web", wsMessageContext).call(Message.class);
+                        new WebMessage(root.get("message").asString(), instance.getUserId(), "Web", wsMessageContext, attachments).call(Message.class);
                     } else {
-                        new WebMessage(root.get("message").asString(), "web", "Web", wsMessageContext).call(Message.class);
+                        new WebMessage(root.get("message").asString(), "web", "Web", wsMessageContext, attachments).call(Message.class);
                     }
                     break;
             }

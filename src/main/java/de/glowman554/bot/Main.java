@@ -16,7 +16,7 @@ import de.glowman554.bot.platform.web.WebPlatform;
 import de.glowman554.bot.plugin.PluginLoader;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.bot.sqlite.SQLiteDatabase;
-import de.glowman554.bot.utils.AutoFileSavable;
+import de.glowman554.config.ConfigFile;
 import de.glowman554.config.ConfigManager;
 import de.glowman554.config.Savable;
 import de.glowman554.config.auto.AutoSavable;
@@ -30,8 +30,6 @@ import java.io.*;
 import java.util.List;
 
 public class Main {
-    public static final File configFile = new File(ConfigManager.BASE_FOLDER, "config.json");
-
     public static final Config config = new Config();
     public static CommandManager commandManager;
 
@@ -46,16 +44,11 @@ public class Main {
         }
         commandManager = new CommandManager();
         ConfigManager platformConfigs = new ConfigManager("platform", false);
-        config.load(configFile);
+        config.load();
 
         if (config.useBuiltinDatabase) {
             new SQLiteDatabase();
         }
-
-        if (config.api) {
-
-        }
-
 
         new PluginLoader(new File("plugins"));
 
@@ -65,7 +58,9 @@ public class Main {
 
         Registries.PLATFORMS.getRegistry().values().forEach(platform -> platform.init(platformConfigs));
 
-        startJavalin();
+        if (config.api) {
+            startJavalin();
+        }
         complete();
     }
 
@@ -222,7 +217,7 @@ public class Main {
     }
 
 
-    public static class Config extends AutoFileSavable {
+    public static class Config extends ConfigFile {
         @Saved
         private String prefix = "owo!";
         @Saved
@@ -237,6 +232,10 @@ public class Main {
         private WebserverConfig webserver = new WebserverConfig();
         @Saved
         private boolean api = true;
+
+        public Config() {
+            super(new File(ConfigManager.BASE_FOLDER, "config.json"));
+        }
 
         public String getPrefix() {
             return prefix;

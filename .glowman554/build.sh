@@ -1,9 +1,5 @@
 (
     cd $1
-    (
-        cd external
-        bash install.sh
-    )
 
     (
         cd frontend

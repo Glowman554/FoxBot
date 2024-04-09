@@ -4,7 +4,7 @@ import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
 import de.glowman554.bot.event.impl.JavalinEvent;
 import de.glowman554.bot.logging.Logger;
-import de.glowman554.bot.utils.AutoFileSavable;
+import de.glowman554.config.ConfigFile;
 import de.glowman554.config.ConfigManager;
 import de.glowman554.config.auto.Saved;
 import net.shadew.json.Json;
@@ -139,8 +139,7 @@ public class SpotifyApi implements AutoCloseable {
         timer.cancel();
     }
 
-    private static class SpotifyToken extends AutoFileSavable {
-        private final File configFile = new File(ConfigManager.BASE_FOLDER, "spotify.json");
+    private static class SpotifyToken extends ConfigFile {
         @Saved
         private String access_token = "";
         @Saved
@@ -150,12 +149,8 @@ public class SpotifyApi implements AutoCloseable {
         @Saved
         private String refresh_token = "";
 
-        public void load() {
-            load(configFile);
-        }
-
-        public void save() {
-            save(configFile);
+        public SpotifyToken() {
+            super(new File(ConfigManager.BASE_FOLDER, "spotify.json"));
         }
 
         public boolean isEmpty() {

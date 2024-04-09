@@ -59,9 +59,9 @@ function entriesReducer(state: {entries: JSX.Element[]}, action: JSX.Element) {
 
 function plural(word: string, length: number) {
 	if (length == 1 || length == -1) {
-		return word + "s";
-	} else {
 		return word;
+	} else {
+		return word + "s";
 	}
 }
 

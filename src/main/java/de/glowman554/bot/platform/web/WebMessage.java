@@ -1,17 +1,16 @@
 package de.glowman554.bot.platform.web;
 
-import de.glowman554.bot.Main;
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Message;
-import de.glowman554.bot.utils.FileUtils;
-import de.glowman554.bot.utils.TemporaryFile;
+import de.glowman554.bot.utils.StreamedFile;
 import io.javalin.websocket.WsMessageContext;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Base64;
 
 public class WebMessage extends Message {
     private final WsMessageContext session;
@@ -29,11 +28,12 @@ public class WebMessage extends Message {
         session.send(Json.json().serialize(root));
     }
 
-    private String staticFile(StreamedFile file) throws IOException {
-        String outputName = TemporaryFile.createTemporaryFileName(FileUtils.getFileExtension(file.getName()));
-        File output = new File(Main.staticFolder, outputName);
-        file.save(output);
-        return outputName;
+    private String encode(StreamedFile file) throws IOException {
+        String mime = URLConnection.getFileNameMap().getContentTypeFor(file.getName());
+
+        try (BufferedInputStream buffer = new BufferedInputStream(file.getStream())) {
+            return "data:" + mime + ";base64," + Base64.getEncoder().encodeToString(buffer.readAllBytes());
+        }
     }
 
     @Override
@@ -46,7 +46,8 @@ public class WebMessage extends Message {
         try {
             JsonNode root = JsonNode.object();
             root.set("type", "replyFile");
-            root.set("file", staticFile(file));
+            root.set("file", encode(file));
+            root.set("fileName", file.getName());
             root.set("fileType", type.toString());
             root.set("nsfw", nsfw);
             root.set("caption", caption);

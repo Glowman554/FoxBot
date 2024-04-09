@@ -3,7 +3,7 @@ package de.glowman554.bot.utils;
 import java.io.*;
 
 public class StreamedFile implements AutoCloseable {
-    private final String name;
+    private String name;
     private InputStream stream;
 
     public StreamedFile(InputStream stream, String name) {
@@ -25,12 +25,15 @@ public class StreamedFile implements AutoCloseable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void save(File output) throws IOException {
         try (FileOutputStream outputStream = new FileOutputStream(output)) {
             stream.transferTo(outputStream);
         }
     }
-
 
     @Override
     public void close() throws Exception {

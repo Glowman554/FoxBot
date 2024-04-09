@@ -1,7 +1,7 @@
 package de.glowman554.bot.platform.discord;
 
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Attachment;
+import de.glowman554.bot.utils.StreamedFile;
 import net.dv8tion.jda.api.entities.Message;
 
 import java.io.File;

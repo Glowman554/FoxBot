@@ -1,8 +1,8 @@
 package de.glowman554.bot.utils.api;
 
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.HttpClient;
+import de.glowman554.bot.utils.StreamedFile;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 

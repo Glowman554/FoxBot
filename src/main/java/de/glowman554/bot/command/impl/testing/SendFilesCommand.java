@@ -1,10 +1,10 @@
 package de.glowman554.bot.command.impl.testing;
 
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Command;
 import de.glowman554.bot.command.Constants;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.HttpClient;
+import de.glowman554.bot.utils.StreamedFile;
 
 public class SendFilesCommand extends Command {
 

@@ -1,7 +1,7 @@
 package de.glowman554.bot.command;
 
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.event.Event;
+import de.glowman554.bot.utils.StreamedFile;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,8 @@
 package de.glowman554.bot.platform.telegram;
 
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Attachment;
 import de.glowman554.bot.utils.HttpClient;
+import de.glowman554.bot.utils.StreamedFile;
 
 import java.io.File;
 import java.io.IOException;

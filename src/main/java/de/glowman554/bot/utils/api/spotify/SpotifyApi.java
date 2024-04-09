@@ -44,23 +44,27 @@ public class SpotifyApi implements AutoCloseable {
         }
 
         EventManager.register(this);
+
+        // searchSpotifySongs("UwU", 10).forEach(song -> Logger.log(song.toString()));
     }
 
     @EventTarget
     public void onJavalin(JavalinEvent event) {
-        event.getJavalin().get("/login", (context) -> {
-            context.redirect("https://accounts.spotify.com/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUrl);
-        });
+        if (authentication) {
+            event.getJavalin().get("/login", (context) -> {
+                context.redirect("https://accounts.spotify.com/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUrl);
+            });
 
-        event.getJavalin().get("/callback", (context) -> {
-            String code = context.queryParams("code").stream().findFirst().orElseThrow();
+            event.getJavalin().get("/callback", (context) -> {
+                String code = context.queryParams("code").stream().findFirst().orElseThrow();
 
-            spotifyToken = createToken(code);
-            spotifyToken.save();
-            setup();
+                spotifyToken = createToken(code);
+                spotifyToken.save();
+                setup();
 
-            context.result("Big success!");
-        });
+                context.result("Big success!");
+            });
+        }
     }
 
     private SpotifyToken createToken(String code) {

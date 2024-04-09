@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useCallback, useReducer } from "react";
+import React, { useCallback, useReducer, useState } from "react";
 import useWebSocket from "react-use-websocket";
 
 namespace FromServer {
 	export interface BaseMessage {
-		type: "reply" | "replyFile" | "authenticate";
+		type: "reply" | "replyFile" | "authenticate" | "info";
 	}
 
 	export interface Reply extends BaseMessage {
@@ -14,6 +14,7 @@ namespace FromServer {
 
 	export interface ReplyFile extends BaseMessage {
 		file: string;
+		fileName: string;
 		fileType: "IMAGE" | "VIDEO" | "AUDIO" | "DOCUMENT";
 		nsfw: boolean;
 		caption: string | null;
@@ -21,6 +22,10 @@ namespace FromServer {
 
 	export interface Authenticate extends BaseMessage {
 		string: string;
+	}
+
+	export interface Info extends BaseMessage {
+		prefix: string;
 	}
 }
 
@@ -48,11 +53,15 @@ function entriesReducer(state: {entries: JSX.Element[]}, action: JSX.Element) {
 
 export function Shell() {
     const [entriesState, dispatchEntry] = useReducer(entriesReducer, { entries: [] });
+	const [prefix, setPrefix] = useState("");
 	const {sendMessage} = useWebSocket(useCallback(() => (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/web", []), {
 		onOpen: () => {
 			dispatchEntry(<p>Connection successful.</p>);
 		},
 		onMessage: (message) => {
+			if (message.data == "pong") {
+				return;
+			}
 			const json = JSON.parse(message.data) as FromServer.BaseMessage;
 			switch (json.type) {
 				case "reply":
@@ -66,22 +75,26 @@ export function Shell() {
 					}
 					switch (replyFile.fileType) {
 						case "IMAGE":
-							dispatchEntry(<img src={"/" + replyFile.file} />);
+							dispatchEntry(<img src={replyFile.file} />);
 							break;
 						case "VIDEO":
-							dispatchEntry(<video src={"/" + replyFile.file} controls/>);
+							dispatchEntry(<video src={replyFile.file} controls/>);
 							break;
 						case "AUDIO":
-							dispatchEntry(<audio src={"/" + replyFile.file} controls/>);
+							dispatchEntry(<audio src={replyFile.file} controls/>);
 							break;
 						case "DOCUMENT":
-							dispatchEntry(<><a href={"/" + replyFile.file}>Open file</a><br /></>);
+							dispatchEntry(<><a href={replyFile.file} download={replyFile.fileName.split("/").pop()}>Open file</a><br /></>);
 							break;
 					}
                     break;
 				case "authenticate":
 					const authenticate = json as FromServer.Authenticate;
 					dispatchEntry(<p>Send {authenticate.string} to the bot to authenticate this session.</p>);
+					break;
+				case "info":
+					const info = json as FromServer.Info;
+					setPrefix(info.prefix);
 					break;
 			}
 		},
@@ -107,14 +120,14 @@ export function Shell() {
 			</div>
 
 			<input className="glow-input" style={{
-			}} type="text" autoComplete="off" autoCapitalize="off" onKeyDown={(e) => {
+			}} type="text" autoComplete="off" autoCapitalize="off" defaultValue={prefix} onKeyDown={(e) => {
 					if (e.key == "Enter") {
 						dispatchEntry(<p>{(e.target as any).value}</p>)
 						sendMessage(JSON.stringify({
 							type: "message",
 							message: (e.target as any).value
 						} as ToServer.Message));
-						(e.target as any).value = "";
+						(e.target as any).value = prefix;
 					}
 				}
 			}></input>

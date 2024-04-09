@@ -65,7 +65,7 @@ public class WebManager {
                 wsMessageContext.send("pong");
                 return;
             }
-            
+
             JsonNode root = Json.json().parse(wsMessageContext.message());
 
             switch (root.get("type").asString()) {

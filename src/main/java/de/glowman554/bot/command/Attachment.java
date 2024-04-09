@@ -1,7 +1,7 @@
 package de.glowman554.bot.command;
 
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.utils.FileUtils;
+import de.glowman554.bot.utils.StreamedFile;
 
 import java.io.File;
 import java.util.HashSet;

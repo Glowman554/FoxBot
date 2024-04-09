@@ -23,20 +23,17 @@ import de.glowman554.config.auto.AutoSavable;
 import de.glowman554.config.auto.Saved;
 import io.javalin.Javalin;
 import io.javalin.http.staticfiles.Location;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import java.io.*;
 import java.util.List;
-
-import org.eclipse.jetty.server.ConnectionFactory;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 public class Main {
     public static final File configFile = new File(ConfigManager.BASE_FOLDER, "config.json");
 
     public static final Config config = new Config();
     public static CommandManager commandManager;
-    public static final File staticFolder = new File("host");
 
     public static void main(String[] args) throws Exception {
         Logger.log("Starting...");
@@ -73,21 +70,9 @@ public class Main {
     }
 
     private static void startJavalin() {
-        if (!staticFolder.exists()) {
-            Logger.log("Creating %s", staticFolder.getPath());
-            if (!staticFolder.mkdir()) {
-                throw new RuntimeException("Could not create " + staticFolder.getPath());
-            }
-        }
-
         File frontend = new File(config.webserver.frontendPath);
 
         Javalin app = Javalin.create(javalinConfig -> {
-            javalinConfig.staticFiles.add(staticFileConfig -> {
-                staticFileConfig.hostedPath = "/";
-                staticFileConfig.directory = staticFolder.getAbsolutePath();
-                staticFileConfig.location = Location.EXTERNAL;
-            });
             if (frontend.exists()) {
                 javalinConfig.staticFiles.add(staticFileConfig -> {
                     staticFileConfig.hostedPath = "/";
@@ -103,7 +88,7 @@ public class Main {
                     ServerConnector sslConnector = new ServerConnector(server, getSslContextFactory());
                     sslConnector.setPort(443);
                     return sslConnector;
-            });
+                });
             } else {
                 javalinConfig.jetty.addConnector((server, httpConfiguration) -> {
                     ServerConnector connector = new ServerConnector(server);

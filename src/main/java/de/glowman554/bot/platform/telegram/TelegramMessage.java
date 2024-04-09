@@ -1,9 +1,9 @@
 package de.glowman554.bot.platform.telegram;
 
 
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Attachment;
 import de.glowman554.bot.command.Message;
+import de.glowman554.bot.utils.StreamedFile;
 import org.telegram.telegrambots.facilities.filedownloader.TelegramFileDownloader;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.*;

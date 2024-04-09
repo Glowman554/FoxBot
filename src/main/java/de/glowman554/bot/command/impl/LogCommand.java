@@ -1,10 +1,10 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.command.Command;
 import de.glowman554.bot.command.Constants;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.logging.Logger;
+import de.glowman554.bot.utils.StreamedFile;
 
 public class LogCommand extends Command {
     public LogCommand() {

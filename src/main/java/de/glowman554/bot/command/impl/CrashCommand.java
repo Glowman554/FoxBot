@@ -1,6 +1,7 @@
 package de.glowman554.bot.command.impl;
 
 import de.glowman554.bot.command.Command;
+import de.glowman554.bot.command.MediaType;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.StreamedFile;
@@ -18,7 +19,7 @@ public class CrashCommand extends Command {
             message.reply("Command takes exactly 1 argument");
         } else {
             try (StreamedFile file = new StreamedFile(new File(Logger.logDirectory, arguments[0] + ".log"))) {
-                message.replyFile(file, Message.Type.DOCUMENT, false);
+                message.replyFile(file, MediaType.DOCUMENT, false);
             }
         }
     }

@@ -4,6 +4,7 @@ import de.glowman554.bot.api.HelpEndpoint;
 import de.glowman554.bot.api.StatsEndpoint;
 import de.glowman554.bot.api.UsageEndpoint;
 import de.glowman554.bot.command.Command;
+import de.glowman554.bot.command.CommandContext;
 import de.glowman554.bot.command.CommandManager;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.command.impl.*;
@@ -193,7 +194,7 @@ public class Main {
         Logger.log("Startup complete.");
     }
 
-    public static void handleException(Exception exception, Message message) {
+    private static String saveCrash(Exception exception) {
         String id = "crash_" + System.currentTimeMillis();
 
         try {
@@ -205,8 +206,17 @@ public class Main {
         } catch (IOException ignored) {
             exception.printStackTrace();
         }
+        return id;
+    }
 
+    public static void handleException(Exception exception, Message message) {
+        String id = saveCrash(exception);
         message.reply("There was an error executing your request. Use " + message.formatCode(config.getPrefix() + "crash " + id) + " to upload the stack trace!");
+    }
+
+    public static void handleException(Exception exception, CommandContext context) {
+        String id = saveCrash(exception);
+        context.reply("There was an error executing your request. Use crash id " + context.formatCode(id) + " to upload the stack trace!");
     }
 
     private static SslContextFactory.Server getSslContextFactory() {

@@ -101,4 +101,24 @@ public class CommandManager implements Savable {
         }
         save();
     }
+
+    public void execute(String name, SchemaCommand command, CommandContext context) {
+        if (usage.containsKey(name)) {
+            usage.put(name, usage.get(name) + 1);
+        } else {
+            usage.put(name, 1);
+        }
+        save();
+
+        try {
+
+            if (Registries.PERMISSION_PROVIDER.get().hasPermission(context.userId, command.getPermission())) {
+                command.execute(context);
+            } else {
+                context.reply("You are not allowed to use this command!");
+            }
+        } catch (Exception exception) {
+            Main.handleException(exception, context);
+        }
+    }
 }

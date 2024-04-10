@@ -1,6 +1,7 @@
 package de.glowman554.bot.command.impl;
 
 import de.glowman554.bot.command.Command;
+import de.glowman554.bot.command.MediaType;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.utils.api.YiffAPI;
@@ -45,7 +46,7 @@ public class FurryCommand extends Command {
         Optional<YiffAPI.YiffCategory> yiffCategory = categories.stream().filter(v -> v.db().equals(categoryString)).findFirst();
         if (yiffCategory.isPresent()) {
             try (StreamedFile file = yiffCategory.get().download()) {
-                message.replyFile(file, Message.Type.IMAGE, !yiffCategory.get().sfw());
+                message.replyFile(file, MediaType.IMAGE, !yiffCategory.get().sfw());
             }
         } else {
             message.reply("Category " + categoryString + " not found!");

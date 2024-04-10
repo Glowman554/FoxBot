@@ -1,6 +1,7 @@
 package de.glowman554.bot.platform.discord;
 
 import de.glowman554.bot.command.Attachment;
+import de.glowman554.bot.command.MediaType;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.StreamedFile;
 import net.dv8tion.jda.api.utils.FileUpload;
@@ -36,7 +37,7 @@ public class DiscordMessage extends Message {
     }
 
     @Override
-    public void replyFile(StreamedFile file, Type type, boolean nsfw) {
+    public void replyFile(StreamedFile file, MediaType type, boolean nsfw) {
         FileUpload upload = FileUpload.fromData(file.getStream(), file.getName());
         if (nsfw) {
             upload.asSpoiler();
@@ -45,7 +46,7 @@ public class DiscordMessage extends Message {
     }
 
     @Override
-    public void replyFile(StreamedFile file, Type type, boolean nsfw, String caption) {
+    public void replyFile(StreamedFile file, MediaType type, boolean nsfw, String caption) {
         FileUpload upload = FileUpload.fromData(file.getStream(), file.getName());
         if (nsfw) {
             upload.asSpoiler();

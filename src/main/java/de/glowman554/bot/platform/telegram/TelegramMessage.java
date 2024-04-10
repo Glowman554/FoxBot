@@ -2,6 +2,7 @@ package de.glowman554.bot.platform.telegram;
 
 
 import de.glowman554.bot.command.Attachment;
+import de.glowman554.bot.command.MediaType;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.StreamedFile;
 import org.telegram.telegrambots.facilities.filedownloader.TelegramFileDownloader;
@@ -78,7 +79,7 @@ public class TelegramMessage extends Message {
     }
 
     @Override
-    public void replyFile(StreamedFile file, Type type, boolean nsfw) {
+    public void replyFile(StreamedFile file, MediaType type, boolean nsfw) {
         try {
             switch (type) {
                 case AUDIO:
@@ -116,7 +117,7 @@ public class TelegramMessage extends Message {
     }
 
     @Override
-    public void replyFile(StreamedFile file, Type type, boolean nsfw, String caption) {
+    public void replyFile(StreamedFile file, MediaType type, boolean nsfw, String caption) {
         try {
             switch (type) {
                 case AUDIO:

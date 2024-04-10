@@ -2,6 +2,7 @@ package de.glowman554.bot.command.impl;
 
 import de.glowman554.bot.Main;
 import de.glowman554.bot.command.Command;
+import de.glowman554.bot.command.MediaType;
 import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.utils.api.spotify.Song;
@@ -28,7 +29,7 @@ public class SpotifyCommand extends Command {
                     continue;
                 }
                 try (StreamedFile file = song.stream()) {
-                    message.replyFile(file, Message.Type.AUDIO, false, "Maybe you like " + message.formatBold(song.title()));
+                    message.replyFile(file, MediaType.AUDIO, false, "Maybe you like " + message.formatBold(song.title()));
                 }
             }
         }

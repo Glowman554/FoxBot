@@ -1,13 +1,11 @@
 package de.glowman554.bot.command.premade;
 
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Constants;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.utils.HttpClient;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 
-public abstract class JsonTextCommand extends Command {
+public abstract class JsonTextCommand extends SchemaCommand {
     private final String url;
 
     public JsonTextCommand(String shortHelp, String permission, Command.Group group, String url) {
@@ -27,6 +25,21 @@ public abstract class JsonTextCommand extends Command {
 
             message.reply(extractText(root));
         }
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+        String res = HttpClient.get(url);
+
+        Json json = Json.json();
+        JsonNode root = json.parse(res);
+
+        commandContext.reply(extractText(root));
     }
 
     public abstract String extractText(JsonNode root);

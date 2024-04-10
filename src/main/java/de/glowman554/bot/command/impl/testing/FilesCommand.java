@@ -1,12 +1,9 @@
 package de.glowman554.bot.command.impl.testing;
 
-import de.glowman554.bot.command.Attachment;
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Constants;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.utils.StreamedFile;
 
-public class FilesCommand extends Command {
+public class FilesCommand extends SchemaCommand {
     public FilesCommand() {
         super(Constants.TESTING, Constants.TESTING, "testing", Command.Group.TESTING);
     }
@@ -22,15 +19,27 @@ public class FilesCommand extends Command {
 
             try (StreamedFile file = attachment.download()) {
                 if (attachment.getType() != null) {
-                    Message.Type type = switch (attachment.getType()) {
-                        case AUDIO -> Message.Type.AUDIO;
-                        case IMAGE -> Message.Type.IMAGE;
-                        case VIDEO -> Message.Type.VIDEO;
+                    MediaType type = switch (attachment.getType()) {
+                        case AUDIO -> MediaType.AUDIO;
+                        case IMAGE -> MediaType.IMAGE;
+                        case VIDEO -> MediaType.VIDEO;
                     };
                     message.replyFile(file, type, false);
                 }
             }
         }
 
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+        schema.addArgument(Schema.Argument.Type.ATTACHMENT, "file", Constants.TESTING, false).register();
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+        try (StreamedFile file = commandContext.get("file").asAttachment()) {
+            commandContext.replyFile(file, MediaType.DOCUMENT, false);
+        }
     }
 }

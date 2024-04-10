@@ -1,11 +1,11 @@
 package de.glowman554.bot.command;
 
+import de.glowman554.bot.command.impl.Reply;
 import de.glowman554.bot.event.Event;
-import de.glowman554.bot.utils.StreamedFile;
 
 import java.util.ArrayList;
 
-public abstract class Message extends Event {
+public abstract class Message extends Event implements Reply {
     private final Message quote;
     private final ArrayList<Attachment> attachments;
     private final String userId;
@@ -19,8 +19,6 @@ public abstract class Message extends Event {
         this.userId = userId;
         this.displayName = displayName;
     }
-
-    public abstract void reply(String reply);
 
     public String getMessage() {
         return message;
@@ -42,17 +40,6 @@ public abstract class Message extends Event {
         return displayName;
     }
 
-    public abstract void replyFile(StreamedFile file, Type type, boolean nsfw);
-
-    public abstract void replyFile(StreamedFile file, Type type, boolean nsfw, String caption);
-
-    public abstract String formatBold(String text);
-
-    public abstract String formatItalic(String text);
-
-    public abstract String formatCode(String text);
-
-    public abstract String formatCodeBlock(String text);
 
     @Override
     public String toString() {
@@ -64,7 +51,4 @@ public abstract class Message extends Event {
     }
 
 
-    public enum Type {
-        IMAGE, VIDEO, AUDIO, DOCUMENT
-    }
 }

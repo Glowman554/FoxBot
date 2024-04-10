@@ -23,6 +23,12 @@ public class Registry<Identifier, Entry> {
         return entry;
     }
 
+    public void iterate(RegistryIterator<Identifier, Entry> iterator) {
+        for (Identifier identifier : registry.keySet()) {
+            iterator.process(identifier, registry.get(identifier));
+        }
+    }
+
     public boolean has(Identifier identifier) {
         return registry.containsKey(identifier);
     }
@@ -33,5 +39,9 @@ public class Registry<Identifier, Entry> {
 
     public interface RegistryProcessor<Identifier, Entry> {
         void register(Identifier identifier, Entry entry);
+    }
+
+    public interface RegistryIterator<Identifier, Entry> {
+        void process(Identifier identifier, Entry entry);
     }
 }

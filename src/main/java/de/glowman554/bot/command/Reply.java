@@ -1,4 +1,4 @@
-package de.glowman554.bot.command.impl;
+package de.glowman554.bot.command;
 
 import de.glowman554.bot.command.MediaType;
 import de.glowman554.bot.utils.StreamedFile;

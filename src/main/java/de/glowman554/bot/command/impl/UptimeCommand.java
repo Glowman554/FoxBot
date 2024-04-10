@@ -1,11 +1,9 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Constants;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.utils.TimeUtils;
 
-public class UptimeCommand extends Command {
+public class UptimeCommand extends SchemaCommand {
     public static final long startingTime = System.currentTimeMillis();
 
     public UptimeCommand() {
@@ -20,5 +18,15 @@ public class UptimeCommand extends Command {
         } else {
             message.reply(TimeUtils.millisecondToDhms(System.currentTimeMillis() - startingTime));
         }
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+        commandContext.reply(TimeUtils.millisecondToDhms(System.currentTimeMillis() - startingTime));
     }
 }

@@ -1,13 +1,11 @@
 package de.glowman554.bot.command.premade;
 
-import de.glowman554.bot.command.CommandContext;
-import de.glowman554.bot.command.Message;
-import de.glowman554.bot.command.Schema;
-import de.glowman554.bot.command.SchemaCommand;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.utils.HttpClient;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
@@ -24,14 +22,18 @@ public abstract class JsonQueryCommand extends SchemaCommand {
         if (arguments.length == 0) {
             message.reply("Invalid arguments");
         } else {
-            String res = HttpClient.get(encodeUrl(String.join(" ", arguments)));
-
-            Json json = Json.json();
-            JsonNode root = json.parse(res);
-
-
-            message.reply(extractText(root));
+            doSend(message, String.join(" ", arguments));
         }
+    }
+
+    private void doSend(Reply reply, String query) throws IOException {
+        String res = HttpClient.get(encodeUrl(query));
+
+        Json json = Json.json();
+        JsonNode root = json.parse(res);
+
+
+        reply.reply(extractText(root));
     }
 
     @Override
@@ -41,13 +43,7 @@ public abstract class JsonQueryCommand extends SchemaCommand {
 
     @Override
     public void execute(CommandContext commandContext) throws Exception {
-        String res = HttpClient.get(encodeUrl(commandContext.get("query").asString()));
-
-        Json json = Json.json();
-        JsonNode root = json.parse(res);
-
-
-        commandContext.reply(extractText(root));
+        doSend(commandContext, commandContext.get("query").asString());
     }
 
     private String encodeUrl(String query) {

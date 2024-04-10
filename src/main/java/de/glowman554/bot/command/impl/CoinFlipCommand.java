@@ -1,10 +1,8 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Constants;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 
-public class CoinFlipCommand extends Command {
+public class CoinFlipCommand extends SchemaCommand {
     public CoinFlipCommand() {
         super("Flip a coin.", "Usage: <command>", null, Group.FUN);
     }
@@ -16,12 +14,26 @@ public class CoinFlipCommand extends Command {
             return;
         }
 
+        doFlip(message);
+    }
+
+    private void doFlip(Reply reply) {
         boolean random = Math.random() < 0.5;
 
         if (random) {
-            message.reply("You've landed on heads!");
+            reply.reply("You've landed on heads!");
         } else {
-            message.reply("You've landed on tails!");
+            reply.reply("You've landed on tails!");
         }
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+        doFlip(commandContext);
     }
 }

@@ -1,15 +1,13 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.MediaType;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.utils.api.YiffAPI;
 
 import java.util.List;
 import java.util.Optional;
 
-public class FurryCommand extends Command {
+public class FurryCommand extends SchemaCommand {
     private final List<YiffAPI.YiffCategory> categories;
 
     public FurryCommand() {
@@ -21,7 +19,7 @@ public class FurryCommand extends Command {
 
     @Override
     public void execute(Message message, String[] arguments) throws Exception {
-        String categoryString;
+        String categoryString = "furry.fursuit";
         if (arguments.length == 1) {
             if (arguments[0].equals("list")) {
                 StringBuilder result = new StringBuilder();
@@ -35,21 +33,41 @@ public class FurryCommand extends Command {
             } else {
                 categoryString = arguments[0];
             }
-        } else {
-            if (arguments.length != 0) {
-                message.reply("Command takes exactly 0 or 1 arguments");
-                return;
-            }
-            categoryString = "furry.fursuit";
+        } else if (arguments.length != 0) {
+            message.reply("Command takes exactly 0 or 1 arguments");
+            return;
         }
 
+        doSend(message, categoryString);
+    }
+
+    private void doSend(Reply reply, String categoryString) throws Exception {
         Optional<YiffAPI.YiffCategory> yiffCategory = categories.stream().filter(v -> v.db().equals(categoryString)).findFirst();
         if (yiffCategory.isPresent()) {
             try (StreamedFile file = yiffCategory.get().download()) {
-                message.replyFile(file, MediaType.IMAGE, !yiffCategory.get().sfw());
+                reply.replyFile(file, MediaType.IMAGE, !yiffCategory.get().sfw());
             }
         } else {
-            message.reply("Category " + categoryString + " not found!");
+            reply.reply("Category " + categoryString + " not found!");
         }
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+        Schema.Argument categoryArgument = schema.addArgument(Schema.Argument.Type.STRING, "category", "Image category", true);
+        for (YiffAPI.YiffCategory category : categories) {
+            categoryArgument.addOption(category.name(), new Schema.Value(category.db()));
+        }
+        categoryArgument.register();
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+        String categoryString = "furry.fursuit";
+        Schema.Value categoryValue = commandContext.get("category");
+        if (categoryValue != null) {
+            categoryString = categoryValue.asString();
+        }
+        doSend(commandContext, categoryString);
     }
 }

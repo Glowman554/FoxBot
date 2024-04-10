@@ -1,10 +1,8 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Constants;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 
-public class StopCommand extends Command {
+public class StopCommand extends SchemaCommand {
     public StopCommand() {
         super("Stop the bot.", "Usage: <command>", "stop", Group.DEVELOPMENT);
     }
@@ -17,5 +15,16 @@ public class StopCommand extends Command {
             message.reply("Stopping...");
             System.exit(0);
         }
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+        commandContext.reply("Stopping...");
+        System.exit(0);
     }
 }

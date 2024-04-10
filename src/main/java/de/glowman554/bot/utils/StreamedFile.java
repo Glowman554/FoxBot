@@ -11,7 +11,6 @@ public class StreamedFile implements AutoCloseable {
         this.name = name;
     }
 
-    @Deprecated
     public StreamedFile(File input) throws FileNotFoundException {
         this.stream = new FileInputStream(input);
         this.name = input.getName();

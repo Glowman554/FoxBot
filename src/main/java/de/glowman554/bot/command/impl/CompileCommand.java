@@ -1,16 +1,14 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.Attachment;
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Constants;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.utils.FileUtils;
+import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.utils.TemporaryFile;
 import de.glowman554.bot.utils.compiler.CompilerManager;
 
 import java.util.List;
 
-public class CompileCommand extends Command {
+public class CompileCommand extends SchemaCommand {
     public CompileCommand() {
         super("Compile and run source code files.", "Usage: <command>", null, Group.TOOLS);
     }
@@ -30,6 +28,21 @@ public class CompileCommand extends Command {
                         message.reply(message.formatCodeBlock(CompilerManager.run(file)));
                     }
                 }
+            }
+        }
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+        schema.addArgument(Schema.Argument.Type.ATTACHMENT, "source", "Source code file", false).register();
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+        try (StreamedFile sourceStream = commandContext.get("source").asAttachment()) {
+            try (TemporaryFile file = new TemporaryFile(FileUtils.getFileExtension(sourceStream.getName()))) {
+                sourceStream.save(file.getFile());
+                commandContext.reply(commandContext.formatCodeBlock(CompilerManager.run(file)));
             }
         }
     }

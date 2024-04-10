@@ -18,13 +18,17 @@ public abstract class JsonTextCommand extends SchemaCommand {
         if (arguments.length != 0) {
             message.reply(Constants.NO_ARGUMENTS);
         } else {
-            String res = HttpClient.get(url);
-
-            Json json = Json.json();
-            JsonNode root = json.parse(res);
-
-            message.reply(extractText(root));
+            doSend(message);
         }
+    }
+
+    private void doSend(Reply reply) throws Exception {
+        String res = HttpClient.get(url);
+
+        Json json = Json.json();
+        JsonNode root = json.parse(res);
+
+        reply.reply(extractText(root));
     }
 
     @Override
@@ -34,12 +38,7 @@ public abstract class JsonTextCommand extends SchemaCommand {
 
     @Override
     public void execute(CommandContext commandContext) throws Exception {
-        String res = HttpClient.get(url);
-
-        Json json = Json.json();
-        JsonNode root = json.parse(res);
-
-        commandContext.reply(extractText(root));
+        doSend(commandContext);
     }
 
     public abstract String extractText(JsonNode root);

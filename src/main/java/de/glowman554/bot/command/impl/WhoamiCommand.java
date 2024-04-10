@@ -1,10 +1,8 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Constants;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 
-public class WhoamiCommand extends Command {
+public class WhoamiCommand extends SchemaCommand {
     public WhoamiCommand() {
         super("Information's about yourself.", "Usage: <command>", null, Group.TOOLS);
     }
@@ -16,5 +14,16 @@ public class WhoamiCommand extends Command {
         } else {
             message.reply("displayName: " + message.formatCode(message.getDisplayName()) + "\n" + "userId: " + message.formatCode(message.getUserId()));
         }
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+        commandContext.reply("displayName: " + commandContext.formatCode(commandContext.displayName) + "\n" + "userId: " + commandContext.formatCode(commandContext.userId));
+
     }
 }

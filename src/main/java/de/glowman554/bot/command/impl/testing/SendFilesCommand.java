@@ -1,7 +1,6 @@
 package de.glowman554.bot.command.impl.testing;
 
 import de.glowman554.bot.command.*;
-import de.glowman554.bot.command.Reply;
 import de.glowman554.bot.utils.HttpClient;
 import de.glowman554.bot.utils.StreamedFile;
 

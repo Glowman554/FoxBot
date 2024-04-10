@@ -19,16 +19,20 @@ public abstract class JsonPictureCommand extends SchemaCommand {
         if (arguments.length != 0) {
             message.reply(Constants.NO_ARGUMENTS);
         } else {
-            String res = HttpClient.get(url);
+            doSend(message);
+        }
+    }
 
-            Json json = Json.json();
-            JsonNode root = json.parse(res);
+    private void doSend(Reply reply) throws Exception {
+        String res = HttpClient.get(url);
 
-            String pictureUrl = extractUrl(root);
+        Json json = Json.json();
+        JsonNode root = json.parse(res);
 
-            try (StreamedFile file = HttpClient.download(pictureUrl)) {
-                message.replyFile(file, MediaType.IMAGE, false);
-            }
+        String pictureUrl = extractUrl(root);
+
+        try (StreamedFile file = HttpClient.download(pictureUrl)) {
+            reply.replyFile(file, MediaType.IMAGE, false);
         }
     }
 
@@ -39,16 +43,7 @@ public abstract class JsonPictureCommand extends SchemaCommand {
 
     @Override
     public void execute(CommandContext commandContext) throws Exception {
-        String res = HttpClient.get(url);
-
-        Json json = Json.json();
-        JsonNode root = json.parse(res);
-
-        String pictureUrl = extractUrl(root);
-
-        try (StreamedFile file = HttpClient.download(pictureUrl)) {
-            commandContext.replyFile(file, MediaType.IMAGE, false);
-        }
+        doSend(commandContext);
     }
 
     public abstract String extractUrl(JsonNode root);

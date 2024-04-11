@@ -1,0 +1,6 @@
+{
+  "entrypoint": "de.glowman554.bot.tic_tac_toe.Entrypoint",
+  "name": "tic tac toe",
+  "author": "glowman554",
+  "version": "1.0.0"
+}

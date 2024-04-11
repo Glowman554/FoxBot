@@ -1,0 +1,6 @@
+{
+  "entrypoint": "de.glowman554.bot.mysql.Entrypoint",
+  "name": "mysql",
+  "author": "glowman554",
+  "version": "1.0.0"
+}

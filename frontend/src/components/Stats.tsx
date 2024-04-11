@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Time } from "./Time";
+import { EXTERNAL, EXTERNAL_API } from "@/environment";
 
 interface StatsObject {
     commands: number;
@@ -18,7 +19,7 @@ export function Stats() {
     } as StatsObject);
 
     useEffect(() => {
-        fetch("/api/stats").then(r => r.json().then(r => setStats(r as StatsObject)));
+        fetch(EXTERNAL ? EXTERNAL_API + "/api/stats" : "/api/stats").then(r => r.json().then(r => setStats(r as StatsObject)));
     }, []);
 
     return (

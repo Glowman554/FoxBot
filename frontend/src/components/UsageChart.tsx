@@ -1,5 +1,6 @@
 "use client";
 
+import { EXTERNAL, EXTERNAL_API } from "@/environment";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
@@ -12,7 +13,7 @@ export default function UsageChart() {
 
     useEffect(() => {
         async function update() {
-            const req = await fetch("/api/usage");
+            const req = await fetch(EXTERNAL ? EXTERNAL_API + "/api/usage" : "/api/usage");
             const json = await req.json() as UsageObject;
 
             const newChart: UsageChart = [];

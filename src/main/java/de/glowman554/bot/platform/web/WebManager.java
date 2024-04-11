@@ -1,11 +1,12 @@
 package de.glowman554.bot.platform.web;
 
 import de.glowman554.bot.Main;
-import de.glowman554.bot.command.Attachment;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
 import de.glowman554.bot.logging.Logger;
+import de.glowman554.bot.platform.discord.DiscordCommandContext;
+import de.glowman554.bot.registry.Registries;
 import io.javalin.websocket.WsCloseContext;
 import io.javalin.websocket.WsConfig;
 import io.javalin.websocket.WsConnectContext;
@@ -23,9 +24,11 @@ import java.util.HashMap;
 @WebSocket
 public class WebManager {
     private final HashMap<Session, WebInstance> connections = new HashMap<>();
+    private final JsonNode schemas;
 
-    public WebManager() {
+    public WebManager(JsonNode schemas) {
         EventManager.register(this);
+        this.schemas = schemas;
     }
 
 
@@ -56,6 +59,7 @@ public class WebManager {
         JsonNode root = JsonNode.object();
         root.set("type", "info");
         root.set("prefix", Main.config.getPrefix());
+        root.set("schemas", schemas);
 
         wsConnectContext.send(Json.json().serialize(root));
     }
@@ -87,6 +91,14 @@ public class WebManager {
                         new WebMessage(root.get("message").asString(), instance.getUserId(), "Web", wsMessageContext, attachments).call(Message.class);
                     } else {
                         new WebMessage(root.get("message").asString(), "web", "Web", wsMessageContext, attachments).call(Message.class);
+                    }
+                    break;
+                case "schemaMessage":
+                    Command command = Registries.COMMANDS.get(root.get("schemaCommandName").asString());
+                    if (command instanceof SchemaCommand schemaCommand) {
+                        CommandContext context = new WebCommandContext(instance.isAuthenticated() ? instance.getUserId() : "web", "Web", wsMessageContext, root);
+                        schemaCommand.loadSchema(context);
+                        Main.commandManager.execute(root.get("schemaCommandName").asString(), schemaCommand, context);
                     }
                     break;
             }

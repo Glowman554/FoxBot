@@ -1,5 +1,6 @@
 "use client";
 
+import { EXTERNAL, EXTERNAL_API } from "@/environment";
 import { useEffect, useState } from "react";
 
 interface HelpEntry {
@@ -37,7 +38,7 @@ export function CommandEntry(props: { command: HelpEntry }) {
 export function Commands() {
     const [entries, setEntries] = useState([] as HelpEntry[]);
     useEffect(() => {
-        fetch("/api/help").then(r => r.json().then(r => setEntries(r as HelpEntry[])));
+        fetch(EXTERNAL ? EXTERNAL_API + "/api/help" : "/api/help").then(r => r.json().then(r => setEntries(r as HelpEntry[])));
     }, []);
 
 	return (

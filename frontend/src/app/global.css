@@ -278,6 +278,12 @@ img {
   border-radius: 6px;
 }
 
+.glow-schema-field {
+  padding: 0.5rem;
+  background-color: #1f1f1f;
+  border-radius: 6px;
+}
+
 .glow-input {
   /* background-color: grey; */
   border-radius: 6px;

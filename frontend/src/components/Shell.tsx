@@ -1,9 +1,12 @@
 "use client";
 
+import { EXTERNAL, EXTERNAL_WS } from "@/environment";
+import { Schema } from "inspector";
 import React, { ChangeEvent, useCallback, useReducer, useState } from "react";
 import useWebSocket from "react-use-websocket";
+import { SchemaCommand, SchemaTableContainer } from "./SchemaCommand";
 
-namespace FromServer {
+export namespace FromServer {
 	export interface BaseMessage {
 		type: "reply" | "replyFile" | "authenticate" | "info";
 	}
@@ -26,13 +29,33 @@ namespace FromServer {
 
 	export interface Info extends BaseMessage {
 		prefix: string;
+		schemas: Schema[];
+	}
+
+	export interface Schema {
+		name: string;
+		description: string;
+		arguments: Argument[];
+	}
+
+	export interface Argument {
+		type: "STRING" | "INTEGER" | "BOOLEAN" | "NUMBER" | "ATTACHMENT";
+		name: string;
+		description: string;
+		optional: boolean;
+		options: Option[];
+	}
+
+	export interface Option {
+		name: string;
+		value: number | string;
 	}
 }
 
-namespace ToServer {
+export namespace ToServer {
 	
 	export interface BaseMessage {
-		type: "message" | "authenticate" | "displayName";
+		type: "message" | "schemaMessage" | "authenticate" | "displayName";
 	}
 
 	export interface UploadedFile {
@@ -47,6 +70,11 @@ namespace ToServer {
 
 	export interface Authenticate extends BaseMessage {
 		user: string;
+	}
+
+	export interface SchemaMessage extends BaseMessage {
+		schemaCommandName: string;
+		[ argument: string ] : number | string | UploadedFile;
 	}
 }
 
@@ -65,11 +93,23 @@ function plural(word: string, length: number) {
 	}
 }
 
+export function processUploadFile(file: File): Promise<ToServer.UploadedFile> {
+	return new Promise<ToServer.UploadedFile>((resolve, reject) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onload = () => resolve({ name: file.name, file: (reader.result as string).split(",").pop() as string });
+		reader.onerror = (error) => reject(error);
+		// reader.onprogress = (progress) => prg((progress.loaded / progress.total) * 100);
+	});
+}
+
 export function Shell() {
     const [entriesState, dispatchEntry] = useReducer(entriesReducer, { entries: [] });
 	const [prefix, setPrefix] = useState("");
 	const [uploadedFiles, setUploadedFiles] = useState([] as ToServer.UploadedFile[]);
-	const {sendMessage} = useWebSocket(useCallback(() => (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/web", []), {
+	const [schemas, setSchemas] = useState([] as FromServer.Schema[]);
+	const [displaySchemaTable, setDisplaySchemaTable] = useState(false);
+	const {sendMessage} = useWebSocket(EXTERNAL ? EXTERNAL_WS : useCallback(() => (location.protocol == "https:" ? "wss://" : "ws://") + location.host + "/web", []), {
 		onOpen: () => {
 			dispatchEntry(<p>Connection successful.</p>);
 		},
@@ -110,6 +150,7 @@ export function Shell() {
 				case "info":
 					const info = json as FromServer.Info;
 					setPrefix(info.prefix);
+					setSchemas(info.schemas);
 					break;
 			}
 		},
@@ -130,13 +171,7 @@ export function Shell() {
 			const files = target.files;
 			
 			for (let i = 0; i < files.length; i++) {
-				promises.push(new Promise<ToServer.UploadedFile>((resolve, reject) => {
-					const reader = new FileReader();
-					reader.readAsDataURL(files[i]);
-					reader.onload = () => resolve({ name: files[i].name, file: (reader.result as string).split(",").pop() as string });
-					reader.onerror = (error) => reject(error);
-					// reader.onprogress = (progress) => prg((progress.loaded / progress.total) * 100);
-				}));
+				promises.push(processUploadFile(files[i]));
 			}
 		}
 
@@ -156,11 +191,21 @@ export function Shell() {
 				} as ToServer.Authenticate));
 			}}>Authenticate</button>
 
+			<button className="glow-auth-button" onClick={() => setDisplaySchemaTable(!displaySchemaTable)}>Toggle schema commands</button>
+
 			<div className="glow-upload-field">
 				<label htmlFor="file">{uploadedFiles.length + " " + plural("file", uploadedFiles.length) +  " uploaded."}</label>
 				<br />
 				<input type="file" name="file" onChange={processUpload} multiple />
 			</div>
+
+			<table className="glow-table" style={{ display: displaySchemaTable ? undefined : "none" }}>
+				<tbody>
+					{
+						schemas.map((schema, i) => <SchemaTableContainer key={i} schema={schema} send={(message) => sendMessage(JSON.stringify(message))} />)
+					}
+				</tbody>
+			</table>
 
 			<div className="glow-shell">
 				{entriesState.entries.map((comp, i) => React.cloneElement(comp, { key: i }))}

@@ -5,7 +5,6 @@ import de.glowman554.bot.command.*;
 import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
 import de.glowman554.bot.logging.Logger;
-import de.glowman554.bot.platform.discord.DiscordCommandContext;
 import de.glowman554.bot.registry.Registries;
 import io.javalin.websocket.WsCloseContext;
 import io.javalin.websocket.WsConfig;

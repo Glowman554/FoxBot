@@ -8,7 +8,6 @@ import de.glowman554.bot.event.impl.JavalinEvent;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.config.ConfigManager;
-import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 
 public class WebPlatform extends Platform {
@@ -26,7 +25,7 @@ public class WebPlatform extends Platform {
                 schemas.add(schema.getSchema());
             }
         });
-        
+
         Logger.log("Web ready.");
     }
 

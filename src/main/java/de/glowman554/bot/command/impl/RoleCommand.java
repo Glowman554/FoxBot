@@ -1,14 +1,12 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Message;
-import de.glowman554.bot.command.PermissionProvider;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.bot.utils.Pair;
 
 import java.util.List;
 
-public class RoleCommand extends Command {
+public class RoleCommand extends SchemaCommand {
     public RoleCommand() {
         super("Change roles.", """
                 Usage: <command> list
@@ -69,5 +67,43 @@ public class RoleCommand extends Command {
 
     private void fail(Message message) {
         message.reply("Invalid arguments.");
+    }
+
+    @Override
+    public void loadSchema(Schema schema) {
+        schema.addArgument(Schema.Argument.Type.STRING, "subcommand", "Subcommand to execute", false).addOption("Create new role", new Schema.Value("add")).addOption("List role's", new Schema.Value("list")).addOption("Remove role", new Schema.Value("remove")).addOption("Set user's role", new Schema.Value("set")).register();
+        schema.addArgument(Schema.Argument.Type.STRING, "rolename", "Role name", true).register();
+        schema.addArgument(Schema.Argument.Type.STRING, "userid", "User id", true).register();
+        schema.addArgument(Schema.Argument.Type.STRING, "permissions", "Permissions", true).register();
+    }
+
+    @Override
+    public void execute(CommandContext commandContext) throws Exception {
+
+        switch (commandContext.get("subcommand").asString()) {
+            case "list":
+                List<Pair<String, List<String>>> roles = Registries.PERMISSION_PROVIDER.get().getRoles();
+                StringBuilder result = new StringBuilder();
+                for (Pair<String, List<String>> role : roles) {
+                    result.append(role.t1).append(": ").append(String.join(", ", role.t2)).append("\n");
+                }
+                commandContext.reply(result.toString());
+                break;
+            case "remove":
+                Registries.PERMISSION_PROVIDER.get().removeRole(commandContext.get("rolename").asString());
+                commandContext.reply("Removed role " + commandContext.get("rolename").asString());
+                break;
+            case "set":
+                Registries.PERMISSION_PROVIDER.get().setRole(commandContext.get("userid").asString(), commandContext.get("rolename").asString());
+                commandContext.reply("Set " + commandContext.get("userid").asString() + "'s role to " + commandContext.get("rolename").asString());
+                break;
+            case "add":
+                PermissionProvider.RoleBuilder builder = PermissionProvider.RoleBuilder.begin(commandContext.get("rolename").asString(), Registries.PERMISSION_PROVIDER.get());
+                for (String permission : commandContext.get("permissions").asString().split(" ")) {
+                    builder.permission(permission);
+                }
+                commandContext.reply("Created new role " + commandContext.get("rolename").asString());
+                break;
+        }
     }
 }

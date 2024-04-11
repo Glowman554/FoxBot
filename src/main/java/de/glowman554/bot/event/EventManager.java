@@ -11,7 +11,7 @@ public class EventManager {
 
     private static void sortListValue(final Class<? extends Event> clazz) {
 
-        final ArrayList<EventData> flexibleArray = new ArrayList<EventData>();
+        final ArrayList<EventData> flexibleArray = new ArrayList<>();
 
         for (final byte b : EventPriority.VALUE_ARRAY) {
             for (EventData methodData : EventManager.REGISTRY_MAP.get(clazz)) {
@@ -95,7 +95,7 @@ public class EventManager {
             }
 
         } else {
-            REGISTRY_MAP.put((Class<? extends Event>) clazz, new ArrayList<EventData>() {
+            REGISTRY_MAP.put((Class<? extends Event>) clazz, new ArrayList<>() {
 
                 {
                     this.add(methodData);

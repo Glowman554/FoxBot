@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Parser {
     private final LexerToken[] tokens;
-    private final HashMap<String, Double> definedVariables = new HashMap<String, Double>();
+    private final HashMap<String, Double> definedVariables = new HashMap<>();
     private int tokensPos = -1;
     private LexerToken currentToken = null;
 

@@ -9,7 +9,7 @@ import de.glowman554.bot.utils.compiler.impl.FlCompiler;
 import de.glowman554.bot.utils.compiler.impl.ShInterpreter;
 
 public class CompilerManager {
-    public static Registry<String, Compiler> BY_FILE_EXTENSION = new Registry<>((string, compiler) -> {
+    public static final Registry<String, Compiler> BY_FILE_EXTENSION = new Registry<>((string, compiler) -> {
     });
 
     static {

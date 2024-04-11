@@ -13,10 +13,8 @@ import io.javalin.websocket.WsMessageContext;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -28,12 +26,6 @@ public class WebManager {
     public WebManager(JsonNode schemas) {
         EventManager.register(this);
         this.schemas = schemas;
-    }
-
-
-    @OnWebSocketMessage
-    public void onMessage(Session session, String message) throws IOException {
-
     }
 
     @EventTarget

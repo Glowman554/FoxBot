@@ -51,9 +51,7 @@ public class SpotifyApi implements AutoCloseable {
     @EventTarget
     public void onJavalin(JavalinEvent event) {
         if (authentication) {
-            event.getJavalin().get("/login", (context) -> {
-                context.redirect("https://accounts.spotify.com/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUrl);
-            });
+            event.getJavalin().get("/login", (context) -> context.redirect("https://accounts.spotify.com/authorize?response_type=code&client_id=" + clientId + "&redirect_uri=" + redirectUrl));
 
             event.getJavalin().get("/callback", (context) -> {
                 String code = context.queryParams("code").stream().findFirst().orElseThrow();

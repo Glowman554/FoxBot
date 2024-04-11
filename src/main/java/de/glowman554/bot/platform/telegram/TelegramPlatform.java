@@ -35,11 +35,12 @@ public class TelegramPlatform extends Platform {
 
         try {
             telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBot = new TelegramLongPollingBot(config.token) {
+            Config finalConfig = config;
+            telegramBot = new TelegramLongPollingBot(finalConfig.token) {
                 @Override
                 public void onUpdateReceived(Update update) {
                     if (update.hasMessage()) {
-                        TelegramMessage.create(update.getMessage()).call(Message.class);
+                        TelegramMessage.create(update.getMessage(), finalConfig.token).call(Message.class);
                     }
                 }
 

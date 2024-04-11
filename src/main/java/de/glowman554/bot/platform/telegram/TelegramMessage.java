@@ -22,31 +22,31 @@ public class TelegramMessage extends Message {
         this.telegramMessage = telegramMessage;
     }
 
-    public static TelegramMessage create(org.telegram.telegrambots.meta.api.objects.Message message) {
+    public static TelegramMessage create(org.telegram.telegrambots.meta.api.objects.Message message, String botToken) {
         Message quote = null;
         if (message.getReplyToMessage() != null) {
-            quote = create(message.getReplyToMessage());
+            quote = create(message.getReplyToMessage(), botToken);
         }
 
-        TelegramFileDownloader telegramFileDownloader = new TelegramFileDownloader(TelegramPlatform.getTelegramBot()::getBotToken);
+        TelegramFileDownloader telegramFileDownloader = new TelegramFileDownloader(() -> botToken);
         ArrayList<Attachment> attachments = new ArrayList<>();
 
         if (message.getPhoto() != null) {
             for (PhotoSize photo : message.getPhoto()) {
-                attachments.add(new TelegramAttachment(getFile(photo.getFileId())));
+                attachments.add(new TelegramAttachment(getFile(photo.getFileId()), botToken));
             }
         }
 
         if (message.getVideo() != null) {
-            attachments.add(new TelegramAttachment(getFile(message.getVideo().getFileId())));
+            attachments.add(new TelegramAttachment(getFile(message.getVideo().getFileId()), botToken));
         }
 
         if (message.getAudio() != null) {
-            attachments.add(new TelegramAttachment(getFile(message.getAudio().getFileId())));
+            attachments.add(new TelegramAttachment(getFile(message.getAudio().getFileId()), botToken));
         }
 
         if (message.getDocument() != null) {
-            attachments.add(new TelegramAttachment(getFile(message.getDocument().getFileId())));
+            attachments.add(new TelegramAttachment(getFile(message.getDocument().getFileId()), botToken));
         }
 
         return new TelegramMessage(message, quote, attachments);

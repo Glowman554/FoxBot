@@ -40,7 +40,7 @@ public class MySQLPermissionProvider extends PermissionProvider {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("select count(*) from owouser, role, permission where userId = ? and permission = ? and user.roleName = role.roleName and role.roleName = permission.roleName");
+            PreparedStatement statement = connection.prepareStatement("select count(*) from user, role, permission where userId = ? and permission = ? and user.roleName = role.roleName and role.roleName = permission.roleName");
             statement.setString(1, userId);
             statement.setString(2, permission);
             ResultSet resultSet = statement.executeQuery();

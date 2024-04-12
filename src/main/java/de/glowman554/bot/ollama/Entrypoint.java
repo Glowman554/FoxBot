@@ -56,7 +56,7 @@ public class Entrypoint {
         for (String user : instances.keySet()) {
             Chat chat = instances.get(user);
 
-            if (now - chat.getLastMessage() > (1000 * 60)) {
+            if (now - chat.getLastMessage() > (1000 * 60 * 60)) {
                 Logger.log("Deleting chat with %s.", user);
                 instances.remove(user);
             }

@@ -1,0 +1,6 @@
+{
+  "entrypoint": "de.glowman554.bot.ollama.Entrypoint",
+  "name": "ollama",
+  "author": "glowman554",
+  "version": "1.0.0"
+}

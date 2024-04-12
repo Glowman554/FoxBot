@@ -6,10 +6,16 @@ services:
       - "/etc/letsencrypt:/etc/letsencrypt"
     networks:
       - "router_default"
+      - "production_db_default"
       - "default"
     privileged: true
+    restart: always
+  ollama:
+    image: ollama/ollama:latest
     restart: always
 
 networks:
   router_default:
+    external: true
+  production_db_default:
     external: true

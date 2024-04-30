@@ -18,15 +18,15 @@ public abstract class JsonQueryCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length == 0) {
-            message.reply("Invalid arguments");
+            commandContext.reply("Invalid arguments");
         } else {
-            doSend(message, String.join(" ", arguments));
+            doSend(commandContext, String.join(" ", arguments));
         }
     }
 
-    private void doSend(Reply reply, String query) throws IOException {
+    private void doSend(IReply reply, String query) throws IOException {
         String res = HttpClient.get(encodeUrl(query));
 
         Json json = Json.json();
@@ -42,7 +42,7 @@ public abstract class JsonQueryCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         doSend(commandContext, commandContext.get("query").asString());
     }
 

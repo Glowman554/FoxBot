@@ -1,12 +1,12 @@
 package de.glowman554.bot.utils.compiler;
 
-import java.io.IOException;
-
 import de.glowman554.bot.Main;
 import de.glowman554.bot.utils.HttpClient;
 import de.glowman554.bot.utils.StreamedFile;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+
+import java.io.IOException;
 
 public class RemoteCompiler {
     public static String run(StreamedFile file) throws IOException {

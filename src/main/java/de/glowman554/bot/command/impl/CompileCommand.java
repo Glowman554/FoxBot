@@ -12,17 +12,17 @@ public class CompileCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length != 0) {
-            message.reply(Constants.NO_ARGUMENTS);
+            commandContext.reply(Constants.NO_ARGUMENTS);
         } else {
-            List<Attachment> attachments = message.getAttachments();
+            List<Attachment> attachments = commandContext.getAttachments();
             if (attachments.isEmpty()) {
-                message.reply("No file attached.");
+                commandContext.reply("No file attached.");
             } else {
                 for (Attachment attachment : attachments) {
                     try (StreamedFile sourceStream = attachment.download()) {
-                        message.reply(RemoteCompiler.run(sourceStream));
+                        commandContext.reply(RemoteCompiler.run(sourceStream));
                     }
                 }
             }
@@ -35,7 +35,7 @@ public class CompileCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         try (StreamedFile sourceStream = commandContext.get("source").asAttachment()) {
             commandContext.reply(RemoteCompiler.run(sourceStream));
         }

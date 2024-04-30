@@ -1,18 +1,18 @@
 package de.glowman554.bot.platform.discord;
 
-import de.glowman554.bot.command.CommandContext;
 import de.glowman554.bot.command.MediaType;
 import de.glowman554.bot.command.Schema;
+import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.utils.StreamedFile;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.FileUpload;
 
-public class DiscordCommandContext extends CommandContext {
+public class DiscordSchemaCommandContext extends SchemaCommandContext {
     private final SlashCommandInteractionEvent event;
     private boolean usedInitialReply = false;
 
-    public DiscordCommandContext(SlashCommandInteractionEvent event) {
+    public DiscordSchemaCommandContext(SlashCommandInteractionEvent event) {
         super(event.getUser().getId() + "@discord", event.getUser().getEffectiveName());
         this.event = event;
     }

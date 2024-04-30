@@ -2,8 +2,8 @@ package de.glowman554.bot.platform.telegram;
 
 
 import de.glowman554.bot.command.Attachment;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.MediaType;
-import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.StreamedFile;
 import org.telegram.telegrambots.facilities.filedownloader.TelegramFileDownloader;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
@@ -14,16 +14,16 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 
-public class TelegramMessage extends Message {
+public class TelegramLegacyCommandContext extends LegacyCommandContext {
     private final org.telegram.telegrambots.meta.api.objects.Message telegramMessage;
 
-    private TelegramMessage(org.telegram.telegrambots.meta.api.objects.Message telegramMessage, Message quote, ArrayList<Attachment> attachments) {
+    private TelegramLegacyCommandContext(org.telegram.telegrambots.meta.api.objects.Message telegramMessage, LegacyCommandContext quote, ArrayList<Attachment> attachments) {
         super(telegramMessage.getText() == null ? telegramMessage.getCaption() : telegramMessage.getText(), quote, attachments, telegramMessage.getFrom().getId().toString() + "@telegram", telegramMessage.getFrom().getUserName());
         this.telegramMessage = telegramMessage;
     }
 
-    public static TelegramMessage create(org.telegram.telegrambots.meta.api.objects.Message message, String botToken) {
-        Message quote = null;
+    public static TelegramLegacyCommandContext create(org.telegram.telegrambots.meta.api.objects.Message message, String botToken) {
+        LegacyCommandContext quote = null;
         if (message.getReplyToMessage() != null) {
             quote = create(message.getReplyToMessage(), botToken);
         }
@@ -49,7 +49,7 @@ public class TelegramMessage extends Message {
             attachments.add(new TelegramAttachment(getFile(message.getDocument().getFileId()), botToken));
         }
 
-        return new TelegramMessage(message, quote, attachments);
+        return new TelegramLegacyCommandContext(message, quote, attachments);
     }
 
     private static org.telegram.telegrambots.meta.api.objects.File getFile(String fileId) {

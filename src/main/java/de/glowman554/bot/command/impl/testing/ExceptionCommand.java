@@ -8,7 +8,7 @@ public class ExceptionCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         throw new Exception("Test");
     }
 
@@ -17,7 +17,7 @@ public class ExceptionCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         throw new Exception("Test");
     }
 }

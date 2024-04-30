@@ -1,9 +1,9 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.CommandContext;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.Schema;
 import de.glowman554.bot.command.SchemaCommand;
+import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.bot.utils.Pair;
 
@@ -21,25 +21,25 @@ public class TodoCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length >= 2 && arguments[0].equals("add")) {
             String[] todo = new String[arguments.length - 1];
             System.arraycopy(arguments, 1, todo, 0, todo.length);
-            Registries.TODO_PROVIDER.get().createTodo(message.getUserId(), String.join(" ", todo));
-            message.reply("Added todo.");
+            Registries.TODO_PROVIDER.get().createTodo(commandContext.getUserId(), String.join(" ", todo));
+            commandContext.reply("Added todo.");
         } else {
             switch (arguments.length) {
                 case 1:
                     if (arguments[0].equals("list")) {
                         StringBuilder result = new StringBuilder();
-                        HashMap<Integer, Pair<Boolean, String>> todos = Registries.TODO_PROVIDER.get().loadTodo(message.getUserId());
+                        HashMap<Integer, Pair<Boolean, String>> todos = Registries.TODO_PROVIDER.get().loadTodo(commandContext.getUserId());
                         for (int key : todos.keySet()) {
                             Pair<Boolean, String> entry = todos.get(key);
                             result.append(entry.t1 ? "[x] " : "[ ] ").append(key).append(": ").append(entry.t2).append("\n");
                         }
-                        message.reply(message.formatCodeBlock(result.toString()));
+                        commandContext.reply(commandContext.formatCodeBlock(result.toString()));
                     } else {
-                        message.reply("Invalid arguments.");
+                        commandContext.reply("Invalid arguments.");
                     }
                     break;
                 case 2:
@@ -47,24 +47,24 @@ public class TodoCommand extends SchemaCommand {
 
                     switch (arguments[0]) {
                         case "done":
-                            Registries.TODO_PROVIDER.get().changeTodoDone(message.getUserId(), id, true);
-                            message.reply("Changed status.");
+                            Registries.TODO_PROVIDER.get().changeTodoDone(commandContext.getUserId(), id, true);
+                            commandContext.reply("Changed status.");
                             break;
                         case "pending":
-                            Registries.TODO_PROVIDER.get().changeTodoDone(message.getUserId(), id, false);
-                            message.reply("Changed status.");
+                            Registries.TODO_PROVIDER.get().changeTodoDone(commandContext.getUserId(), id, false);
+                            commandContext.reply("Changed status.");
                             break;
                         case "remove":
-                            Registries.TODO_PROVIDER.get().deleteTodo(message.getUserId(), id);
-                            message.reply("Removed todo.");
+                            Registries.TODO_PROVIDER.get().deleteTodo(commandContext.getUserId(), id);
+                            commandContext.reply("Removed todo.");
                             break;
                         default:
-                            message.reply("Invalid arguments.");
+                            commandContext.reply("Invalid arguments.");
                             break;
                     }
                     break;
                 default:
-                    message.reply("Invalid arguments.");
+                    commandContext.reply("Invalid arguments.");
                     break;
             }
         }
@@ -78,11 +78,11 @@ public class TodoCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         switch (commandContext.get("subcommand").asString()) {
             case "list":
                 StringBuilder result = new StringBuilder();
-                HashMap<Integer, Pair<Boolean, String>> todos = Registries.TODO_PROVIDER.get().loadTodo(commandContext.userId);
+                HashMap<Integer, Pair<Boolean, String>> todos = Registries.TODO_PROVIDER.get().loadTodo(commandContext.getUserId());
                 for (int key : todos.keySet()) {
                     Pair<Boolean, String> entry = todos.get(key);
                     result.append(entry.t1 ? "[x] " : "[ ] ").append(key).append(": ").append(entry.t2).append("\n");
@@ -90,19 +90,19 @@ public class TodoCommand extends SchemaCommand {
                 commandContext.reply(commandContext.formatCodeBlock(result.toString()));
                 break;
             case "done":
-                Registries.TODO_PROVIDER.get().changeTodoDone(commandContext.userId, commandContext.get("id").asInteger(), true);
+                Registries.TODO_PROVIDER.get().changeTodoDone(commandContext.getUserId(), commandContext.get("id").asInteger(), true);
                 commandContext.reply("Changed status.");
                 break;
             case "pending":
-                Registries.TODO_PROVIDER.get().changeTodoDone(commandContext.userId, commandContext.get("id").asInteger(), false);
+                Registries.TODO_PROVIDER.get().changeTodoDone(commandContext.getUserId(), commandContext.get("id").asInteger(), false);
                 commandContext.reply("Changed status.");
                 break;
             case "remove":
-                Registries.TODO_PROVIDER.get().deleteTodo(commandContext.userId, commandContext.get("id").asInteger());
+                Registries.TODO_PROVIDER.get().deleteTodo(commandContext.getUserId(), commandContext.get("id").asInteger());
                 commandContext.reply("Removed todo.");
                 break;
             case "add":
-                Registries.TODO_PROVIDER.get().createTodo(commandContext.userId, commandContext.get("todo").asString());
+                Registries.TODO_PROVIDER.get().createTodo(commandContext.getUserId(), commandContext.get("todo").asString());
                 commandContext.reply("Added todo.");
                 break;
             default:

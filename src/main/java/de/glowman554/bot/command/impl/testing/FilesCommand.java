@@ -5,26 +5,22 @@ import de.glowman554.bot.utils.StreamedFile;
 
 public class FilesCommand extends SchemaCommand {
     public FilesCommand() {
-        super(Constants.TESTING, Constants.TESTING, "testing", Command.Group.TESTING);
+        super(Constants.TESTING, Constants.TESTING, "testing", LegacyCommand.Group.TESTING);
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
-        if (message.getAttachments().isEmpty()) {
-            message.reply("No files attached!");
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
+        if (commandContext.getAttachments().isEmpty()) {
+            commandContext.reply("No files attached!");
         }
 
-        for (Attachment attachment : message.getAttachments()) {
-            message.reply(String.format("%s: %s", attachment.getName(), attachment.getType()));
+        for (Attachment attachment : commandContext.getAttachments()) {
+            commandContext.reply(String.format("%s: %s", attachment.getName(), attachment.getType()));
 
             try (StreamedFile file = attachment.download()) {
                 if (attachment.getType() != null) {
-                    MediaType type = switch (attachment.getType()) {
-                        case AUDIO -> MediaType.AUDIO;
-                        case IMAGE -> MediaType.IMAGE;
-                        case VIDEO -> MediaType.VIDEO;
-                    };
-                    message.replyFile(file, type, false);
+                    MediaType type = attachment.getType();
+                    commandContext.replyFile(file, type, false);
                 }
             }
         }
@@ -37,7 +33,7 @@ public class FilesCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         try (StreamedFile file = commandContext.get("file").asAttachment()) {
             commandContext.replyFile(file, MediaType.DOCUMENT, false);
         }

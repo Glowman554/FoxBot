@@ -8,21 +8,21 @@ import net.shadew.json.JsonNode;
 public abstract class JsonTextCommand extends SchemaCommand {
     private final String url;
 
-    public JsonTextCommand(String shortHelp, String permission, Command.Group group, String url) {
+    public JsonTextCommand(String shortHelp, String permission, LegacyCommand.Group group, String url) {
         super(shortHelp, "Usage: <command>", permission, group);
         this.url = url;
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length != 0) {
-            message.reply(Constants.NO_ARGUMENTS);
+            commandContext.reply(Constants.NO_ARGUMENTS);
         } else {
-            doSend(message);
+            doSend(commandContext);
         }
     }
 
-    private void doSend(Reply reply) throws Exception {
+    private void doSend(IReply reply) throws Exception {
         String res = HttpClient.get(url);
 
         Json json = Json.json();
@@ -37,7 +37,7 @@ public abstract class JsonTextCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         doSend(commandContext);
     }
 

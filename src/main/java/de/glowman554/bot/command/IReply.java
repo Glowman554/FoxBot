@@ -2,7 +2,7 @@ package de.glowman554.bot.command;
 
 import de.glowman554.bot.utils.StreamedFile;
 
-public interface Reply {
+public interface IReply {
     void reply(String reply);
 
     void replyFile(StreamedFile file, MediaType type, boolean nsfw);

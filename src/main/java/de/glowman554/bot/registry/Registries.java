@@ -2,14 +2,14 @@ package de.glowman554.bot.registry;
 
 import de.glowman554.bot.Feature;
 import de.glowman554.bot.Platform;
-import de.glowman554.bot.command.Command;
+import de.glowman554.bot.command.LegacyCommand;
 import de.glowman554.bot.command.PermissionProvider;
 import de.glowman554.bot.command.SchemaCommand;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.TodoProvider;
 
 public class Registries {
-    public static final Registry<String, Command> COMMANDS = new Registry<>((string, command) -> {
+    public static final Registry<String, LegacyCommand> COMMANDS = new Registry<>((string, command) -> {
         if (!(command instanceof SchemaCommand)) {
             Logger.log("[WARNING (%s)] Command is not a SchemaCommand.", string);
         }

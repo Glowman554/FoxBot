@@ -17,7 +17,7 @@ public class RoleCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         // role list
         // role remove test
         // role <id> set test
@@ -28,7 +28,7 @@ public class RoleCommand extends SchemaCommand {
             for (int i = 2; i < arguments.length; i++) {
                 builder.permission(arguments[i]);
             }
-            message.reply("Created new role " + arguments[1]);
+            commandContext.reply("Created new role " + arguments[1]);
         } else {
 
             switch (arguments.length) {
@@ -39,34 +39,34 @@ public class RoleCommand extends SchemaCommand {
                         for (Pair<String, List<String>> role : roles) {
                             result.append(role.t1).append(": ").append(String.join(", ", role.t2)).append("\n");
                         }
-                        message.reply(result.toString());
+                        commandContext.reply(result.toString());
                     } else {
-                        fail(message);
+                        fail(commandContext);
                     }
                     break;
 
                 case 2:
                     if (arguments[0].equals("remove")) {
                         Registries.PERMISSION_PROVIDER.get().removeRole(arguments[1]);
-                        message.reply("Removed role " + arguments[1]);
+                        commandContext.reply("Removed role " + arguments[1]);
                     } else {
-                        fail(message);
+                        fail(commandContext);
                     }
                     break;
 
                 case 3:
                     if (arguments[1].equals("set")) {
                         Registries.PERMISSION_PROVIDER.get().setRole(arguments[0], arguments[2]);
-                        message.reply("Set " + arguments[0] + "'s role to " + arguments[1]);
+                        commandContext.reply("Set " + arguments[0] + "'s role to " + arguments[1]);
                     } else {
-                        fail(message);
+                        fail(commandContext);
                     }
             }
         }
     }
 
-    private void fail(Message message) {
-        message.reply("Invalid arguments.");
+    private void fail(LegacyCommandContext commandContext) {
+        commandContext.reply("Invalid arguments.");
     }
 
     @Override
@@ -78,7 +78,7 @@ public class RoleCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
 
         switch (commandContext.get("subcommand").asString()) {
             case "list":

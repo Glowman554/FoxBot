@@ -1,19 +1,19 @@
 package de.glowman554.bot.command.impl;
 
 import de.glowman554.bot.Main;
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommand;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.registry.Registries;
 
-public class RepeatCommand extends Command {
+public class RepeatCommand extends LegacyCommand {
     public RepeatCommand() {
         super("Repeat a command.", "Usage: <command> [command]", null, Group.TOOLS);
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length < 2) {
-            message.reply("Not enough arguments");
+            commandContext.reply("Not enough arguments");
         } else {
             int count = Integer.parseInt(arguments[0]);
 
@@ -25,21 +25,21 @@ public class RepeatCommand extends Command {
             }
 
             if (newArguments[0].equals(Main.config.getPrefix() + "repeat")) {
-                message.reply("You can't repeat a repeat command");
+                commandContext.reply("You can't repeat a repeat command");
             } else {
-                if (count < 11 || Registries.PERMISSION_PROVIDER.get().hasPermission(message.getUserId(), "no_limit")) {
+                if (count < 11 || Registries.PERMISSION_PROVIDER.get().hasPermission(commandContext.getUserId(), "no_limit")) {
 
                     if (count < 0) {
-                        message.reply("Count must be greater than 0");
+                        commandContext.reply("Count must be greater than 0");
                     } else {
-                        message.modifyMessage(String.join(" ", newArguments));
+                        commandContext.modifyMessage(String.join(" ", newArguments));
 
                         for (int i = 0; i < count; i++) {
-                            message.call(Message.class);
+                            commandContext.call(LegacyCommandContext.class);
                         }
                     }
                 } else {
-                    message.reply("Count must be less than 10");
+                    commandContext.reply("Count must be less than 10");
                 }
             }
         }

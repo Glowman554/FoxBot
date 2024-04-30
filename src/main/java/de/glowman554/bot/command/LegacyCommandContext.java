@@ -4,14 +4,14 @@ import de.glowman554.bot.event.Event;
 
 import java.util.ArrayList;
 
-public abstract class Message extends Event implements Reply {
-    private final Message quote;
+public abstract class LegacyCommandContext extends Event implements IContext {
+    private final LegacyCommandContext quote;
     private final ArrayList<Attachment> attachments;
     private final String userId;
     private final String displayName;
     private String message;
 
-    protected Message(String message, Message quote, ArrayList<Attachment> attachments, String userId, String displayName) {
+    protected LegacyCommandContext(String message, LegacyCommandContext quote, ArrayList<Attachment> attachments, String userId, String displayName) {
         this.message = message;
         this.quote = quote;
         this.attachments = attachments;
@@ -23,7 +23,7 @@ public abstract class Message extends Event implements Reply {
         return message;
     }
 
-    public Message getQuote() {
+    public LegacyCommandContext getQuote() {
         return quote;
     }
 

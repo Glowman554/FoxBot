@@ -1,23 +1,23 @@
 package de.glowman554.bot.platform.discord;
 
 import de.glowman554.bot.command.Attachment;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.MediaType;
-import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.StreamedFile;
 import net.dv8tion.jda.api.utils.FileUpload;
 
 import java.util.ArrayList;
 
-public class DiscordMessage extends Message {
+public class DiscordLegacyCommandContext extends LegacyCommandContext {
     private final net.dv8tion.jda.api.entities.Message discordMessage;
 
-    private DiscordMessage(net.dv8tion.jda.api.entities.Message discordMessage, Message quote, ArrayList<Attachment> attachments) {
+    private DiscordLegacyCommandContext(net.dv8tion.jda.api.entities.Message discordMessage, LegacyCommandContext quote, ArrayList<Attachment> attachments) {
         super(discordMessage.getContentDisplay(), quote, attachments, discordMessage.getAuthor().getId() + "@discord", discordMessage.getAuthor().getEffectiveName());
         this.discordMessage = discordMessage;
     }
 
-    public static DiscordMessage create(net.dv8tion.jda.api.entities.Message message) {
-        Message quote = null;
+    public static DiscordLegacyCommandContext create(net.dv8tion.jda.api.entities.Message message) {
+        LegacyCommandContext quote = null;
         net.dv8tion.jda.api.entities.Message referenced = message.getReferencedMessage();
         if (referenced != null) {
             quote = create(referenced);
@@ -28,7 +28,7 @@ public class DiscordMessage extends Message {
             attachments.add(new DiscordAttachment(attachment));
         }
 
-        return new DiscordMessage(message, quote, attachments);
+        return new DiscordLegacyCommandContext(message, quote, attachments);
     }
 
     @Override

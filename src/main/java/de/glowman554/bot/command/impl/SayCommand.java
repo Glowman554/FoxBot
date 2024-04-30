@@ -1,9 +1,9 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.CommandContext;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.Schema;
 import de.glowman554.bot.command.SchemaCommand;
+import de.glowman554.bot.command.SchemaCommandContext;
 
 public class SayCommand extends SchemaCommand {
     public SayCommand() {
@@ -11,11 +11,11 @@ public class SayCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length == 0) {
-            message.reply("You need to specify a message to say.");
+            commandContext.reply("You need to specify a message to say.");
         } else {
-            message.reply(String.join(" ", arguments));
+            commandContext.reply(String.join(" ", arguments));
         }
     }
 
@@ -25,7 +25,7 @@ public class SayCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         commandContext.reply(commandContext.get("text").asString());
     }
 }

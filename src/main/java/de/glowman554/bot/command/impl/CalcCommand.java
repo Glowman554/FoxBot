@@ -1,9 +1,9 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.CommandContext;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.Schema;
 import de.glowman554.bot.command.SchemaCommand;
+import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.utils.math.MathInterpreter;
 
 public class CalcCommand extends SchemaCommand {
@@ -12,13 +12,13 @@ public class CalcCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length == 0) {
-            message.reply("Expected at leas t 1 argument!");
+            commandContext.reply("Expected at leas t 1 argument!");
         } else {
             String expr = String.join(" ", arguments);
 
-            message.reply("The result is: " + MathInterpreter.eval(expr));
+            commandContext.reply("The result is: " + MathInterpreter.eval(expr));
         }
     }
 
@@ -28,7 +28,7 @@ public class CalcCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         commandContext.reply("The result is: " + MathInterpreter.eval(commandContext.get("expression").asString()));
 
     }

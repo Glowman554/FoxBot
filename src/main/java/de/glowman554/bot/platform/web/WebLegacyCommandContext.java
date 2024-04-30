@@ -1,8 +1,8 @@
 package de.glowman554.bot.platform.web;
 
 import de.glowman554.bot.command.Attachment;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.MediaType;
-import de.glowman554.bot.command.Message;
 import de.glowman554.bot.utils.StreamedFile;
 import io.javalin.websocket.WsMessageContext;
 import net.shadew.json.Json;
@@ -14,10 +14,10 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Base64;
 
-public class WebMessage extends Message {
+public class WebLegacyCommandContext extends LegacyCommandContext {
     private final WsMessageContext session;
 
-    protected WebMessage(String message, String userId, String displayName, WsMessageContext session, ArrayList<Attachment> attachments) {
+    protected WebLegacyCommandContext(String message, String userId, String displayName, WsMessageContext session, ArrayList<Attachment> attachments) {
         super(message, null, attachments, userId, displayName);
         this.session = session;
     }

@@ -5,9 +5,9 @@ import de.glowman554.bot.logging.Logger;
 import java.io.*;
 
 public class Executor {
-    private static final String[] nsjail = new String[] { "-l /tmp/nsjail.log", "-Mo", "--user 0", "--group 99999",
-            "--chroot /", "-T /boot/", "-T /dev/", "-T /mnt/", "-T /media/", "-t 600", "-T /proc/", "--keep_caps" };
-    private static final String[] filter = new String[] { "$", "(", ")", "'", "\"", "|", "<", ">", "`", "\\" };
+    private static final String[] nsjail = new String[]{"-l /tmp/nsjail.log", "-Mo", "--user 0", "--group 99999",
+            "--chroot /", "-T /boot/", "-T /dev/", "-T /mnt/", "-T /media/", "-t 600", "-T /proc/", "--keep_caps"};
+    private static final String[] filter = new String[]{"$", "(", ")", "'", "\"", "|", "<", ">", "`", "\\"};
     private static final File nsjailExecutable = new File("./nsjail.elf");
     private static boolean secure = true;
 

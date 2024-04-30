@@ -9,11 +9,11 @@ public class FormattingCommand extends SchemaCommand {
 
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
-        message.reply(message.formatBold("bold"));
-        message.reply(message.formatItalic("italic"));
-        message.reply(message.formatCode("code"));
-        message.reply(message.formatCodeBlock("code block"));
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
+        commandContext.reply(commandContext.formatBold("bold"));
+        commandContext.reply(commandContext.formatItalic("italic"));
+        commandContext.reply(commandContext.formatCode("code"));
+        commandContext.reply(commandContext.formatCodeBlock("code block"));
     }
 
     @Override
@@ -22,7 +22,7 @@ public class FormattingCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         commandContext.reply(commandContext.formatBold("bold"));
         commandContext.reply(commandContext.formatItalic("italic"));
         commandContext.reply(commandContext.formatCode("code"));

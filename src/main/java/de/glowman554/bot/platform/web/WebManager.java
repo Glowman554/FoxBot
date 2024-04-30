@@ -29,11 +29,11 @@ public class WebManager {
     }
 
     @EventTarget
-    public void onMessage(Message message) {
+    public void onMessage(LegacyCommandContext commandContext) {
         for (Session session : connections.keySet()) {
             WebInstance instance = connections.get(session);
-            if (message.getUserId().equals(instance.getUserId()) && message.getMessage().equals(instance.getAuthenticationString())) {
-                Logger.log("User %s authenticated", message.getUserId());
+            if (commandContext.getUserId().equals(instance.getUserId()) && commandContext.getMessage().equals(instance.getAuthenticationString())) {
+                Logger.log("User %s authenticated", commandContext.getUserId());
                 instance.setAuthenticated(true);
             }
         }
@@ -79,15 +79,15 @@ public class WebManager {
                         attachments.add(new WebAttachment(attachmentNode.get("name").asString(), attachmentNode.get("file").asString()));
                     }
                     if (instance.isAuthenticated()) {
-                        new WebMessage(root.get("message").asString(), instance.getUserId(), "Web", wsMessageContext, attachments).call(Message.class);
+                        new WebLegacyCommandContext(root.get("message").asString(), instance.getUserId(), "Web", wsMessageContext, attachments).call(LegacyCommandContext.class);
                     } else {
-                        new WebMessage(root.get("message").asString(), "web", "Web", wsMessageContext, attachments).call(Message.class);
+                        new WebLegacyCommandContext(root.get("message").asString(), "web", "Web", wsMessageContext, attachments).call(LegacyCommandContext.class);
                     }
                     break;
                 case "schemaMessage":
-                    Command command = Registries.COMMANDS.get(root.get("schemaCommandName").asString());
+                    LegacyCommand command = Registries.COMMANDS.get(root.get("schemaCommandName").asString());
                     if (command instanceof SchemaCommand schemaCommand) {
-                        CommandContext context = new WebCommandContext(instance.isAuthenticated() ? instance.getUserId() : "web", "Web", wsMessageContext, root);
+                        SchemaCommandContext context = new WebSchemaCommandContext(instance.isAuthenticated() ? instance.getUserId() : "web", "Web", wsMessageContext, root);
                         schemaCommand.loadSchema(context);
                         Main.commandManager.execute(root.get("schemaCommandName").asString(), schemaCommand, context);
                     }

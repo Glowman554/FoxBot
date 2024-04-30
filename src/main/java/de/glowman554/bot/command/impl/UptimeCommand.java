@@ -12,11 +12,11 @@ public class UptimeCommand extends SchemaCommand {
 
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length != 0) {
-            message.reply(Constants.NO_ARGUMENTS);
+            commandContext.reply(Constants.NO_ARGUMENTS);
         } else {
-            message.reply(TimeUtils.millisecondToDhms(System.currentTimeMillis() - startingTime));
+            commandContext.reply(TimeUtils.millisecondToDhms(System.currentTimeMillis() - startingTime));
         }
     }
 
@@ -26,7 +26,7 @@ public class UptimeCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         commandContext.reply(TimeUtils.millisecondToDhms(System.currentTimeMillis() - startingTime));
     }
 }

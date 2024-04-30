@@ -8,12 +8,16 @@ public class WhoamiCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length != 0) {
-            message.reply(Constants.NO_ARGUMENTS);
+            commandContext.reply(Constants.NO_ARGUMENTS);
         } else {
-            message.reply("displayName: " + message.formatCode(message.getDisplayName()) + "\n" + "userId: " + message.formatCode(message.getUserId()));
+            common(commandContext);
         }
+    }
+
+    private void common(IContext context) {
+        context.reply("displayName: " + context.formatCode(context.getDisplayName()) + "\n" + "userId: " + context.formatCode(context.getUserId()));
     }
 
     @Override
@@ -22,8 +26,7 @@ public class WhoamiCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
-        commandContext.reply("displayName: " + commandContext.formatCode(commandContext.displayName) + "\n" + "userId: " + commandContext.formatCode(commandContext.userId));
-
+    public void execute(SchemaCommandContext commandContext) throws Exception {
+        common(commandContext);
     }
 }

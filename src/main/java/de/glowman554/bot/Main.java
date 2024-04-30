@@ -3,10 +3,10 @@ package de.glowman554.bot;
 import de.glowman554.bot.api.HelpEndpoint;
 import de.glowman554.bot.api.StatsEndpoint;
 import de.glowman554.bot.api.UsageEndpoint;
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.CommandContext;
 import de.glowman554.bot.command.CommandManager;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommand;
+import de.glowman554.bot.command.LegacyCommandContext;
+import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.command.impl.*;
 import de.glowman554.bot.command.impl.testing.Testing;
 import de.glowman554.bot.event.impl.JavalinEvent;
@@ -180,7 +180,7 @@ public class Main {
     }
 
     private static void complete() {
-        for (Command.Group group : Command.Group.values()) {
+        for (LegacyCommand.Group group : LegacyCommand.Group.values()) {
             List<String> groupCommands = Registries.COMMANDS.getRegistry().keySet().stream()
                     .filter(key -> Registries.COMMANDS.get(key).getGroup() == group).toList();
             Logger.log("%s: %d commands", group.getDisplayName(), groupCommands.size());
@@ -213,13 +213,13 @@ public class Main {
         return id;
     }
 
-    public static void handleException(Exception exception, Message message) {
+    public static void handleException(Exception exception, LegacyCommandContext commandContext) {
         String id = saveCrash(exception);
-        message.reply("There was an error executing your request. Use "
-                + message.formatCode(config.getPrefix() + "crash " + id) + " to upload the stack trace!");
+        commandContext.reply("There was an error executing your request. Use "
+                + commandContext.formatCode(config.getPrefix() + "crash " + id) + " to upload the stack trace!");
     }
 
-    public static void handleException(Exception exception, CommandContext context) {
+    public static void handleException(Exception exception, SchemaCommandContext context) {
         String id = saveCrash(exception);
         context.reply("There was an error executing your request. Use crash id " + context.formatCode(id)
                 + " to upload the stack trace!");
@@ -262,6 +262,10 @@ public class Main {
             return spotify;
         }
 
+        public String getCompilerBackend() {
+            return compilerBackend;
+        }
+
         public static class WebserverConfig extends AutoSavable {
             @Saved
             private int port = 8888;
@@ -296,10 +300,6 @@ public class Main {
             public String getRedirectUrl() {
                 return redirectUrl;
             }
-        }
-
-        public String getCompilerBackend() {
-            return compilerBackend;
         }
     }
 }

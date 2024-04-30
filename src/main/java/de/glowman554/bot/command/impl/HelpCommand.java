@@ -12,26 +12,26 @@ public class HelpCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length == 0) {
-            doHelp(message, message.getUserId());
+            doHelp(commandContext);
         } else if (arguments.length == 1) {
-            doCommandHelp(arguments[0], message);
+            doCommandHelp(arguments[0], commandContext);
         } else {
-            message.reply("Command takes exactly 0 or 1 argument!");
+            commandContext.reply("Command takes exactly 0 or 1 argument!");
         }
     }
 
-    private void doHelp(Reply reply, String userId) {
+    private void doHelp(IContext context) {
         StringBuilder response = new StringBuilder();
 
         for (Group group : Group.values()) {
             List<String> groupCommands = Registries.COMMANDS.getRegistry().keySet().stream().filter(key -> {
-                Command command = Registries.COMMANDS.get(key);
+                LegacyCommand command = Registries.COMMANDS.get(key);
                 if (command.getGroup() != group) {
                     return false;
                 }
-                return Registries.PERMISSION_PROVIDER.get().hasPermission(userId, command.getPermission());
+                return Registries.PERMISSION_PROVIDER.get().hasPermission(context.getUserId(), command.getPermission());
             }).toList();
 
             if (groupCommands.isEmpty()) {
@@ -40,22 +40,22 @@ public class HelpCommand extends SchemaCommand {
 
             response.append(group.getDisplayName()).append(" commands:\n");
             for (String key : groupCommands) {
-                Command command = Registries.COMMANDS.get(key);
-                response.append(reply.formatBold(Main.config.getPrefix() + key)).append(": ").append(command.getShortHelp()).append("\n");
+                LegacyCommand command = Registries.COMMANDS.get(key);
+                response.append(context.formatBold(Main.config.getPrefix() + key)).append(": ").append(command.getShortHelp()).append("\n");
             }
 
             response.append("\n");
         }
 
-        reply.reply(response.toString());
+        context.reply(response.toString());
     }
 
-    private void doCommandHelp(String commandStr, Reply reply) {
+    private void doCommandHelp(String commandStr, IReply reply) {
         if (commandStr.startsWith(Main.config.getPrefix())) {
             commandStr = commandStr.substring(Main.config.getPrefix().length());
         }
         try {
-            Command command = Registries.COMMANDS.get(commandStr);
+            LegacyCommand command = Registries.COMMANDS.get(commandStr);
             reply.reply(reply.formatBold(Main.config.getPrefix() + commandStr + " (" + command.getGroup().getDisplayName() + " command)") + "\n\n" + command.getLongHelp().replace("<command>", Main.config.getPrefix() + commandStr));
         } catch (IllegalArgumentException e) {
             reply.reply("Command " + commandStr + " not found!");
@@ -68,10 +68,10 @@ public class HelpCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         Schema.Value command = commandContext.get("command");
         if (command == null) {
-            doHelp(commandContext, commandContext.userId);
+            doHelp(commandContext);
         } else {
             doCommandHelp(command.asString(), commandContext);
         }

@@ -2,10 +2,10 @@ package de.glowman554.bot.platform.discord;
 
 import de.glowman554.bot.Main;
 import de.glowman554.bot.Platform;
-import de.glowman554.bot.command.Command;
-import de.glowman554.bot.command.CommandContext;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommand;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.SchemaCommand;
+import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.config.ConfigManager;
@@ -67,11 +67,11 @@ public class DiscordPlatform extends Platform implements EventListener {
             if (messageReceivedEvent.getAuthor().isBot()) {
                 return;
             }
-            DiscordMessage.create(messageReceivedEvent.getMessage()).call(Message.class);
+            DiscordLegacyCommandContext.create(messageReceivedEvent.getMessage()).call(LegacyCommandContext.class);
         } else if (genericEvent instanceof SlashCommandInteractionEvent slashCommandInteractionEvent) {
-            Command command = Registries.COMMANDS.get(slashCommandInteractionEvent.getFullCommandName());
+            LegacyCommand command = Registries.COMMANDS.get(slashCommandInteractionEvent.getFullCommandName());
             if (command instanceof SchemaCommand schemaCommand) {
-                CommandContext context = new DiscordCommandContext(slashCommandInteractionEvent);
+                SchemaCommandContext context = new DiscordSchemaCommandContext(slashCommandInteractionEvent);
                 schemaCommand.loadSchema(context);
                 Main.commandManager.execute(slashCommandInteractionEvent.getFullCommandName(), schemaCommand, context);
             }

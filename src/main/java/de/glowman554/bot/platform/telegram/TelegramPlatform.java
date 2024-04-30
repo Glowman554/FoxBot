@@ -1,7 +1,7 @@
 package de.glowman554.bot.platform.telegram;
 
 import de.glowman554.bot.Platform;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.config.ConfigManager;
 import de.glowman554.config.auto.AutoSavable;
@@ -40,7 +40,7 @@ public class TelegramPlatform extends Platform {
                 @Override
                 public void onUpdateReceived(Update update) {
                     if (update.hasMessage()) {
-                        TelegramMessage.create(update.getMessage(), finalConfig.token).call(Message.class);
+                        TelegramLegacyCommandContext.create(update.getMessage(), finalConfig.token).call(LegacyCommandContext.class);
                     }
                 }
 

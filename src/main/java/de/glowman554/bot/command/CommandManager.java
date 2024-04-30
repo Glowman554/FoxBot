@@ -24,15 +24,15 @@ public class CommandManager implements Savable {
     }
 
     @EventTarget
-    public void onMessage(Message message) {
-        if (message.getMessage() == null) {
+    public void onMessage(LegacyCommandContext commandContext) {
+        if (commandContext.getMessage() == null) {
             return;
         }
 
-        Logger.log("%s", message);
+        Logger.log("%s", commandContext);
 
-        if (message.getMessage().startsWith(Main.config.getPrefix())) {
-            String[] arguments = message.getMessage().split(" ");
+        if (commandContext.getMessage().startsWith(Main.config.getPrefix())) {
+            String[] arguments = commandContext.getMessage().split(" ");
             arguments[0] = arguments[0].substring(Main.config.getPrefix().length());
 
             if (Registries.COMMANDS.has(arguments[0])) {
@@ -44,17 +44,17 @@ public class CommandManager implements Savable {
                 save();
 
                 try {
-                    Command command = Registries.COMMANDS.get(arguments[0]);
+                    LegacyCommand command = Registries.COMMANDS.get(arguments[0]);
 
-                    if (Registries.PERMISSION_PROVIDER.get().hasPermission(message.getUserId(), command.getPermission())) {
+                    if (Registries.PERMISSION_PROVIDER.get().hasPermission(commandContext.getUserId(), command.getPermission())) {
                         String[] commandArguments = new String[arguments.length - 1];
                         System.arraycopy(arguments, 1, commandArguments, 0, arguments.length - 1);
-                        command.execute(message, commandArguments);
+                        command.execute(commandContext, commandArguments);
                     } else {
-                        message.reply("You are not allowed to use this command!");
+                        commandContext.reply("You are not allowed to use this command!");
                     }
                 } catch (Exception exception) {
-                    Main.handleException(exception, message);
+                    Main.handleException(exception, commandContext);
                 }
             }
         }
@@ -102,7 +102,7 @@ public class CommandManager implements Savable {
         save();
     }
 
-    public void execute(String name, SchemaCommand command, CommandContext context) {
+    public void execute(String name, SchemaCommand command, SchemaCommandContext context) {
         if (usage.containsKey(name)) {
             usage.put(name, usage.get(name) + 1);
         } else {
@@ -112,7 +112,7 @@ public class CommandManager implements Savable {
 
         try {
 
-            if (Registries.PERMISSION_PROVIDER.get().hasPermission(context.userId, command.getPermission())) {
+            if (Registries.PERMISSION_PROVIDER.get().hasPermission(context.getUserId(), command.getPermission())) {
                 command.execute(context);
             } else {
                 context.reply("You are not allowed to use this command!");

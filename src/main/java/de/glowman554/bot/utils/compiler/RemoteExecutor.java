@@ -1,11 +1,11 @@
 package de.glowman554.bot.utils.compiler;
 
-import java.io.IOException;
-
 import de.glowman554.bot.Main;
 import de.glowman554.bot.utils.HttpClient;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+
+import java.io.IOException;
 
 public class RemoteExecutor {
     public static String execute(String command) throws IOException {

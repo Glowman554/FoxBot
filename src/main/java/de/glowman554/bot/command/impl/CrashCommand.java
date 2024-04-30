@@ -12,12 +12,12 @@ public class CrashCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length != 1) {
-            message.reply("Command takes exactly 1 argument");
+            commandContext.reply("Command takes exactly 1 argument");
         } else {
             try (StreamedFile file = new StreamedFile(new File(Logger.logDirectory, arguments[0] + ".log"))) {
-                message.replyFile(file, MediaType.DOCUMENT, false);
+                commandContext.replyFile(file, MediaType.DOCUMENT, false);
             }
         }
     }
@@ -28,7 +28,7 @@ public class CrashCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         try (StreamedFile file = new StreamedFile(new File(Logger.logDirectory, commandContext.get("id").asString() + ".log"))) {
             commandContext.replyFile(file, MediaType.DOCUMENT, false);
         }

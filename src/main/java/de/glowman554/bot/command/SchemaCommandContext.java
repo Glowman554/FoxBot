@@ -2,13 +2,13 @@ package de.glowman554.bot.command;
 
 import java.util.HashMap;
 
-public abstract class CommandContext extends Schema implements Reply {
-    public final String userId;
-    public final String displayName;
+public abstract class SchemaCommandContext extends Schema implements IContext {
 
     private final HashMap<String, Schema.Value> values = new HashMap<>();
+    private final String userId;
+    private final String displayName;
 
-    public CommandContext(String userId, String displayName) {
+    public SchemaCommandContext(String userId, String displayName) {
         super(null, null);
         this.userId = userId;
         this.displayName = displayName;
@@ -19,6 +19,15 @@ public abstract class CommandContext extends Schema implements Reply {
     public Schema.Value get(String option) {
         return values.get(option);
     }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
 
     @Override
     public Argument addArgument(Argument.Type type, String name, String description, boolean optional) {

@@ -11,15 +11,15 @@ public class Magic8Command extends SchemaCommand {
 
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length == 0) {
-            message.reply("You should ask a question didn't you know?");
+            commandContext.reply("You should ask a question didn't you know?");
         } else {
-            doSend(message);
+            doSend(commandContext);
         }
     }
 
-    private void doSend(Reply reply) {
+    private void doSend(IReply reply) {
         String response = answers[(int) (Math.random() * answers.length)];
         reply.reply(response);
     }
@@ -30,7 +30,7 @@ public class Magic8Command extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         doSend(commandContext);
     }
 }

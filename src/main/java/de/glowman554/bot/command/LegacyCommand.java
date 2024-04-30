@@ -2,13 +2,13 @@ package de.glowman554.bot.command;
 
 import de.glowman554.bot.logging.Logger;
 
-public abstract class Command {
+public abstract class LegacyCommand {
     private final String shortHelp;
     private final String longHelp;
     private final String permission;
     private final Group group;
 
-    public Command(String shortHelp, String longHelp, String permission, Group group) {
+    public LegacyCommand(String shortHelp, String longHelp, String permission, Group group) {
         this.shortHelp = shortHelp;
         this.longHelp = longHelp;
         this.permission = permission;
@@ -35,7 +35,7 @@ public abstract class Command {
         return group;
     }
 
-    public abstract void execute(Message message, String[] arguments) throws Exception;
+    public abstract void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception;
 
     public enum Group {
         DEVELOPMENT("Development"), ANIMAL("Animal"), FUN("Fun"), TOOLS("Tool"), TESTING("Testing");

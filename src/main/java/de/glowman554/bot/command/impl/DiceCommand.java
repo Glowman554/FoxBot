@@ -1,9 +1,9 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.CommandContext;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.Schema;
 import de.glowman554.bot.command.SchemaCommand;
+import de.glowman554.bot.command.SchemaCommandContext;
 
 public class DiceCommand extends SchemaCommand {
     public DiceCommand() {
@@ -11,9 +11,9 @@ public class DiceCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (!(arguments.length == 0 || arguments.length == 1)) {
-            message.reply("Expected 0 or 1 arguments!");
+            commandContext.reply("Expected 0 or 1 arguments!");
         } else {
             int numSides = 6;
 
@@ -21,7 +21,7 @@ public class DiceCommand extends SchemaCommand {
                 numSides = Integer.parseInt(arguments[0]);
             }
 
-            message.reply("You rolled a " + ((int) (Math.random() * numSides) + 1));
+            commandContext.reply("You rolled a " + ((int) (Math.random() * numSides) + 1));
         }
     }
 
@@ -31,7 +31,7 @@ public class DiceCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         int numSides = 6;
         Schema.Value sidesValue = commandContext.get("sides");
         if (sidesValue != null) {

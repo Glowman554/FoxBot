@@ -1,7 +1,7 @@
 package de.glowman554.bot.platform.web;
 
-import de.glowman554.bot.command.CommandContext;
 import de.glowman554.bot.command.MediaType;
+import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.utils.StreamedFile;
 import io.javalin.websocket.WsMessageContext;
 import net.shadew.json.Json;
@@ -14,11 +14,11 @@ import java.io.InputStream;
 import java.net.URLConnection;
 import java.util.Base64;
 
-public class WebCommandContext extends CommandContext {
+public class WebSchemaCommandContext extends SchemaCommandContext {
     private final WsMessageContext session;
     private final JsonNode message;
 
-    public WebCommandContext(String userId, String displayName, WsMessageContext session, JsonNode message) {
+    public WebSchemaCommandContext(String userId, String displayName, WsMessageContext session, JsonNode message) {
         super(userId, displayName);
         this.session = session;
         this.message = message;

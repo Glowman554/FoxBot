@@ -17,15 +17,15 @@ public class SpotifyCommand extends SchemaCommand {
 
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length == 0) {
-            message.reply("Invalid arguments");
+            commandContext.reply("Invalid arguments");
         } else {
-            doSend(message, String.join(" ", arguments));
+            doSend(commandContext, String.join(" ", arguments));
         }
     }
 
-    private void doSend(Reply reply, String query) throws Exception {
+    private void doSend(IReply reply, String query) throws Exception {
         List<Song> songs = spotifyApi.searchSpotifySongs(query, 5);
         for (Song song : songs) {
             if (song.preview() == null || song.preview().isEmpty() || song.preview().equals("null")) {
@@ -43,7 +43,7 @@ public class SpotifyCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         doSend(commandContext, commandContext.get("query").asString());
     }
 }

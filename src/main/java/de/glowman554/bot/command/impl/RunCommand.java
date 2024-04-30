@@ -13,19 +13,19 @@ public class RunCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length == 0) {
-            message.reply("Missing command.");
+            commandContext.reply("Missing command.");
         } else {
-            doRun(message, String.join(" ", arguments), message.getUserId());
+            doRun(commandContext, String.join(" ", arguments));
         }
     }
 
-    private void doRun(Reply reply, String command, String userId) throws IOException {
-        if (Registries.PERMISSION_PROVIDER.get().hasPermission(userId, "no_jail")) {
-            reply.reply(Executor.executeUnsafe(command));
+    private void doRun(IContext context, String command) throws IOException {
+        if (Registries.PERMISSION_PROVIDER.get().hasPermission(context.getUserId(), "no_jail")) {
+            context.reply(Executor.executeUnsafe(command));
         } else {
-            reply.reply(RemoteExecutor.execute(command));
+            context.reply(RemoteExecutor.execute(command));
         }
     }
 
@@ -35,7 +35,7 @@ public class RunCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
-        doRun(commandContext, commandContext.get("command").asString(), commandContext.userId);
+    public void execute(SchemaCommandContext commandContext) throws Exception {
+        doRun(commandContext, commandContext.get("command").asString());
     }
 }

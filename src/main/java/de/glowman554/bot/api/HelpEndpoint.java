@@ -1,7 +1,7 @@
 package de.glowman554.bot.api;
 
 import de.glowman554.bot.Main;
-import de.glowman554.bot.command.Command;
+import de.glowman554.bot.command.LegacyCommand;
 import de.glowman554.bot.registry.Registries;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -17,9 +17,9 @@ public class HelpEndpoint implements Handler {
         context.header("Content-Type", "application/json");
         JsonNode root = JsonNode.array();
 
-        HashMap<String, Command> commands = Registries.COMMANDS.getRegistry();
+        HashMap<String, LegacyCommand> commands = Registries.COMMANDS.getRegistry();
         for (String key : commands.keySet()) {
-            Command command = commands.get(key);
+            LegacyCommand command = commands.get(key);
 
             JsonNode object = JsonNode.object();
             object.set("command", key);

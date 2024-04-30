@@ -11,14 +11,14 @@ public class SendFilesCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
-        doTest("https://filesamples.com/samples/audio/mp3/sample3.mp3", MediaType.AUDIO, message);
-        doTest("https://filesamples.com/samples/video/mp4/sample_960x540.mp4", MediaType.VIDEO, message);
-        doTest("https://filesamples.com/samples/image/webp/sample1.webp", MediaType.IMAGE, message);
-        doTest("https://filesamples.com/samples/document/csv/sample2.csv", MediaType.DOCUMENT, message);
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
+        doTest("https://filesamples.com/samples/audio/mp3/sample3.mp3", MediaType.AUDIO, commandContext);
+        doTest("https://filesamples.com/samples/video/mp4/sample_960x540.mp4", MediaType.VIDEO, commandContext);
+        doTest("https://filesamples.com/samples/image/webp/sample1.webp", MediaType.IMAGE, commandContext);
+        doTest("https://filesamples.com/samples/document/csv/sample2.csv", MediaType.DOCUMENT, commandContext);
     }
 
-    public void doTest(String url, MediaType mediaType, Reply message) {
+    public void doTest(String url, MediaType mediaType, IReply message) {
         try (StreamedFile file = HttpClient.download(url)) {
             message.replyFile(file, mediaType, true);
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class SendFilesCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         doTest("https://filesamples.com/samples/audio/mp3/sample3.mp3", MediaType.AUDIO, commandContext);
         doTest("https://filesamples.com/samples/video/mp4/sample_960x540.mp4", MediaType.VIDEO, commandContext);
         doTest("https://filesamples.com/samples/image/webp/sample1.webp", MediaType.IMAGE, commandContext);

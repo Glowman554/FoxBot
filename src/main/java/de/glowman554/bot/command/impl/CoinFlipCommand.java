@@ -8,16 +8,16 @@ public class CoinFlipCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length != 0) {
-            message.reply(Constants.NO_ARGUMENTS);
+            commandContext.reply(Constants.NO_ARGUMENTS);
             return;
         }
 
-        doFlip(message);
+        doFlip(commandContext);
     }
 
-    private void doFlip(Reply reply) {
+    private void doFlip(IReply reply) {
         boolean random = Math.random() < 0.5;
 
         if (random) {
@@ -33,7 +33,7 @@ public class CoinFlipCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         doFlip(commandContext);
     }
 }

@@ -18,7 +18,7 @@ public class FurryCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         String categoryString = "furry.fursuit";
         if (arguments.length == 1) {
             if (arguments[0].equals("list")) {
@@ -28,20 +28,20 @@ public class FurryCommand extends SchemaCommand {
                     result.append(yiffCategory.name()).append(": ").append(yiffCategory.db()).append("\n");
                 }
 
-                message.reply(result.toString());
+                commandContext.reply(result.toString());
                 return;
             } else {
                 categoryString = arguments[0];
             }
         } else if (arguments.length != 0) {
-            message.reply("Command takes exactly 0 or 1 arguments");
+            commandContext.reply("Command takes exactly 0 or 1 arguments");
             return;
         }
 
-        doSend(message, categoryString);
+        doSend(commandContext, categoryString);
     }
 
-    private void doSend(Reply reply, String categoryString) throws Exception {
+    private void doSend(IReply reply, String categoryString) throws Exception {
         Optional<YiffAPI.YiffCategory> yiffCategory = categories.stream().filter(v -> v.db().equals(categoryString)).findFirst();
         if (yiffCategory.isPresent()) {
             try (StreamedFile file = yiffCategory.get().download()) {
@@ -62,7 +62,7 @@ public class FurryCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         String categoryString = "furry.fursuit";
         Schema.Value categoryValue = commandContext.get("category");
         if (categoryValue != null) {

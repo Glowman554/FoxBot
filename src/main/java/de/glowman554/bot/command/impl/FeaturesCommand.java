@@ -11,15 +11,15 @@ public class FeaturesCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
         if (arguments.length != 0) {
-            message.reply(Constants.NO_ARGUMENTS);
+            commandContext.reply(Constants.NO_ARGUMENTS);
         } else {
-            doSend(message);
+            doSend(commandContext);
         }
     }
 
-    private void doSend(Reply reply) {
+    private void doSend(IReply reply) {
         StringBuilder result = new StringBuilder();
 
         for (Feature feature : Registries.FEATURES.getRegistry().values()) {
@@ -35,7 +35,7 @@ public class FeaturesCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         doSend(commandContext);
     }
 }

@@ -8,8 +8,8 @@ public class ArgumentsCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
-        message.reply(String.join(", ", arguments));
+    public void execute(LegacyCommandContext commandContext, String[] arguments) throws Exception {
+        commandContext.reply(String.join(", ", arguments));
     }
 
     @Override
@@ -18,7 +18,7 @@ public class ArgumentsCommand extends SchemaCommand {
     }
 
     @Override
-    public void execute(CommandContext commandContext) {
+    public void execute(SchemaCommandContext commandContext) {
         commandContext.reply(commandContext.get("arg").asString());
     }
 }

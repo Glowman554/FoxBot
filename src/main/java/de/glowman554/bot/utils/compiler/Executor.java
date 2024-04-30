@@ -5,11 +5,13 @@ import de.glowman554.bot.logging.Logger;
 import java.io.*;
 
 public class Executor {
-    private static final String[] nsjail = new String[]{"-l /tmp/nsjail.log", "-Mo", "--user 0", "--group 99999", "--chroot /", "-T /boot/", "-T /dev/", "-T /mnt/", "-T /media/", "-t 600", "-T /proc/", "--keep_caps"};
-    private static final String[] filter = new String[]{"$", "(", ")", "'", "\"", "|", "<", ">", "`", "\\"};
+    private static final String[] nsjail = new String[] { "-l /tmp/nsjail.log", "-Mo", "--user 0", "--group 99999",
+            "--chroot /", "-T /boot/", "-T /dev/", "-T /mnt/", "-T /media/", "-t 600", "-T /proc/", "--keep_caps" };
+    private static final String[] filter = new String[] { "$", "(", ")", "'", "\"", "|", "<", ">", "`", "\\" };
     private static final File nsjailExecutable = new File("./nsjail.elf");
     private static boolean secure = true;
 
+    @Deprecated
     public static String execute(String command) throws IOException {
         if (secure) {
             // Check platform
@@ -24,7 +26,8 @@ public class Executor {
                     }
                 }
 
-                String actualCommand = "echo '" + command + "' | " + new File(".").getAbsolutePath() + "/nsjail.elf " + String.join(" ", nsjail) + " -- /bin/bash";
+                String actualCommand = "echo '" + command + "' | " + new File(".").getAbsolutePath() + "/nsjail.elf "
+                        + String.join(" ", nsjail) + " -- /bin/bash";
 
                 try (FileWriter fileWriter = new FileWriter("/tmp/tmp.sh")) {
                     fileWriter.write(actualCommand);
@@ -56,7 +59,6 @@ public class Executor {
 
             executeUnsafe("bash /tmp/nsjail.sh");
 
-
             if (!nsjailExecutable.exists()) {
                 throw new RuntimeException("Could not install nsjail.");
             }
@@ -64,7 +66,6 @@ public class Executor {
             Logger.log("Downloaded and installed nsjail!");
         }
     }
-
 
     public static String executeUnsafe(String command) throws IOException {
         Logger.log("Executing command '%s'", command);

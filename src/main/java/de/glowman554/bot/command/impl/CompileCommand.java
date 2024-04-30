@@ -1,10 +1,8 @@
 package de.glowman554.bot.command.impl;
 
 import de.glowman554.bot.command.*;
-import de.glowman554.bot.utils.FileUtils;
 import de.glowman554.bot.utils.StreamedFile;
-import de.glowman554.bot.utils.TemporaryFile;
-import de.glowman554.bot.utils.compiler.CompilerManager;
+import de.glowman554.bot.utils.compiler.RemoteCompiler;
 
 import java.util.List;
 
@@ -23,9 +21,8 @@ public class CompileCommand extends SchemaCommand {
                 message.reply("No file attached.");
             } else {
                 for (Attachment attachment : attachments) {
-                    try (TemporaryFile file = new TemporaryFile(FileUtils.getFileExtension(attachment.getName()))) {
-                        attachment.download(file.getFile());
-                        message.reply(message.formatCodeBlock(CompilerManager.run(file)));
+                    try (StreamedFile sourceStream = attachment.download()) {
+                        message.reply(RemoteCompiler.run(sourceStream));
                     }
                 }
             }
@@ -40,10 +37,7 @@ public class CompileCommand extends SchemaCommand {
     @Override
     public void execute(CommandContext commandContext) throws Exception {
         try (StreamedFile sourceStream = commandContext.get("source").asAttachment()) {
-            try (TemporaryFile file = new TemporaryFile(FileUtils.getFileExtension(sourceStream.getName()))) {
-                sourceStream.save(file.getFile());
-                commandContext.reply(commandContext.formatCodeBlock(CompilerManager.run(file)));
-            }
+            commandContext.reply(RemoteCompiler.run(sourceStream));
         }
     }
 }

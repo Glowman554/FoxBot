@@ -8,8 +8,13 @@ services:
       - "router_default"
       - "production_db_default"
       - "default"
+    restart: always
+ 
+  compiler:
+    build: compiler
     privileged: true
     restart: always
+
   ollama:
     image: ollama/ollama:latest
     restart: always

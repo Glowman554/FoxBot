@@ -8,6 +8,7 @@ import de.glowman554.bot.utils.compiler.impl.CppCompiler;
 import de.glowman554.bot.utils.compiler.impl.FlCompiler;
 import de.glowman554.bot.utils.compiler.impl.ShInterpreter;
 
+@Deprecated
 public class CompilerManager {
     public static final Registry<String, Compiler> BY_FILE_EXTENSION = new Registry<>((string, compiler) -> {
     });
@@ -23,6 +24,7 @@ public class CompilerManager {
         BY_FILE_EXTENSION.register(fileExtension, compiler);
     }
 
+    @Deprecated
     public static String run(TemporaryFile file) throws Exception {
         Compiler compiler = BY_FILE_EXTENSION.get(FileUtils.getFileExtension(file.getFile().getName()));
 

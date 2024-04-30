@@ -102,14 +102,14 @@ public class Main {
             exception.printStackTrace(pw);
 
             context.status(500);
-            context.result("<h1>Internal server error!</h1>\n<span style=\"white-space: pre-line\"><code>" + sw.getBuffer().toString() + "</code></span>");
+            context.result("<h1>Internal server error!</h1>\n<span style=\"white-space: pre-line\"><code>"
+                    + sw.getBuffer().toString() + "</code></span>");
         });
 
         app.error(404, context -> {
             context.header("Content-Type", "text/html");
             context.result(new FileInputStream(new File(frontend, "404.html")));
         });
-
 
         app.before(context -> context.header("Access-Control-Allow-Origin", "*"));
 
@@ -130,11 +130,14 @@ public class Main {
     }
 
     private static void registerFeatures() {
-        Registries.FEATURES.register("commands", new Feature("Commands", "The bot supports many different commands.\nTo get a list of all commands use <prefix>help.\nTo get help for a specific command use <prefix>help [command]."));
-        Registries.FEATURES.register("roles", new Feature("Roles", "The bot supports a role system which allows granting specific permissions to roles.\nA user can have exactly 1 role or no role at all."));
+        Registries.FEATURES.register("commands", new Feature("Commands",
+                "The bot supports many different commands.\nTo get a list of all commands use <prefix>help.\nTo get help for a specific command use <prefix>help [command]."));
+        Registries.FEATURES.register("roles", new Feature("Roles",
+                "The bot supports a role system which allows granting specific permissions to roles.\nA user can have exactly 1 role or no role at all."));
 
         if (config.compiler) {
-            Registries.FEATURES.register("compiler", new Feature("Compiler", "Use the '<prefix>compile' command to compile and / or execute the attached file."));
+            Registries.FEATURES.register("compiler", new Feature("Compiler",
+                    "Use the '<prefix>compile' command to compile and / or execute the attached file."));
         }
     }
 
@@ -178,7 +181,8 @@ public class Main {
 
     private static void complete() {
         for (Command.Group group : Command.Group.values()) {
-            List<String> groupCommands = Registries.COMMANDS.getRegistry().keySet().stream().filter(key -> Registries.COMMANDS.get(key).getGroup() == group).toList();
+            List<String> groupCommands = Registries.COMMANDS.getRegistry().keySet().stream()
+                    .filter(key -> Registries.COMMANDS.get(key).getGroup() == group).toList();
             Logger.log("%s: %d commands", group.getDisplayName(), groupCommands.size());
             for (String key : groupCommands) {
                 Logger.log("%s%s", config.prefix, key);
@@ -211,12 +215,14 @@ public class Main {
 
     public static void handleException(Exception exception, Message message) {
         String id = saveCrash(exception);
-        message.reply("There was an error executing your request. Use " + message.formatCode(config.getPrefix() + "crash " + id) + " to upload the stack trace!");
+        message.reply("There was an error executing your request. Use "
+                + message.formatCode(config.getPrefix() + "crash " + id) + " to upload the stack trace!");
     }
 
     public static void handleException(Exception exception, CommandContext context) {
         String id = saveCrash(exception);
-        context.reply("There was an error executing your request. Use crash id " + context.formatCode(id) + " to upload the stack trace!");
+        context.reply("There was an error executing your request. Use crash id " + context.formatCode(id)
+                + " to upload the stack trace!");
     }
 
     private static SslContextFactory.Server getSslContextFactory() {
@@ -226,7 +232,6 @@ public class Main {
         return sslContextFactory;
     }
 
-
     public static class Config extends ConfigFile {
         @Saved
         private String prefix = "owo!";
@@ -234,6 +239,8 @@ public class Main {
         private boolean testing = false;
         @Saved
         private boolean compiler = true;
+        @Saved
+        private String compilerBackend = "http://localhost:1234/";
         @Saved
         private boolean useBuiltinDatabase = true;
         @Saved(remap = Savable.class)
@@ -289,6 +296,10 @@ public class Main {
             public String getRedirectUrl() {
                 return redirectUrl;
             }
+        }
+
+        public String getCompilerBackend() {
+            return compilerBackend;
         }
     }
 }

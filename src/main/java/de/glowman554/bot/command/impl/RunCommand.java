@@ -3,12 +3,13 @@ package de.glowman554.bot.command.impl;
 import de.glowman554.bot.command.*;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.bot.utils.compiler.Executor;
+import de.glowman554.bot.utils.compiler.RemoteExecutor;
 
 import java.io.IOException;
 
 public class RunCommand extends SchemaCommand {
     public RunCommand() {
-        super("Execute a command.", "Usage: <command> [command]", "execute", Group.DEVELOPMENT);
+        super("Execute a command.", "Usage: <command> [command]", null, Group.DEVELOPMENT);
     }
 
     @Override
@@ -24,7 +25,7 @@ public class RunCommand extends SchemaCommand {
         if (Registries.PERMISSION_PROVIDER.get().hasPermission(userId, "no_jail")) {
             reply.reply(Executor.executeUnsafe(command));
         } else {
-            reply.reply(Executor.execute(command));
+            reply.reply(RemoteExecutor.execute(command));
         }
     }
 

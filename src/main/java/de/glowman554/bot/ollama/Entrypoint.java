@@ -19,12 +19,15 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Entrypoint {
     private final Config config = new Config();
     private final HashMap<String, Chat> instances = new HashMap<>();
     private OllamaAPI api;
 
+    private Timer timer = new Timer("chat clean");
 
     public static void main(String[] args) throws Exception {
         new Entrypoint().entrypoint();
@@ -38,16 +41,35 @@ public class Entrypoint {
         api = new OllamaAPI(config.host);
         api.setRequestTimeoutSeconds(60 * 10);
         api.setVerbose(true);
-        try {
-            api.pullModel(config.model);
-        } catch (OllamaBaseException | InterruptedException | URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
 
+        new Thread(() -> {
+            Logger.log("Sending pull request for %s", config.model);
+            try {
+                api.pullModel(config.model);
+            } catch (OllamaBaseException | InterruptedException | URISyntaxException | IOException e) {
+                throw new RuntimeException(e);
+            }
+            Logger.log("Pull completed.");
+
+        }).start();
+
+        register();
+    }
+
+    private void register() {
         EventManager.register(this);
 
-        Registries.FEATURES.register("ollama", new Feature("Ai chatbot", String.format("Use '%s' in front of a message to talk to a chatbot.", config.prefix)));
+        Registries.FEATURES.register("ollama", new Feature("Ai chatbot",
+                String.format("Use '%s' in front of a message to talk to a chatbot.", config.prefix)));
         Registries.COMMANDS.register("set_model", new SetModelCommand(config));
+
+        Logger.log("Scheduling chat clean task");
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                clean();
+            }
+        }, 0, 1000 * 60);
     }
 
     public void clean() {
@@ -72,7 +94,6 @@ public class Entrypoint {
 
     @EventTarget
     public void onMessage(Message message) {
-        clean();
         String messageString = message.getMessage();
         if (messageString.startsWith(config.prefix + " ")) {
             messageString = messageString.substring(config.prefix.length() + 1);

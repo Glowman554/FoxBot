@@ -2,7 +2,7 @@ package de.glowman554.bot.tic_tac_toe;
 
 import de.glowman554.bot.Feature;
 import de.glowman554.bot.Main;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
 import de.glowman554.bot.registry.Registries;
@@ -28,7 +28,7 @@ public class Entrypoint {
     }
 
     @EventTarget
-    public void onMessage(Message message) {
+    public void onMessage(LegacyCommandContext message) {
         Parser parser = Parser.tryParse(message.getMessage());
 
         if (parser != null) {

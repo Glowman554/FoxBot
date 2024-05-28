@@ -1,13 +1,14 @@
 package de.glowman554.bot.ollama.commands;
 
-import de.glowman554.bot.command.CommandContext;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.Schema;
 import de.glowman554.bot.command.SchemaCommand;
+import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.ollama.Entrypoint;
 
 public class SetModelCommand extends SchemaCommand {
     private final Entrypoint.Config config;
+
     public SetModelCommand(Entrypoint.Config config) {
         super("Set ai model being used.", "Usage: <command> [model]", "no_jail", Group.TOOLS);
         this.config = config;
@@ -22,17 +23,15 @@ public class SetModelCommand extends SchemaCommand {
                 .addOption("tinyllama", new Schema.Value("tinyllama")).register();
     }
 
-
-
     @Override
-    public void execute(CommandContext commandContext) throws Exception {
+    public void execute(SchemaCommandContext commandContext) throws Exception {
         config.model = commandContext.get("model").asString();
         config.save();
         commandContext.reply("Successfully updated model.");
     }
 
     @Override
-    public void execute(Message message, String[] arguments) throws Exception {
+    public void execute(LegacyCommandContext message, String[] arguments) throws Exception {
         if (arguments.length != 1) {
             message.reply("Command takes exactly 1 argument!");
         } else {

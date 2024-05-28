@@ -2,7 +2,7 @@ package de.glowman554.bot.ollama;
 
 import de.glowman554.bot.Feature;
 import de.glowman554.bot.Main;
-import de.glowman554.bot.command.Message;
+import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
 import de.glowman554.bot.logging.Logger;
@@ -93,7 +93,7 @@ public class Entrypoint {
     }
 
     @EventTarget
-    public void onMessage(Message message) {
+    public void onMessage(LegacyCommandContext message) {
         String messageString = message.getMessage();
         if (messageString.startsWith(config.prefix + " ")) {
             messageString = messageString.substring(config.prefix.length() + 1);

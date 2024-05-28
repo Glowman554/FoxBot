@@ -56,7 +56,7 @@
         <dependency>
             <groupId>io.github.amithkoujalgi</groupId>
             <artifactId>ollama4j</artifactId>
-            <version>1.0.57</version>
+            <version>1.0.70</version>
         </dependency>
     </dependencies>
 </project>

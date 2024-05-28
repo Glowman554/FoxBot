@@ -18,8 +18,9 @@ public class YiffAPI {
         try {
             JsonNode loadedCategories = Json.json().parse(HttpClient.get("https://v2.yiff.rest/categories"));
 
-            for (JsonNode category : loadedCategories.get("data").get("enabled")) {
-                categories.add(new YiffCategory(category.get("name").asString(), category.get("db").asString(), category.get("sfw").asBoolean()));
+            for (JsonNode category : loadedCategories.get("data")) {
+                categories.add(new YiffCategory(category.get("name").asString(), category.get("db").asString(),
+                        category.get("sfw").asBoolean()));
             }
 
         } catch (IOException e) {
@@ -43,7 +44,8 @@ public class YiffAPI {
     public record YiffCategory(String name, String db, boolean sfw) {
         public StreamedFile download() {
             try {
-                JsonNode root = Json.json().parse(HttpClient.get(String.format("https://v2.yiff.rest/%s?amount=1&notes=disabled", db.replace(".", "/"))));
+                JsonNode root = Json.json().parse(HttpClient
+                        .get(String.format("https://v2.yiff.rest/%s?amount=1&notes=disabled", db.replace(".", "/"))));
                 if (!root.get("success").asBoolean()) {
                     int timeout = root.get("info").get("resetAfter").asInt();
                     Logger.log("Timeout: %d", timeout);

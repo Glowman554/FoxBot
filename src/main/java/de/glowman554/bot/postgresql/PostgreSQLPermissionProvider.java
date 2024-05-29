@@ -1,4 +1,4 @@
-package de.glowman554.bot.mysql;
+package de.glowman554.bot.postgresql;
 
 import de.glowman554.bot.command.PermissionProvider;
 import de.glowman554.bot.utils.Pair;
@@ -10,24 +10,27 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySQLPermissionProvider extends PermissionProvider {
+public class PostgreSQLPermissionProvider extends PermissionProvider {
     private final Connection connection;
 
-    public MySQLPermissionProvider(Connection connection) {
+    public PostgreSQLPermissionProvider(Connection connection) {
         this.connection = connection;
 
         try {
-            PreparedStatement role = connection.prepareStatement("CREATE TABLE IF NOT EXISTS role (roleName varchar(100) NOT NULL, PRIMARY KEY (roleName))");
+            PreparedStatement role = connection.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS role (roleName text NOT NULL, PRIMARY KEY (roleName))");
             role.execute();
             role.close();
 
-            PreparedStatement permission = connection.prepareStatement("CREATE TABLE IF NOT EXISTS permission (roleName varchar(100) NOT NULL, permission varchar(100) NOT NULL, PRIMARY KEY (permission,roleName), FOREIGN KEY (roleName) REFERENCES role(roleName) ON DELETE CASCADE ON UPDATE CASCADE)");
+            PreparedStatement permission = connection.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS permission (roleName text NOT NULL, permission text NOT NULL, PRIMARY KEY (permission,roleName), FOREIGN KEY (roleName) REFERENCES role(roleName) ON DELETE CASCADE ON UPDATE CASCADE)");
             permission.execute();
             permission.close();
 
-            PreparedStatement user = connection.prepareStatement("CREATE TABLE IF NOT EXISTS user (userId varchar(100) NOT NULL, roleName varchar(100), PRIMARY KEY (userId), FOREIGN KEY (roleName) REFERENCES role(roleName))");
-            user.execute();
-            user.close();
+            PreparedStatement users = connection.prepareStatement(
+                    "CREATE TABLE IF NOT EXISTS users (userId text NOT NULL, roleName text, PRIMARY KEY (userId), FOREIGN KEY (roleName) REFERENCES role(roleName))");
+            users.execute();
+            users.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -40,7 +43,8 @@ public class MySQLPermissionProvider extends PermissionProvider {
         }
 
         try {
-            PreparedStatement statement = connection.prepareStatement("select count(*) from user, role, permission where userId = ? and permission = ? and user.roleName = role.roleName and role.roleName = permission.roleName");
+            PreparedStatement statement = connection.prepareStatement(
+                    "select count(*) from users, role, permission where userId = ? and permission = ? and users.roleName = role.roleName and role.roleName = permission.roleName");
             statement.setString(1, userId);
             statement.setString(2, permission);
             ResultSet resultSet = statement.executeQuery();
@@ -57,7 +61,8 @@ public class MySQLPermissionProvider extends PermissionProvider {
     @Override
     public void setRole(String userId, String role) {
         try {
-            PreparedStatement statement = connection.prepareStatement("insert into user (userId, roleName) values (?, ?) on duplicate key update roleName = ?");
+            PreparedStatement statement = connection.prepareStatement(
+                    "insert into users (userId, roleName) values (?, ?) on conflict (userId) do update set roleName = ?");
             statement.setString(1, userId);
             statement.setString(2, role);
             statement.setString(3, role);
@@ -83,7 +88,8 @@ public class MySQLPermissionProvider extends PermissionProvider {
     @Override
     public void addPermission(String roleName, String permission) {
         try {
-            PreparedStatement statement = connection.prepareStatement("insert into permission (roleName, permission) values (?, ?)");
+            PreparedStatement statement = connection
+                    .prepareStatement("insert into permission (roleName, permission) values (?, ?)");
             statement.setString(1, roleName);
             statement.setString(2, permission);
             statement.execute();
@@ -114,7 +120,8 @@ public class MySQLPermissionProvider extends PermissionProvider {
         List<String> result = new ArrayList<>();
 
         try {
-            PreparedStatement statement = connection.prepareStatement("select permission from permission where roleName = ?");
+            PreparedStatement statement = connection
+                    .prepareStatement("select permission from permission where roleName = ?");
             statement.setString(1, roleName);
             ResultSet resultSet = statement.executeQuery();
 
@@ -149,7 +156,6 @@ public class MySQLPermissionProvider extends PermissionProvider {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
 
         return result;
     }

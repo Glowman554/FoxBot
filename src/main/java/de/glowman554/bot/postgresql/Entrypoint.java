@@ -1,4 +1,4 @@
-package de.glowman554.bot.mysql;
+package de.glowman554.bot.postgresql;
 
 import de.glowman554.bot.Main;
 import de.glowman554.bot.logging.Logger;
@@ -25,18 +25,19 @@ public class Entrypoint extends Thread {
     public void entrypoint() {
         try {
             config.load();
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName("org.postgresql.Driver");
 
-            Logger.log("Connecting to mysql database %s:%s", config.host, config.database);
+            Logger.log("Connecting to postgresql database %s:%s", config.host, config.database);
 
             Runtime.getRuntime().addShutdownHook(this);
-            connection = DriverManager.getConnection(String.format("jdbc:mysql://%s/%s?user=%s&password=%s&autoReconnect=true", config.host, config.database, config.username, config.password));
-            MySQLPermissionProvider provider = new MySQLPermissionProvider(connection);
+            connection = DriverManager.getConnection(String.format("jdbc:postgresql://%s/%s?user=%s&password=%s",
+                    config.host, config.database, config.username, config.password));
+            PostgreSQLPermissionProvider provider = new PostgreSQLPermissionProvider(connection);
             if (config.insertDefaultRoles) {
                 provider.insertDefaultRoles();
             }
             Registries.PERMISSION_PROVIDER.set(provider);
-            Registries.TODO_PROVIDER.set(new MySQLTodoProvider(connection));
+            Registries.TODO_PROVIDER.set(new PostgreSQLTodoProvider(connection));
 
         } catch (Exception exception) {
             throw new RuntimeException(exception);
@@ -65,7 +66,7 @@ public class Entrypoint extends Thread {
         public boolean insertDefaultRoles = false;
 
         public Config() {
-            super(new File(ConfigManager.BASE_FOLDER, "mysql.json"));
+            super(new File(ConfigManager.BASE_FOLDER, "postgresql.json"));
         }
     }
 }

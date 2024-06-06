@@ -8,7 +8,6 @@ import io.github.amithkoujalgi.ollama4j.core.models.chat.OllamaChatResult;
 
 import java.io.IOException;
 import java.time.Instant;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 

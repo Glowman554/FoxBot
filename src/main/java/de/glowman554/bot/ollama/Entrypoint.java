@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -75,13 +76,19 @@ public class Entrypoint {
     public void clean() {
         long now = Instant.now().toEpochMilli();
 
+        ArrayList<String> toBeRemoved = new ArrayList<>();
+
         for (String user : instances.keySet()) {
             Chat chat = instances.get(user);
 
             if (now - chat.getLastMessage() > (1000 * 60 * 60)) {
-                Logger.log("Deleting chat with %s.", user);
-                instances.remove(user);
+                toBeRemoved.add(user);
             }
+        }
+
+        for (String user : toBeRemoved) {
+            Logger.log("Deleting chat with %s.", user);
+            instances.remove(user);
         }
     }
 

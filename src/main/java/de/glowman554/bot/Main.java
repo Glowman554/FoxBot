@@ -169,6 +169,7 @@ public class Main {
         Registries.COMMANDS.register("spotify", new SpotifyCommand());
         Registries.COMMANDS.register("run", new RunCommand());
         Registries.COMMANDS.register("todo", new TodoCommand());
+        Registries.COMMANDS.register("sticker", new StickerCommand());
 
         if (config.compiler) {
             Registries.COMMANDS.register("compile", new CompileCommand());
@@ -249,6 +250,8 @@ public class Main {
         private WebserverConfig webserver = new WebserverConfig();
         @Saved
         private boolean api = true;
+        @Saved
+        private String telegramToken = "";
 
         public Config() {
             super(new File(ConfigManager.BASE_FOLDER, "config.json"));
@@ -264,6 +267,10 @@ public class Main {
 
         public String getCompilerBackend() {
             return compilerBackend;
+        }
+
+        public String getTelegramToken() {
+            return telegramToken;
         }
 
         public static class WebserverConfig extends AutoSavable {

@@ -2,6 +2,7 @@ package de.glowman554.bot.ollama;
 
 import de.glowman554.bot.Feature;
 import de.glowman554.bot.Main;
+import de.glowman554.bot.Platform;
 import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
@@ -13,6 +14,7 @@ import de.glowman554.config.ConfigManager;
 import de.glowman554.config.auto.Saved;
 import io.github.amithkoujalgi.ollama4j.core.OllamaAPI;
 import io.github.amithkoujalgi.ollama4j.core.exceptions.OllamaBaseException;
+import net.shadew.json.Json;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,6 +27,7 @@ import java.util.TimerTask;
 
 public class Entrypoint {
     private final Config config = new Config();
+    private final File chatLogs = new File("chats");
     private final HashMap<String, Chat> instances = new HashMap<>();
     private OllamaAPI api;
 
@@ -38,6 +41,8 @@ public class Entrypoint {
     @de.glowman554.bot.plugin.Entrypoint
     public void entrypoint() {
         config.load();
+
+        chatLogs.mkdir();
 
         api = new OllamaAPI(config.host);
         api.setRequestTimeoutSeconds(60 * 10);
@@ -59,6 +64,7 @@ public class Entrypoint {
 
     private void register() {
         EventManager.register(this);
+        Platform.accept(new RawAcceptors(this));
 
         Registries.FEATURES.register("ollama", new Feature("Ai chatbot",
                 String.format("Use '%s' in front of a message to talk to a chatbot.", config.prefix)));
@@ -83,6 +89,13 @@ public class Entrypoint {
 
             if (now - chat.getLastMessage() > (1000 * 60 * 60)) {
                 toBeRemoved.add(user);
+
+                try {
+                    Json.json().serialize(chat.toJson(),
+                            new File(chatLogs, System.currentTimeMillis() + user + ".json"));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
 

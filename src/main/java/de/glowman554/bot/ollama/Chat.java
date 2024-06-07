@@ -5,6 +5,7 @@ import io.github.amithkoujalgi.ollama4j.core.exceptions.OllamaBaseException;
 import io.github.amithkoujalgi.ollama4j.core.models.chat.OllamaChatMessage;
 import io.github.amithkoujalgi.ollama4j.core.models.chat.OllamaChatMessageRole;
 import io.github.amithkoujalgi.ollama4j.core.models.chat.OllamaChatResult;
+import net.shadew.json.JsonNode;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -34,5 +35,18 @@ public class Chat {
         OllamaChatResult result = api.chat(model, history);
         history = result.getChatHistory();
         return result.getResponse();
+    }
+
+    public JsonNode toJson() {
+        JsonNode root = JsonNode.array();
+
+        for (OllamaChatMessage message : history) {
+            JsonNode entry = JsonNode.object();
+            entry.set("role", message.getRole().name());
+            entry.set("content", message.getContent());
+            root.add(entry);
+        }
+
+        return root;
     }
 }

@@ -36,11 +36,11 @@ public class DiscordPlatform extends Platform implements EventListener {
         }
         configManager.setValue("discord", config);
 
-
         try {
             JDA jda = JDABuilder.createDefault(config.token)
                     .addEventListeners(this)
-                    .setActivity(Activity.streaming(Main.config.getPrefix() + "help", "https://www.twitch.tv/glowman434"))
+                    .setActivity(
+                            Activity.streaming(Main.config.getPrefix() + "help", "https://www.twitch.tv/glowman434"))
                     .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
                     .build().awaitReady();
 
@@ -61,6 +61,8 @@ public class DiscordPlatform extends Platform implements EventListener {
 
     @Override
     public void onEvent(@NotNull GenericEvent genericEvent) {
+        Platform.call(genericEvent);
+
         if (genericEvent instanceof ReadyEvent) {
             Logger.log("Discord ready!");
         } else if (genericEvent instanceof MessageReceivedEvent messageReceivedEvent) {

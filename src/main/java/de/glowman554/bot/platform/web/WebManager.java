@@ -1,6 +1,7 @@
 package de.glowman554.bot.platform.web;
 
 import de.glowman554.bot.Main;
+import de.glowman554.bot.Platform;
 import de.glowman554.bot.command.*;
 import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.EventTarget;
@@ -32,13 +33,13 @@ public class WebManager {
     public void onMessage(LegacyCommandContext commandContext) {
         for (Session session : connections.keySet()) {
             WebInstance instance = connections.get(session);
-            if (commandContext.getUserId().equals(instance.getUserId()) && commandContext.getMessage().equals(instance.getAuthenticationString())) {
+            if (commandContext.getUserId().equals(instance.getUserId())
+                    && commandContext.getMessage().equals(instance.getAuthenticationString())) {
                 Logger.log("User %s authenticated", commandContext.getUserId());
                 instance.setAuthenticated(true);
             }
         }
     }
-
 
     public void onClose(WsCloseContext wsCloseContext) {
         connections.remove(wsCloseContext.session);
@@ -56,6 +57,7 @@ public class WebManager {
     }
 
     public void onMessage(WsMessageContext wsMessageContext) {
+        Platform.call(wsMessageContext);
         WebInstance instance = connections.get(wsMessageContext.session);
         try {
             if (wsMessageContext.message().equals("ping")) {
@@ -76,18 +78,23 @@ public class WebManager {
                 case "message":
                     ArrayList<Attachment> attachments = new ArrayList<>();
                     for (JsonNode attachmentNode : root.get("files")) {
-                        attachments.add(new WebAttachment(attachmentNode.get("name").asString(), attachmentNode.get("file").asString()));
+                        attachments.add(new WebAttachment(attachmentNode.get("name").asString(),
+                                attachmentNode.get("file").asString()));
                     }
                     if (instance.isAuthenticated()) {
-                        new WebLegacyCommandContext(root.get("message").asString(), instance.getUserId(), "Web", wsMessageContext, attachments).call(LegacyCommandContext.class);
+                        new WebLegacyCommandContext(root.get("message").asString(), instance.getUserId(), "Web",
+                                wsMessageContext, attachments).call(LegacyCommandContext.class);
                     } else {
-                        new WebLegacyCommandContext(root.get("message").asString(), "web", "Web", wsMessageContext, attachments).call(LegacyCommandContext.class);
+                        new WebLegacyCommandContext(root.get("message").asString(), "web", "Web", wsMessageContext,
+                                attachments).call(LegacyCommandContext.class);
                     }
                     break;
                 case "schemaMessage":
                     LegacyCommand command = Registries.COMMANDS.get(root.get("schemaCommandName").asString());
                     if (command instanceof SchemaCommand schemaCommand) {
-                        SchemaCommandContext context = new WebSchemaCommandContext(instance.isAuthenticated() ? instance.getUserId() : "web", "Web", wsMessageContext, root);
+                        SchemaCommandContext context = new WebSchemaCommandContext(
+                                instance.isAuthenticated() ? instance.getUserId() : "web", "Web", wsMessageContext,
+                                root);
                         schemaCommand.loadSchema(context);
                         Main.commandManager.execute(root.get("schemaCommandName").asString(), schemaCommand, context);
                     }

@@ -39,8 +39,10 @@ public class TelegramPlatform extends Platform {
             telegramBot = new TelegramLongPollingBot(finalConfig.token) {
                 @Override
                 public void onUpdateReceived(Update update) {
+                    Platform.call(update);
                     if (update.hasMessage()) {
-                        TelegramLegacyCommandContext.create(update.getMessage(), finalConfig.token).call(LegacyCommandContext.class);
+                        TelegramLegacyCommandContext.create(update.getMessage(), finalConfig.token)
+                                .call(LegacyCommandContext.class);
                     }
                 }
 

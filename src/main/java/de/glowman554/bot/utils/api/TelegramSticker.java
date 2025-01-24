@@ -1,12 +1,12 @@
 package de.glowman554.bot.utils.api;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.HttpClient;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class TelegramSticker {
     private final String token;

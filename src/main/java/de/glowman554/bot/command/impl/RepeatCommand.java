@@ -1,17 +1,12 @@
 package de.glowman554.bot.command.impl;
 
-import java.util.ArrayList;
-
 import de.glowman554.bot.Main;
-import de.glowman554.bot.command.Attachment;
-import de.glowman554.bot.command.LegacyCommandContext;
-import de.glowman554.bot.command.MediaType;
-import de.glowman554.bot.command.Schema;
-import de.glowman554.bot.command.SchemaCommand;
-import de.glowman554.bot.command.SchemaCommandContext;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.command.Schema.Argument.Type;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.bot.utils.StreamedFile;
+
+import java.util.ArrayList;
 
 public class RepeatCommand extends SchemaCommand {
     public RepeatCommand() {

@@ -1,5 +1,8 @@
 package de.glowman554.bot;
 
+import de.glowman554.bot.logging.Logger;
+import de.glowman554.config.ConfigManager;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -7,9 +10,6 @@ import java.lang.annotation.Target;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-
-import de.glowman554.bot.logging.Logger;
-import de.glowman554.config.ConfigManager;
 
 public abstract class Platform {
     private static final ArrayList<Acceptor> acceptors = new ArrayList<>();

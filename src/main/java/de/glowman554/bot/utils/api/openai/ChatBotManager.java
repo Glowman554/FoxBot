@@ -5,7 +5,6 @@ import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.event.EventTarget;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-import java.io.File;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ public class ChatBotManager {
     private final ChatCompletion chatCompletion;
     private final HashMap<String, Chat> chats = new HashMap<>();
     private final String system;
-    private final String prefix ;
+    private final String prefix;
 
     public ChatBotManager(String apiKey, String system, String prefix) {
         chatCompletion = new ChatCompletion(apiKey);

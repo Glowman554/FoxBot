@@ -1,12 +1,7 @@
 package de.glowman554.bot.command.impl;
 
 import de.glowman554.bot.Main;
-import de.glowman554.bot.command.IReply;
-import de.glowman554.bot.command.LegacyCommandContext;
-import de.glowman554.bot.command.MediaType;
-import de.glowman554.bot.command.Schema;
-import de.glowman554.bot.command.SchemaCommand;
-import de.glowman554.bot.command.SchemaCommandContext;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.command.Schema.Argument.Type;
 import de.glowman554.bot.utils.HttpClient;
 import de.glowman554.bot.utils.StreamedFile;
@@ -25,7 +20,7 @@ public class StickerCommand extends SchemaCommand {
         String strip = "https://t.me/addstickers/";
         if (name.startsWith(strip)) {
             name = name.substring(strip.length());
-            }
+        }
 
         for (String url : sticker.fetchPack(name)) {
             try (StreamedFile file = HttpClient.download(url)) {

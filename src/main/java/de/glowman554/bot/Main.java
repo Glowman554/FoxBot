@@ -9,6 +9,7 @@ import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.command.impl.*;
 import de.glowman554.bot.command.impl.testing.Testing;
+import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.impl.JavalinEvent;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.platform.discord.DiscordPlatform;
@@ -17,6 +18,7 @@ import de.glowman554.bot.platform.web.WebPlatform;
 import de.glowman554.bot.plugin.PluginLoader;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.bot.sqlite.SQLiteDatabase;
+import de.glowman554.bot.utils.api.openai.ChatBotManager;
 import de.glowman554.config.ConfigFile;
 import de.glowman554.config.ConfigManager;
 import de.glowman554.config.Savable;
@@ -49,6 +51,13 @@ public class Main {
 
         if (config.useBuiltinDatabase) {
             new SQLiteDatabase();
+        }
+
+        if (config.chatbot.enabled) {
+            Logger.log("Chatbot enabled");
+            ChatBotManager chatBotManager = new ChatBotManager(config.chatbot.token, config.chatbot.system, config.chatbot.prefix);
+            Platform.accept(chatBotManager);
+            EventManager.register(chatBotManager);
         }
 
         new PluginLoader(new File("plugins"));
@@ -138,6 +147,11 @@ public class Main {
         if (config.compiler) {
             Registries.FEATURES.register("compiler", new Feature("Compiler",
                     "Use the '<prefix>compile' command to compile and / or execute the attached file."));
+        }
+
+        if (config.chatbot.enabled) {
+            Registries.FEATURES.register("chatbot", new Feature("Chatbot",
+                    "The bot can chat with you. Just start your message with '" + config.chatbot.prefix + "' and the bot will respond."));
         }
     }
 
@@ -252,6 +266,8 @@ public class Main {
         private boolean api = true;
         @Saved
         private String telegramToken = "";
+        @Saved(remap = Savable.class)
+        private Chatbot chatbot = new Chatbot();
 
         public Config() {
             super(new File(ConfigManager.BASE_FOLDER, "config.json"));
@@ -306,6 +322,33 @@ public class Main {
 
             public String getRedirectUrl() {
                 return redirectUrl;
+            }
+        }
+
+        public static class Chatbot extends AutoSavable {
+            @Saved
+            private String token = "";
+            @Saved
+            private String system = "You are a person called FoxBot. You are a furry. Keep your answers short and simple. Please use furry language and use emojis.";
+            @Saved
+            private boolean enabled = false;
+            @Saved
+            private String prefix = "@chatbot";
+
+            public String getToken() {
+                return token;
+            }
+
+            public String getSystem() {
+                return system;
+            }
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public String getPrefix() {
+                return prefix;
             }
         }
     }

@@ -7,7 +7,7 @@ import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.utils.api.openai.ImageGenerator;
 
 public class ImageCommand extends SchemaCommand {
-    private final ImageGenerator generator = new ImageGenerator(Main.config.getChatbot().getToken());
+    private final ImageGenerator generator = new ImageGenerator(Main.config.getOpenAI().getToken());
 
     public ImageCommand() {
         super("Generate an image based on a prompt", "Usage: <command> [prompt]", null, Group.FUN);

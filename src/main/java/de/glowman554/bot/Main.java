@@ -53,9 +53,9 @@ public class Main {
             new SQLiteDatabase();
         }
 
-        if (config.chatbot.enabled) {
+        if (config.openAI.chatbotEnabled) {
             Logger.log("Chatbot enabled");
-            ChatBotManager chatBotManager = new ChatBotManager(config.chatbot.token, config.chatbot.system, config.chatbot.prefix);
+            ChatBotManager chatBotManager = new ChatBotManager(config.openAI.token, config.openAI.chatbotSystem, config.openAI.chatbotPrefix);
             Platform.accept(chatBotManager);
             EventManager.register(chatBotManager);
         }
@@ -149,9 +149,9 @@ public class Main {
                     "Use the '<prefix>compile' command to compile and / or execute the attached file."));
         }
 
-        if (config.chatbot.enabled) {
+        if (config.openAI.chatbotEnabled) {
             Registries.FEATURES.register("chatbot", new Feature("Chatbot",
-                    "The bot can chat with you. Just start your message with '" + config.chatbot.prefix + "' and the bot will respond."));
+                    "The bot can chat with you. Just start your message with '" + config.openAI.chatbotPrefix + "' and the bot will respond."));
         }
     }
 
@@ -267,7 +267,7 @@ public class Main {
         @Saved
         private String telegramToken = "";
         @Saved(remap = Savable.class)
-        private Chatbot chatbot = new Chatbot();
+        private OpenAI openAI = new OpenAI();
 
         public Config() {
             super(new File(ConfigManager.BASE_FOLDER, "config.json"));
@@ -289,8 +289,8 @@ public class Main {
             return telegramToken;
         }
 
-        public Chatbot getChatbot() {
-            return chatbot;
+        public OpenAI getOpenAI() {
+            return openAI;
         }
 
         public static class WebserverConfig extends AutoSavable {
@@ -329,30 +329,30 @@ public class Main {
             }
         }
 
-        public static class Chatbot extends AutoSavable {
+        public static class OpenAI extends AutoSavable {
             @Saved
             private String token = "";
             @Saved
-            private String system = "You are a person called FoxBot. You are a furry. Keep your answers short and simple. Please use furry language and use emojis.";
+            private String chatbotSystem = "You are a person called FoxBot. You are a furry. Keep your answers short and simple. Please use furry language and use emojis.";
             @Saved
-            private boolean enabled = false;
+            private boolean chatbotEnabled = false;
             @Saved
-            private String prefix = "@chatbot";
+            private String chatbotPrefix = "@chatbot";
 
             public String getToken() {
                 return token;
             }
 
-            public String getSystem() {
-                return system;
+            public String getChatbotSystem() {
+                return chatbotSystem;
             }
 
-            public boolean isEnabled() {
-                return enabled;
+            public boolean isChatbotEnabled() {
+                return chatbotEnabled;
             }
 
-            public String getPrefix() {
-                return prefix;
+            public String getChatbotPrefix() {
+                return chatbotPrefix;
             }
         }
     }

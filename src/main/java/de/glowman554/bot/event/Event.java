@@ -1,5 +1,7 @@
 package de.glowman554.bot.event;
 
+import de.glowman554.bot.logging.Logger;
+
 import java.util.ArrayList;
 
 public class Event {
@@ -10,9 +12,9 @@ public class Event {
             // toArray needed because of ConcurrentModificationException
             for (EventData data : dataList.toArray(EventData[]::new)) {
                 try {
-                    data.target.invoke(data.source, this);
+                    data.target().invoke(data.source(), this);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Logger.exception(e);
                 }
             }
         }

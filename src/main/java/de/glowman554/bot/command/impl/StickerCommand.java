@@ -3,12 +3,13 @@ package de.glowman554.bot.command.impl;
 import de.glowman554.bot.Main;
 import de.glowman554.bot.command.*;
 import de.glowman554.bot.command.Schema.Argument.Type;
+import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.HttpClient;
 import de.glowman554.bot.utils.StreamedFile;
 import de.glowman554.bot.utils.api.TelegramSticker;
 
 public class StickerCommand extends SchemaCommand {
-    private TelegramSticker sticker = new TelegramSticker(Main.config.getTelegramToken());
+    private final TelegramSticker sticker = new TelegramSticker(Main.config.getTelegramToken());
 
     public StickerCommand() {
         super("Download a telegram sticker pack.", "Usage: <command> [name]", null, Group.TOOLS);
@@ -26,7 +27,7 @@ public class StickerCommand extends SchemaCommand {
             try (StreamedFile file = HttpClient.download(url)) {
                 reply.replyFile(file, MediaType.IMAGE, false);
             } catch (Exception e) {
-                e.printStackTrace();
+                Logger.exception(e);
             }
         }
     }

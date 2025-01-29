@@ -56,9 +56,7 @@ public class ChatBotManager {
         if (messageString.startsWith(prefix + " ")) {
             messageString = messageString.substring(prefix.length() + 1);
             String finalMessageString = messageString;
-            new Thread(() -> {
-                message.reply(requestCompletion(message.getUserId(), finalMessageString).getContent());
-            }).start();
+            new Thread(() -> message.reply(requestCompletion(message.getUserId(), finalMessageString).getContent())).start();
         }
     }
 

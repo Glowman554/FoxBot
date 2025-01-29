@@ -81,16 +81,16 @@ public class Interpreter {
                 return Math.pow(interpret(root.getNodeA(), dbg), interpret(root.getNodeB(), dbg));
             case FCALL_NODE: {
                 Pair<ArrayList<ParserNode>, String> argNamePair = (Pair<ArrayList<ParserNode>, String>) root.getValue();
-                MathFunction function = mathFunctions.get(argNamePair.t2);
+                MathFunction function = mathFunctions.get(argNamePair.t2());
 
                 if (function == null) {
-                    throw new IllegalStateException("Could not find function " + argNamePair.t2);
+                    throw new IllegalStateException("Could not find function " + argNamePair.t2());
                 }
 
-                double[] result = new double[argNamePair.t1.size()];
+                double[] result = new double[argNamePair.t1().size()];
 
-                for (int i = 0; i < argNamePair.t1.size(); i++) {
-                    result[i] = interpret(argNamePair.t1.get(i), dbg);
+                for (int i = 0; i < argNamePair.t1().size(); i++) {
+                    result[i] = interpret(argNamePair.t1().get(i), dbg);
                 }
 
                 return function.call(result);

@@ -35,7 +35,7 @@ public class TodoCommand extends SchemaCommand {
                         HashMap<Integer, Pair<Boolean, String>> todos = Registries.TODO_PROVIDER.get().loadTodo(commandContext.getUserId());
                         for (int key : todos.keySet()) {
                             Pair<Boolean, String> entry = todos.get(key);
-                            result.append(entry.t1 ? "[x] " : "[ ] ").append(key).append(": ").append(entry.t2).append("\n");
+                            result.append(entry.t1() ? "[x] " : "[ ] ").append(key).append(": ").append(entry.t2()).append("\n");
                         }
                         commandContext.reply(commandContext.formatCodeBlock(result.toString()));
                     } else {
@@ -85,7 +85,7 @@ public class TodoCommand extends SchemaCommand {
                 HashMap<Integer, Pair<Boolean, String>> todos = Registries.TODO_PROVIDER.get().loadTodo(commandContext.getUserId());
                 for (int key : todos.keySet()) {
                     Pair<Boolean, String> entry = todos.get(key);
-                    result.append(entry.t1 ? "[x] " : "[ ] ").append(key).append(": ").append(entry.t2).append("\n");
+                    result.append(entry.t1() ? "[x] " : "[ ] ").append(key).append(": ").append(entry.t2()).append("\n");
                 }
                 commandContext.reply(commandContext.formatCodeBlock(result.toString()));
                 break;

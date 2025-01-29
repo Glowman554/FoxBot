@@ -37,7 +37,7 @@ public class RoleCommand extends SchemaCommand {
                         List<Pair<String, List<String>>> roles = Registries.PERMISSION_PROVIDER.get().getRoles();
                         StringBuilder result = new StringBuilder();
                         for (Pair<String, List<String>> role : roles) {
-                            result.append(role.t1).append(": ").append(String.join(", ", role.t2)).append("\n");
+                            result.append(role.t1()).append(": ").append(String.join(", ", role.t2())).append("\n");
                         }
                         commandContext.reply(result.toString());
                     } else {
@@ -85,7 +85,7 @@ public class RoleCommand extends SchemaCommand {
                 List<Pair<String, List<String>>> roles = Registries.PERMISSION_PROVIDER.get().getRoles();
                 StringBuilder result = new StringBuilder();
                 for (Pair<String, List<String>> role : roles) {
-                    result.append(role.t1).append(": ").append(String.join(", ", role.t2)).append("\n");
+                    result.append(role.t1()).append(": ").append(String.join(", ", role.t2())).append("\n");
                 }
                 commandContext.reply(result.toString());
                 break;

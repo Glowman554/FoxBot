@@ -44,6 +44,13 @@ public class Logger {
         }
     }
 
+    public static void exception(Exception e) {
+        log("Exception: %s", e.getMessage());
+        for (StackTraceElement element : e.getStackTrace()) {
+            log("    at %s.%s(%s:%s)", element.getClassName(), element.getMethodName(), element.getFileName(), element.getLineNumber());
+        }
+    }
+
     public static File getCurrentLogFile() {
         return currentLogFile;
     }

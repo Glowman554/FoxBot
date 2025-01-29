@@ -15,7 +15,7 @@ public class EventManager {
 
         for (final byte b : EventPriority.VALUE_ARRAY) {
             for (EventData methodData : EventManager.REGISTRY_MAP.get(clazz)) {
-                if (methodData.priority == b) {
+                if (methodData.priority() == b) {
                     flexibleArray.add(methodData);
                 }
             }
@@ -51,7 +51,7 @@ public class EventManager {
     public static void unregister(final Object o, final Class<? extends Event> clazz) {
 
         if (REGISTRY_MAP.containsKey(clazz)) {
-            REGISTRY_MAP.get(clazz).removeIf(methodData -> methodData.source.equals(o));
+            REGISTRY_MAP.get(clazz).removeIf(methodData -> methodData.source().equals(o));
         }
 
         cleanMap(true);
@@ -64,7 +64,7 @@ public class EventManager {
 
             for (int i = flexibleArray.size() - 1; i >= 0; i--) {
 
-                if (flexibleArray.get(i).source.equals(o)) {
+                if (flexibleArray.get(i).source().equals(o)) {
                     flexibleArray.remove(i);
                 }
 
@@ -83,8 +83,8 @@ public class EventManager {
 
         final EventData methodData = new EventData(o, method, method.getAnnotation(EventTarget.class).value());
 
-        if (!methodData.target.canAccess(o)) {
-            methodData.target.setAccessible(true);
+        if (!methodData.target().canAccess(o)) {
+            methodData.target().setAccessible(true);
         }
 
         if (REGISTRY_MAP.containsKey(clazz)) {

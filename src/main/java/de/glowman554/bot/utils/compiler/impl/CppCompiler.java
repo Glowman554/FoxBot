@@ -6,6 +6,7 @@ import de.glowman554.bot.utils.compiler.Executor;
 
 import java.io.IOException;
 
+@Deprecated
 public class CppCompiler implements Compiler {
     @Override
     public boolean isInterpreted() {

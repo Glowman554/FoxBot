@@ -82,7 +82,7 @@ public class RepeatCommand extends SchemaCommand {
         private final SchemaCommandContext context;
 
         protected FakeLegacyCommandContext(SchemaCommandContext context, String message) {
-            super(message, null, new ArrayList<Attachment>(), context.getUserId(), context.getDisplayName());
+            super(message, null, new ArrayList<>(), context.getUserId(), context.getDisplayName());
             this.context = context;
         }
 

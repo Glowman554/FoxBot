@@ -104,7 +104,7 @@ public class Main {
         });
 
         app.exception(Exception.class, (exception, context) -> {
-            exception.printStackTrace();
+            Logger.exception(exception);
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw, true);
 
@@ -223,7 +223,7 @@ public class Main {
             fileWriter.flush();
             fileWriter.close();
         } catch (IOException ignored) {
-            exception.printStackTrace();
+
         }
         return id;
     }

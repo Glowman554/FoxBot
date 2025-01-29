@@ -62,7 +62,7 @@ public class PluginLoader {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                Logger.exception(e);
             }
         }
     }

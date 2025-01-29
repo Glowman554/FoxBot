@@ -102,7 +102,7 @@ public class WebManager {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.exception(e);
             wsMessageContext.send("Something went wrong.");
         }
     }

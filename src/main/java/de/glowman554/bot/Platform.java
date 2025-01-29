@@ -28,7 +28,7 @@ public abstract class Platform {
 
     public static <T> void call(T data) {
         for (Acceptor acceptor : acceptors) {
-            Class<?> types[] = acceptor.method.getParameterTypes();
+            Class<?>[] types = acceptor.method.getParameterTypes();
             if (types.length != 1) {
                 Logger.log("[WARNING] acceptor has invalid amount of arguments! %s", acceptor.toString());
                 continue;
@@ -45,11 +45,11 @@ public abstract class Platform {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    public static @interface Raw {
+    public @interface Raw {
 
     }
 
-    public static record Acceptor(Object object, Method method) {
+    public record Acceptor(Object object, Method method) {
     }
 
 }

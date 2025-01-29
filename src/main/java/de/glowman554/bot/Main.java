@@ -184,7 +184,7 @@ public class Main {
         Registries.COMMANDS.register("run", new RunCommand());
         Registries.COMMANDS.register("todo", new TodoCommand());
         Registries.COMMANDS.register("sticker", new StickerCommand());
-
+        Registries.COMMANDS.register("image", new ImageCommand());
         if (config.compiler) {
             Registries.COMMANDS.register("compile", new CompileCommand());
         }
@@ -287,6 +287,10 @@ public class Main {
 
         public String getTelegramToken() {
             return telegramToken;
+        }
+
+        public Chatbot getChatbot() {
+            return chatbot;
         }
 
         public static class WebserverConfig extends AutoSavable {

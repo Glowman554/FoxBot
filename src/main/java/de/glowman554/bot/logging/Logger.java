@@ -27,7 +27,10 @@ public class Logger {
             }
         }
 
-        String message = String.format(format, args);
+        String message = format;
+        if (args.length > 0) {
+            message = String.format(format, args);
+        }
 
         StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
         StringBuilder newMessage = new StringBuilder();

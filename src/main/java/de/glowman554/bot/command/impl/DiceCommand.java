@@ -1,9 +1,6 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.LegacyCommandContext;
-import de.glowman554.bot.command.Schema;
-import de.glowman554.bot.command.SchemaCommand;
-import de.glowman554.bot.command.SchemaCommandContext;
+import de.glowman554.bot.command.*;
 
 public class DiceCommand extends SchemaCommand {
     public DiceCommand() {
@@ -21,7 +18,7 @@ public class DiceCommand extends SchemaCommand {
                 numSides = Integer.parseInt(arguments[0]);
             }
 
-            commandContext.reply("You rolled a " + ((int) (Math.random() * numSides) + 1));
+            common(commandContext, numSides);
         }
     }
 
@@ -37,6 +34,10 @@ public class DiceCommand extends SchemaCommand {
         if (sidesValue != null) {
             numSides = sidesValue.asInteger();
         }
-        commandContext.reply("You rolled a " + ((int) (Math.random() * numSides) + 1));
+        common(commandContext, numSides);
+    }
+
+    private void common(IContext context, int numSides) {
+        context.reply("You rolled a " + ((int) (Math.random() * numSides) + 1));
     }
 }

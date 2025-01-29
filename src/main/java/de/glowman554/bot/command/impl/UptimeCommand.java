@@ -16,7 +16,7 @@ public class UptimeCommand extends SchemaCommand {
         if (arguments.length != 0) {
             commandContext.reply(Constants.NO_ARGUMENTS);
         } else {
-            commandContext.reply(TimeUtils.millisecondToDhms(System.currentTimeMillis() - startingTime));
+            common(commandContext);
         }
     }
 
@@ -27,6 +27,10 @@ public class UptimeCommand extends SchemaCommand {
 
     @Override
     public void execute(SchemaCommandContext commandContext) throws Exception {
-        commandContext.reply(TimeUtils.millisecondToDhms(System.currentTimeMillis() - startingTime));
+        common(commandContext);
+    }
+
+    private void common(IReply reply) {
+        reply.reply(TimeUtils.millisecondToDhms(System.currentTimeMillis() - startingTime));
     }
 }

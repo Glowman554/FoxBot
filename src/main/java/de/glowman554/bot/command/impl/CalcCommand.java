@@ -1,9 +1,6 @@
 package de.glowman554.bot.command.impl;
 
-import de.glowman554.bot.command.LegacyCommandContext;
-import de.glowman554.bot.command.Schema;
-import de.glowman554.bot.command.SchemaCommand;
-import de.glowman554.bot.command.SchemaCommandContext;
+import de.glowman554.bot.command.*;
 import de.glowman554.bot.utils.math.MathInterpreter;
 
 public class CalcCommand extends SchemaCommand {
@@ -18,7 +15,7 @@ public class CalcCommand extends SchemaCommand {
         } else {
             String expr = String.join(" ", arguments);
 
-            commandContext.reply("The result is: " + MathInterpreter.eval(expr));
+            common(commandContext, expr);
         }
     }
 
@@ -29,7 +26,10 @@ public class CalcCommand extends SchemaCommand {
 
     @Override
     public void execute(SchemaCommandContext commandContext) throws Exception {
-        commandContext.reply("The result is: " + MathInterpreter.eval(commandContext.get("expression").asString()));
+        common(commandContext, commandContext.get("expression").asString());
+    }
 
+    private void common(IContext context, String expression) {
+        context.reply("The result is: " + MathInterpreter.eval(expression));
     }
 }

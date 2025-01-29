@@ -5,6 +5,7 @@ import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.StreamedFile;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 public class CrashCommand extends SchemaCommand {
     public CrashCommand() {
@@ -16,9 +17,7 @@ public class CrashCommand extends SchemaCommand {
         if (arguments.length != 1) {
             commandContext.reply("Command takes exactly 1 argument");
         } else {
-            try (StreamedFile file = new StreamedFile(new File(Logger.logDirectory, arguments[0] + ".log"))) {
-                commandContext.replyFile(file, MediaType.DOCUMENT, false);
-            }
+            common(commandContext, arguments[0]);
         }
     }
 
@@ -29,8 +28,12 @@ public class CrashCommand extends SchemaCommand {
 
     @Override
     public void execute(SchemaCommandContext commandContext) throws Exception {
-        try (StreamedFile file = new StreamedFile(new File(Logger.logDirectory, commandContext.get("id").asString() + ".log"))) {
-            commandContext.replyFile(file, MediaType.DOCUMENT, false);
+        common(commandContext, commandContext.get("id").asString());
+    }
+
+    private void common(IContext context, String id) throws Exception {
+        try (StreamedFile file = new StreamedFile(new File(Logger.logDirectory, id + ".log"))) {
+            context.replyFile(file, MediaType.DOCUMENT, false);
         }
     }
 }

@@ -14,9 +14,7 @@ public class LogCommand extends SchemaCommand {
         if (arguments.length != 0) {
             commandContext.reply(Constants.NO_ARGUMENTS);
         } else {
-            try (StreamedFile file = new StreamedFile(Logger.getCurrentLogFile())) {
-                commandContext.replyFile(file, MediaType.DOCUMENT, false);
-            }
+            common(commandContext);
         }
     }
 
@@ -27,8 +25,12 @@ public class LogCommand extends SchemaCommand {
 
     @Override
     public void execute(SchemaCommandContext commandContext) throws Exception {
+        common(commandContext);
+    }
+
+    private void common(IContext context) throws Exception {
         try (StreamedFile file = new StreamedFile(Logger.getCurrentLogFile())) {
-            commandContext.replyFile(file, MediaType.DOCUMENT, false);
+            context.replyFile(file, MediaType.DOCUMENT, false);
         }
     }
 }

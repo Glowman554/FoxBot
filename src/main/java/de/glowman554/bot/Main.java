@@ -9,8 +9,8 @@ import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.command.impl.*;
 import de.glowman554.bot.command.impl.testing.Testing;
-import de.glowman554.bot.event.EventManager;
 import de.glowman554.bot.event.impl.JavalinEvent;
+import de.glowman554.bot.features.ChatBot;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.platform.discord.DiscordPlatform;
 import de.glowman554.bot.platform.telegram.TelegramPlatform;
@@ -18,7 +18,6 @@ import de.glowman554.bot.platform.web.WebPlatform;
 import de.glowman554.bot.plugin.PluginLoader;
 import de.glowman554.bot.registry.Registries;
 import de.glowman554.bot.sqlite.SQLiteDatabase;
-import de.glowman554.bot.utils.api.openai.ChatBotManager;
 import de.glowman554.config.ConfigFile;
 import de.glowman554.config.ConfigManager;
 import de.glowman554.config.Savable;
@@ -55,9 +54,7 @@ public class Main {
 
         if (config.openAI.chatbotEnabled) {
             Logger.log("Chatbot enabled");
-            ChatBotManager chatBotManager = new ChatBotManager(config.openAI.token, config.openAI.chatbotSystem, config.openAI.chatbotPrefix);
-            Platform.accept(chatBotManager);
-            EventManager.register(chatBotManager);
+            new ChatBot(config.openAI.token, config.openAI.chatbotSystem, config.openAI.chatbotPrefix);
         }
 
         new PluginLoader(new File("plugins"));
@@ -111,8 +108,7 @@ public class Main {
             exception.printStackTrace(pw);
 
             context.status(500);
-            context.result("<h1>Internal server error!</h1>\n<span style=\"white-space: pre-line\"><code>"
-                    + sw.getBuffer().toString() + "</code></span>");
+            context.result("<h1>Internal server error!</h1>\n<span style=\"white-space: pre-line\"><code>" + sw.getBuffer().toString() + "</code></span>");
         });
 
         app.error(404, context -> {
@@ -139,19 +135,15 @@ public class Main {
     }
 
     private static void registerFeatures() {
-        Registries.FEATURES.register("commands", new Feature("Commands",
-                "The bot supports many different commands.\nTo get a list of all commands use <prefix>help.\nTo get help for a specific command use <prefix>help [command]."));
-        Registries.FEATURES.register("roles", new Feature("Roles",
-                "The bot supports a role system which allows granting specific permissions to roles.\nA user can have exactly 1 role or no role at all."));
+        Registries.FEATURES.register("commands", new Feature("Commands", "The bot supports many different commands.\nTo get a list of all commands use <prefix>help.\nTo get help for a specific command use <prefix>help [command]."));
+        Registries.FEATURES.register("roles", new Feature("Roles", "The bot supports a role system which allows granting specific permissions to roles.\nA user can have exactly 1 role or no role at all."));
 
         if (config.compiler) {
-            Registries.FEATURES.register("compiler", new Feature("Compiler",
-                    "Use the '<prefix>compile' command to compile and / or execute the attached file."));
+            Registries.FEATURES.register("compiler", new Feature("Compiler", "Use the '<prefix>compile' command to compile and / or execute the attached file."));
         }
 
         if (config.openAI.chatbotEnabled) {
-            Registries.FEATURES.register("chatbot", new Feature("Chatbot",
-                    "The bot can chat with you. Just start your message with '" + config.openAI.chatbotPrefix + "' and the bot will respond."));
+            Registries.FEATURES.register("chatbot", new Feature("Chatbot", "The bot can chat with you. Just start your message with '" + config.openAI.chatbotPrefix + "' and the bot will respond."));
         }
     }
 
@@ -196,8 +188,7 @@ public class Main {
 
     private static void complete() {
         for (LegacyCommand.Group group : LegacyCommand.Group.values()) {
-            List<String> groupCommands = Registries.COMMANDS.getRegistry().keySet().stream()
-                    .filter(key -> Registries.COMMANDS.get(key).getGroup() == group).toList();
+            List<String> groupCommands = Registries.COMMANDS.getRegistry().keySet().stream().filter(key -> Registries.COMMANDS.get(key).getGroup() == group).toList();
             Logger.log("%s: %d commands", group.getDisplayName(), groupCommands.size());
             for (String key : groupCommands) {
                 Logger.log("%s%s", config.prefix, key);
@@ -230,14 +221,12 @@ public class Main {
 
     public static void handleException(Exception exception, LegacyCommandContext commandContext) {
         String id = saveCrash(exception);
-        commandContext.reply("There was an error executing your request. Use "
-                + commandContext.formatCode(config.getPrefix() + "crash " + id) + " to upload the stack trace!");
+        commandContext.reply("There was an error executing your request. Use " + commandContext.formatCode(config.getPrefix() + "crash " + id) + " to upload the stack trace!");
     }
 
     public static void handleException(Exception exception, SchemaCommandContext context) {
         String id = saveCrash(exception);
-        context.reply("There was an error executing your request. Use crash id " + context.formatCode(id)
-                + " to upload the stack trace!");
+        context.reply("There was an error executing your request. Use crash id " + context.formatCode(id) + " to upload the stack trace!");
     }
 
     private static SslContextFactory.Server getSslContextFactory() {

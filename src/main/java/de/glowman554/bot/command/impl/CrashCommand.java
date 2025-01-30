@@ -5,7 +5,6 @@ import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.utils.StreamedFile;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 public class CrashCommand extends SchemaCommand {
     public CrashCommand() {

@@ -1,6 +1,5 @@
 package de.glowman554.bot.utils.api.openai;
 
-import de.glowman554.bot.logging.Logger;
 import net.shadew.json.Json;
 import net.shadew.json.JsonNode;
 import okhttp3.*;

@@ -11,6 +11,7 @@ import de.glowman554.bot.command.impl.*;
 import de.glowman554.bot.command.impl.testing.Testing;
 import de.glowman554.bot.event.impl.JavalinEvent;
 import de.glowman554.bot.features.ChatBot;
+import de.glowman554.bot.features.ttt.TicTacToe;
 import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.platform.discord.DiscordPlatform;
 import de.glowman554.bot.platform.telegram.TelegramPlatform;
@@ -50,11 +51,6 @@ public class Main {
 
         if (config.useBuiltinDatabase) {
             new SQLiteDatabase();
-        }
-
-        if (config.openAI.chatbotEnabled) {
-            Logger.log("Chatbot enabled");
-            new ChatBot(config.openAI.token, config.openAI.chatbotSystem, config.openAI.chatbotPrefix);
         }
 
         new PluginLoader(new File("plugins"));
@@ -143,7 +139,18 @@ public class Main {
         }
 
         if (config.openAI.chatbotEnabled) {
+            new ChatBot(config.openAI.token, config.openAI.chatbotSystem, config.openAI.chatbotPrefix);
             Registries.FEATURES.register("chatbot", new Feature("Chatbot", "The bot can chat with you. Just start your message with '" + config.openAI.chatbotPrefix + "' and the bot will respond."));
+        }
+
+        if (config.ticTacToe) {
+            Registries.FEATURES.register("tic-tac-toe", new Feature("Tic tac toe", """
+                    To play tic tac toke with the bot send the following message:
+                    ❓❓❓
+                    ❓❓❓
+                    ❓❓❓
+                    The bot will reply with a new game field. Just copy and paste it and set your ❌ wherever you want."""));
+            new TicTacToe();
         }
     }
 
@@ -257,6 +264,8 @@ public class Main {
         private String telegramToken = "";
         @Saved(remap = Savable.class)
         private OpenAI openAI = new OpenAI();
+        @Saved
+        private boolean ticTacToe = true;
 
         public Config() {
             super(new File(ConfigManager.BASE_FOLDER, "config.json"));

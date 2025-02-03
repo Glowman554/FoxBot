@@ -1,26 +1,12 @@
-"use client";
+import Navigation, { Entry, Home } from '@glowman554/base-components/src/generic/Navigation';
 
-import { useState } from "react";
-
-export function Navigation() {
-	const [mainBarClass, setMainBarClass] = useState("glow-bar");
-
-	return (
-		<div className={mainBarClass}>
-			<a href="/">Home</a>
-			<a href="/usage">Usage</a>
-			<a href="/shell">Shell</a>
-			<a href="/commands">Commands</a>
-			
-			<a onClick={() => {
-				if (mainBarClass == "glow-bar") {
-					setMainBarClass("glow-bar responsive");
-				} else {
-					setMainBarClass("glow-bar");
-				}
-			}} className="icon">
-				<img src="/menu.svg" alt="Menu" style={{width: "2rem"}} />
-			</a>
-		</div>
-	);
+export default function () {
+    return (
+        <Navigation>
+            <Home href="/">Home</Home>
+            <Entry href="/usage">Usage</Entry>
+            <Entry href="/shell">Shell</Entry>
+            <Entry href="/commands">Commands</Entry>
+        </Navigation>
+    );
 }

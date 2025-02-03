@@ -1,0 +1,38 @@
+@import 'tailwindcss';
+@source "./node_modules/@glowman554/base-components/src/**/*.{astro,tsx}";
+
+* {
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.field {
+    @apply rounded-xl bg-neutral-700 p-4;
+}
+
+.section {
+    @apply m-4 flex justify-between;
+}
+
+.section-small {
+    @apply flex justify-between;
+}
+
+.section-small:hover {
+    @apply bg-neutral-500;
+}
+
+.center {
+    @apply flex justify-center;
+}
+
+.button {
+    @apply m-2 rounded-xl bg-neutral-600 p-2;
+}
+
+.input {
+    @apply rounded-xl border-none bg-neutral-600 p-2;
+}
+
+.responsive .entry {
+    @apply max-sm: max-sm: max-sm: !mb-1 !mt-1 !block max-sm:float-none max-sm:text-left;
+}

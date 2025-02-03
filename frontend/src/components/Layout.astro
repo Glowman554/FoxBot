@@ -1,0 +1,29 @@
+---
+import Navigation from '../components/Navigation';
+import Styles from '@glowman554/base-components/src/Styles.astro';
+
+interface Props {
+    title: string;
+}
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="stylesheet" href="/res/fonts/jetbrains_mono/font.css" />
+        <meta name="generator" content={Astro.generator} />
+        <title>FoxBot - {title}</title>
+        <Styles />
+    </head>
+    <body class="bg-neutral-700 text-white">
+        <Navigation client:load />
+
+        <main class="m-auto w-4/5">
+            <slot />
+        </main>
+    </body>
+</html>

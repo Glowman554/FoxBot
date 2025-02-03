@@ -1,47 +1,55 @@
-"use client";
+import { SolidApexCharts } from 'solid-apexcharts';
+import { createSignal, onCleanup, onMount } from 'solid-js';
+import { z } from 'zod';
+import { fetchAndValidate } from '../validatedFetch';
 
-import { EXTERNAL, EXTERNAL_API } from "@/environment";
-import { useEffect, useState } from "react";
-import { Bar, BarChart, CartesianGrid, Legend, Rectangle, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+const usageObjectSchema = z.record(z.number());
+type UsageObject = z.infer<typeof usageObjectSchema>;
 
-type UsageObject = { [key: string]: number };
-type UsageChart = { command: string, usage: number }[];
+export default function () {
+    const [timer, setTimer] = createSignal(0);
+    const [usage, setUsage] = createSignal<UsageObject>({});
 
+    const refetch = async () => {
+        setUsage(await fetchAndValidate(usageObjectSchema, '/api/usage'));
+    };
 
-export default function UsageChart() {
-    const [chart, setChart] = useState([] as UsageChart);
+    onMount(() => {
+        setTimer(
+            setInterval(async () => {
+                refetch();
+            }, 5000)
+        );
 
-    useEffect(() => {
-        async function update() {
-            const req = await fetch(EXTERNAL ? EXTERNAL_API + "/api/usage" : "/api/usage");
-            const json = await req.json() as UsageObject;
+        refetch();
+    });
 
-            const newChart: UsageChart = [];
-            for (const key of Object.keys(json)) {
-                const entry = {
-                    command: key,
-                    usage: json[key]
-                };
-
-                newChart.push(entry);
-            }
-            setChart(newChart);
-        }
-        update();
-        const interval = setInterval(update, 1000);
-        return () => clearInterval(interval);    
-    }, []);
+    onCleanup(() => {
+        clearInterval(timer());
+    });
 
     return (
-        <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chart}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="command" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="usage" fill="#777777" />
-            </BarChart>
-        </ResponsiveContainer>
+        <div class="center">
+            <div class="h-[80dvh] w-3/4">
+                <SolidApexCharts
+                    width="100%"
+                    height="100%"
+                    type="bar"
+                    options={{
+                        xaxis: {
+                            categories: Object.keys(usage()),
+                        },
+                        theme: {
+                            mode: 'dark',
+                        },
+                    }}
+                    series={[
+                        {
+                            data: Object.values(usage()),
+                        },
+                    ]}
+                />
+            </div>
+        </div>
     );
 }

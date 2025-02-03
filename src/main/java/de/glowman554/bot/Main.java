@@ -299,7 +299,7 @@ public class Main {
             @Saved
             private String keystorePassword = "";
             @Saved
-            private String frontendPath = "frontend/out";
+            private String frontendPath = "frontend/dist";
 
             public boolean isSSL() {
                 return !(keystoreFile.isEmpty() || keystorePassword.isEmpty());

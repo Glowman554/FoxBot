@@ -23,7 +23,6 @@ export namespace FromServer {
     });
     export type Authenticate = z.infer<typeof authenticateSchema>;
 
-
     const optionSchema = z.object({
         name: z.string(),
         value: z.union([z.number(), z.string()]),
@@ -51,8 +50,6 @@ export namespace FromServer {
         prefix: z.string(),
         schemas: z.array(schemaSchema),
     });
-
-   
 
     export const packetSchema = z.union([replySchema, replyFileSchema, authenticateSchema, infoSchema]);
     export type Packet = z.infer<typeof packetSchema>;

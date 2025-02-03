@@ -23,11 +23,7 @@ function Entry(props: { command: HelpEntry }) {
         <>
             <tr onClick={() => setVisible(!visible())} class="cursor-pointer hover:border-b">
                 <td>{props.command.command}</td>
-                <td>
-                    {props.command.shortHelp.endsWith('.')
-                        ? props.command.shortHelp.substring(0, props.command.shortHelp.length - 1)
-                        : props.command.shortHelp}
-                </td>
+                <td>{props.command.shortHelp.endsWith('.') ? props.command.shortHelp.substring(0, props.command.shortHelp.length - 1) : props.command.shortHelp}</td>
                 <td>{capitalizeFirstLetterOnly(props.command.group)}</td>
             </tr>
             <tr

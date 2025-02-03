@@ -11,7 +11,7 @@ export default {
     ],
     trailingComma: 'es5',
     tabWidth: 4,
-    printWidth: 120,
+    printWidth: 180,
     semi: true,
     singleQuote: true,
 };

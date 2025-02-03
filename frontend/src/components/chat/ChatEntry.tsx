@@ -31,7 +31,7 @@ export default function (props: Props) {
         <div class="pb-4">
             <Switch fallback={<div>Unknown message type</div>}>
                 <Match when={props.message.type === 'reply'}>
-                    <pre innerHTML={(props.message as FromServer.Reply).message}></pre>
+                    <pre class='text-wrap' innerHTML={(props.message as FromServer.Reply).message}></pre>
                 </Match>
                 <Match when={props.message.type === 'infoMessage'}>
                     <div>{(props.message as InformationMessage).message}</div>
@@ -40,7 +40,7 @@ export default function (props: Props) {
                     <File file={props.message as FromServer.ReplyFile} />
                 </Match>
                 <Match when={props.message.type === 'authenticate'}>
-                    <pre>Send {(props.message as FromServer.Authenticate).string} to the bot to authenticate this session.</pre>
+                    <pre class='text-wrap'>Send {(props.message as FromServer.Authenticate).string} to the bot to authenticate this session.</pre>
                 </Match>
             </Switch>
         </div>

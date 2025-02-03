@@ -32,7 +32,7 @@ function Entry(props: { command: HelpEntry }) {
                 }}
             >
                 <td colSpan={3} class="rounded-lg bg-zinc-800 p-2">
-                    <pre>{props.command.longHelp}</pre>
+                    <pre class='text-wrap'>{props.command.longHelp}</pre>
                 </td>
             </tr>
         </>
@@ -48,9 +48,9 @@ export default function () {
                         <table class="w-full bg-black">
                             <thead>
                                 <tr class="border-b">
-                                    <td class="text-2xl">Command</td>
-                                    <td class="text-2xl">Description</td>
-                                    <td class="text-2xl">Group</td>
+                                    <td class="sm:text-2xl">Command</td>
+                                    <td class="sm:text-2xl">Description</td>
+                                    <td class="sm:text-2xl">Group</td>
                                 </tr>
                             </thead>
                             <tbody>

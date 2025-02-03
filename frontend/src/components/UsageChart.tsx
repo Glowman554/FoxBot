@@ -30,7 +30,7 @@ export default function () {
 
     return (
         <div class="center">
-            <div class="h-[80dvh] w-3/4">
+            <div class="-z-10 h-[80dvh] w-3/4 max-sm:w-full">
                 <SolidApexCharts
                     width="100%"
                     height="100%"

@@ -17,7 +17,7 @@ function SchemaCommandTable(props: { schemas: FromServer.Schema[]; send: (messag
     return (
         <>
             <div class="center" style={{ display: props.visible ? undefined : 'none' }}>
-                <div class="m-8 w-2/3 rounded-xl bg-black p-8">
+                <div class="m-8 w-2/3 rounded-xl bg-black p-8 max-sm:w-full max-sm:p-2">
                     <table class="w-full bg-black">
                         <tbody>
                             <For each={props.schemas}>{(schema) => <SchemaCommandContainer schema={schema} send={props.send} />}</For>
@@ -39,6 +39,7 @@ export default function () {
     const [displaySchemaTable, setDisplaySchemaTable] = createSignal(false);
 
     const connect = () => {
+        // TODO: Change this to the actual websocket URL
         const ws = new WebSocket('wss://foxbot.glowman554.de/web');
         ws.onopen = () => {
             console.log('websocket opened');
@@ -144,10 +145,10 @@ export default function () {
         <>
             <div class="pb-8">
                 <div class="center">
-                    <button class="button w-1/4 text-center" onClick={() => setDisplaySchemaTable(!displaySchemaTable())}>
+                    <button class="button w-1/4 text-center max-sm:w-3/4" onClick={() => setDisplaySchemaTable(!displaySchemaTable())}>
                         Toggle schema commands
                     </button>
-                    <button class="button w-1/4 text-center" onClick={onAuthenticate}>
+                    <button class="button w-1/4 text-center max-sm:w-3/4" onClick={onAuthenticate}>
                         Authenticate
                     </button>
                     <UploadButton callback={setUploadedFiles} />

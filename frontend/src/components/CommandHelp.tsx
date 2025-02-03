@@ -44,7 +44,7 @@ export default function () {
         <Query f={() => fetchAndValidate(z.array(helpEntrySchema), '/api/help')}>
             {(entries) => (
                 <div class="center">
-                    <div class="m-8 w-2/3 rounded-xl bg-black p-8">
+                    <div class="m-8 w-2/3 rounded-xl bg-black p-8 max-sm:w-full">
                         <table class="w-full bg-black">
                             <thead>
                                 <tr class="border-b">

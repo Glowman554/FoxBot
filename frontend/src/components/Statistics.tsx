@@ -15,7 +15,7 @@ export default function () {
         <Query f={() => fetchAndValidate(statisticsSchema, '/api/stats')}>
             {(statistics) => (
                 <div class="center">
-                    <div class="m-8 w-2/3 rounded-xl bg-black p-8">
+                    <div class="m-8 w-2/3 rounded-xl bg-black p-8 max-sm:w-full">
                         <table class="w-full bg-black">
                             <tbody>
                                 <tr class="border-b">

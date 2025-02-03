@@ -37,7 +37,7 @@ export default function (props: Props) {
 
     return (
         <>
-            <button class="button w-1/4 text-center" type="button" onClick={() => fileInput?.click()}>
+            <button class="button w-1/4 text-center max-sm:w-3/4" type="button" onClick={() => fileInput?.click()}>
                 Upload
             </button>
             <input type="file" ref={fileInput} class="hidden" onInput={handleFileChange} />

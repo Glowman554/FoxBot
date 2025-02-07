@@ -1,5 +1,5 @@
 import { createSignal, For, onCleanup, onMount } from 'solid-js';
-import { validateOrThrow } from '../../validatedFetch';
+import { urlWithPrefix, validateOrThrow } from '../../validatedFetch';
 import { FromServer, type InformationMessage, type ToServer } from './types';
 import ChatEntry from './ChatEntry';
 import UploadButton from './UploadButton';
@@ -39,8 +39,7 @@ export default function () {
     const [displaySchemaTable, setDisplaySchemaTable] = createSignal(false);
 
     const connect = () => {
-        // TODO: Change this to the actual websocket URL
-        const ws = new WebSocket('wss://foxbot.glowman554.de/web');
+        const ws = new WebSocket(urlWithPrefix('/web', true));
         ws.onopen = () => {
             console.log('websocket opened');
             setWebsocket(ws);

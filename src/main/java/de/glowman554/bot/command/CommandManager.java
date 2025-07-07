@@ -30,6 +30,11 @@ public class CommandManager implements Savable {
         }
 
         Logger.log("%s", commandContext);
+        try {
+            Registries.DATABASE.get().insertUser(commandContext.getUserId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (commandContext.getMessage().startsWith(Main.config.getPrefix())) {
             String[] arguments = commandContext.getMessage().split(" ");

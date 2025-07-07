@@ -60,5 +60,22 @@ public class YiffAPI {
                 throw new RuntimeException(e);
             }
         }
+
+        public String[] requestMany(int amount) {
+            try {
+                JsonNode root = Json.json().parse(HttpClient
+                        .get(String.format("https://v2.yiff.rest/%s?amount=" + amount + "&notes=disabled", db.replace(".", "/"))));
+                if (!root.get("success").asBoolean()) {
+                    int timeout = root.get("info").get("resetAfter").asInt();
+                    Logger.log("Timeout: %d", timeout);
+                    Thread.sleep(timeout);
+                    return requestMany(amount);
+                }
+
+                return root.get("images").asList().stream().map(e -> e.get("url").asString()).toArray(String[]::new);
+            } catch (IOException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

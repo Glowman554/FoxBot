@@ -9,6 +9,7 @@ import de.glowman554.bot.command.LegacyCommandContext;
 import de.glowman554.bot.command.SchemaCommandContext;
 import de.glowman554.bot.command.impl.*;
 import de.glowman554.bot.command.impl.testing.Testing;
+import de.glowman554.bot.database.sqlite.SQLiteDatabase;
 import de.glowman554.bot.event.impl.JavalinEvent;
 import de.glowman554.bot.features.ChatBot;
 import de.glowman554.bot.features.ttt.TicTacToe;
@@ -16,9 +17,9 @@ import de.glowman554.bot.logging.Logger;
 import de.glowman554.bot.platform.discord.DiscordPlatform;
 import de.glowman554.bot.platform.telegram.TelegramPlatform;
 import de.glowman554.bot.platform.web.WebPlatform;
+import de.glowman554.bot.plugin.Entrypoint;
 import de.glowman554.bot.plugin.PluginLoader;
 import de.glowman554.bot.registry.Registries;
-import de.glowman554.bot.sqlite.SQLiteDatabase;
 import de.glowman554.config.ConfigFile;
 import de.glowman554.config.ConfigManager;
 import de.glowman554.config.Savable;
@@ -30,11 +31,15 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static final Config config = new Config();
     public static CommandManager commandManager;
+    private static final ArrayList<Object> testPlugins = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
         Logger.log("Starting...");
@@ -50,10 +55,11 @@ public class Main {
         config.load();
 
         if (config.useBuiltinDatabase) {
-            new SQLiteDatabase();
+            Registries.DATABASE.set(new SQLiteDatabase());
         }
 
         new PluginLoader(new File("plugins"));
+        callTestPlugins();
 
         registerPlatforms();
         registerCommands();
@@ -241,6 +247,21 @@ public class Main {
         sslContextFactory.setKeyStorePath(config.webserver.keystoreFile);
         sslContextFactory.setKeyStorePassword(config.webserver.keystorePassword);
         return sslContextFactory;
+    }
+
+    public static void registerTestPlugin(Object object) {
+        Logger.log("Adding test plugin %s", object.getClass().toString());
+        testPlugins.add(object);
+    }
+
+    private static void callTestPlugins() throws InvocationTargetException, IllegalAccessException {
+        for (Object plugin : testPlugins) {
+            for (Method method : plugin.getClass().getMethods()) {
+                if (method.isAnnotationPresent(Entrypoint.class)) {
+                    method.invoke(plugin);
+                }
+            }
+        }
     }
 
     public static class Config extends ConfigFile {

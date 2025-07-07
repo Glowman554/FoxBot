@@ -1,4 +1,6 @@
-package de.glowman554.bot.utils;
+package de.glowman554.bot.database.provider;
+
+import de.glowman554.bot.utils.Pair;
 
 import java.util.HashMap;
 

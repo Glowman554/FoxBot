@@ -18,6 +18,7 @@ func main() {
 	utils.CompilerByFileExtension[".py"] = utils.PythonInterpreter{}
 	utils.CompilerByFileExtension[".c"] = utils.GccCompiler{}
 	utils.CompilerByFileExtension[".sh"] = utils.BashInterpreter{}
+	utils.CompilerByFileExtension[".fl"] = utils.FireStormCompiler{}
 
 	http.Handle("/api/run", http.HandlerFunc(api.RunHandler))
 	http.Handle("/api/compile", http.HandlerFunc(api.CompileHandler))

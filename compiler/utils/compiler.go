@@ -31,7 +31,7 @@ func (bash BashInterpreter) Execute(file string) (string, error) {
 
 
 func (fire FireStormCompiler) Execute(file string) (string, error) {
-	_, err := Execute("fire compile --input" + file + " --output " + file + ".elf")
+	_, err := Execute("fire compile --input=" + file + " --output=" + file + ".elf")
 	if err != nil {
 		return "", err
 	}

@@ -1,0 +1,46 @@
+{
+    "build": [
+        {
+            "command": "mvn package",
+            "directory": "{{service}}"
+        },
+        {
+            "command": "npm run build",
+            "directory": "{{service}}/frontend"
+        },
+        {
+            "command": "sudo docker build -t glowman554/foxbot .",
+            "directory": "{{service}}"
+        },
+        {
+            "command": "sudo docker build -t glowman554/foxbot-compiler .",
+            "directory": "{{service}}/compiler"
+        }
+    ],
+    "networks": [
+        {
+            "name": "foxbot"
+        }
+    ],
+    "containers": [
+        {
+            "name": "foxbot-compiler",
+            "image": "glowman554/foxbot-compiler",
+            "privileged": true,
+            "networks": [
+                "foxbot"
+            ]
+        },
+        {
+            "name": "foxbot",
+            "image": "glowman554/foxbot",
+            "mounts": {
+                "{{base}}/data/FoxBot": "/srv"
+            },
+            "networks": [
+                "router",
+                "foxbot"
+            ]
+        }
+    ]
+}

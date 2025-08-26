@@ -12,8 +12,8 @@ public class ChatBot {
     private final ChatBotManager chatBotManager;
     private final String prefix;
 
-    public ChatBot(String apiKey, String system, String prefix) {
-        chatBotManager = new ChatBotManager(apiKey, system);
+    public ChatBot(String apiKey, String system, String model, String prefix) {
+        chatBotManager = new ChatBotManager(apiKey, system, model);
         this.prefix = prefix;
 
         Platform.accept(this);

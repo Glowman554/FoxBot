@@ -11,12 +11,13 @@ import java.util.ArrayList;
 
 public class ChatCompletion {
     private final String apiKey;
-    private String model = "gpt-4o-mini";
+    private final String model;
 
     private final OkHttpClient client = new OkHttpClient();
 
-    public ChatCompletion(String apiKey) {
+    public ChatCompletion(String apiKey, String model) {
         this.apiKey = apiKey;
+        this.model = model;
     }
 
     public Message[] requestCompletion(Message[] messages) {
@@ -51,10 +52,6 @@ public class ChatCompletion {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public void setModel(String model) {
-        this.model = model;
     }
 
     public static class Message extends AutoSavable {

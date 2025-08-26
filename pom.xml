@@ -48,6 +48,13 @@
         </plugins>
     </build>
 
+    <repositories>
+        <repository>
+            <id>toxicfox</id>
+            <url>https://maven.toxicfox.de</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>de.glowman554</groupId>

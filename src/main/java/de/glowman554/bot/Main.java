@@ -145,7 +145,7 @@ public class Main {
         }
 
         if (config.openAI.chatbotEnabled) {
-            new ChatBot(config.openAI.token, config.openAI.chatbotSystem, config.openAI.chatbotPrefix);
+            new ChatBot(config.openAI.token, config.openAI.chatbotSystem, config.openAI.chatbotModel, config.openAI.chatbotPrefix);
             Registries.FEATURES.register("chatbot", new Feature("Chatbot", "The bot can chat with you. Just start your message with '" + config.openAI.chatbotPrefix + "' and the bot will respond."));
         }
 
@@ -357,6 +357,8 @@ public class Main {
             private boolean chatbotEnabled = false;
             @Saved
             private String chatbotPrefix = "@chatbot";
+            @Saved
+            private String chatbotModel = "gpt-5";
 
             public String getToken() {
                 return token;

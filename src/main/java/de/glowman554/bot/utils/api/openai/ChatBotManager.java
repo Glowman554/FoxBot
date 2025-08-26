@@ -10,8 +10,8 @@ public class ChatBotManager {
     private final HashMap<String, Chat> chats = new HashMap<>();
     private final String system;
 
-    public ChatBotManager(String apiKey, String system) {
-        chatCompletion = new ChatCompletion(apiKey);
+    public ChatBotManager(String apiKey, String system, String model) {
+        chatCompletion = new ChatCompletion(apiKey, model);
         this.system = system;
     }
 

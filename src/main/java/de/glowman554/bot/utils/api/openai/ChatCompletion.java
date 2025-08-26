@@ -8,12 +8,13 @@ import net.shadew.json.JsonNode;
 import okhttp3.*;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class ChatCompletion {
     private final String apiKey;
     private final String model;
 
-    private final OkHttpClient client = new OkHttpClient();
+    private final OkHttpClient client = client();
 
     public ChatCompletion(String apiKey, String model) {
         this.apiKey = apiKey;
@@ -52,6 +53,12 @@ public class ChatCompletion {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private OkHttpClient client() {
+        return new OkHttpClient.Builder()
+                .readTimeout(5, TimeUnit.MINUTES)
+                .build();
     }
 
     public static class Message extends AutoSavable {

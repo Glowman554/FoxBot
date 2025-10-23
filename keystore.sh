@@ -4,12 +4,10 @@ DOMAIN=foxbot.toxicfox.de
 read -p "Keystore password > " PASSWORD
 
 sudo openssl pkcs12 -export \
-	-in /etc/letsencrypt/live/$DOMAIN/cert.pem \
+	-in /etc/letsencrypt/live/$DOMAIN/fullchain.pem \
 	-inkey /etc/letsencrypt/live/$DOMAIN/privkey.pem \
 	-out /tmp/$DOMAIN.p12 \
 	-name $DOMAIN \
-	-CAfile /etc/letsencrypt/live/$DOMAIN/fullchain.pem \
-	-caname "Let's Encrypt Authority X3" \
 	-password pass:$PASSWORD
 
 sudo keytool -importkeystore \
